@@ -61,6 +61,24 @@ public struct CalculatorInputView: View {
                         .buttonStyle(.plain)
                     }
                     .padding(.vertical, 2)
+                } else if viewModel.selectedGoal == .termAndRateToLoan {
+                    HStack(spacing: 8) {
+                        Image(systemName: "info.circle.fill")
+                            .foregroundColor(accent)
+                        Text("Stelle unten die gewünschte Gesamtlaufzeit und deinen Monatsabschlag ein, um deine maximale Kreditsumme zu berechnen.")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                    }
+                    .padding(.vertical, 2)
+                }
+            }
+            
+            // MARK: Modus: Laufzeit & Rate -> Kreditsumme Karte
+            if viewModel.selectedGoal == .termAndRateToLoan {
+                Section {
+                    LoanCapacityCardView(viewModel: viewModel)
+                        .listRowInsets(EdgeInsets())
+                        .listRowBackground(Color.clear)
                 }
             }
             

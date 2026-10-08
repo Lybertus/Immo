@@ -38,6 +38,7 @@
 		0101001D2C00000000000001 /* CityLocationSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020100242C00000000000001 /* CityLocationSearchView.swift */; };
 		0101001E2C00000000000001 /* TabRecommendationsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020100252C00000000000001 /* TabRecommendationsModel.swift */; };
 		0101001F2C00000000000001 /* ExpertTipsCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020100262C00000000000001 /* ExpertTipsCardView.swift */; };
+		010100202C00000000000001 /* LoanCapacityCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020100272C00000000000001 /* LoanCapacityCardView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -74,6 +75,7 @@
 		020100242C00000000000001 /* CityLocationSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityLocationSearchView.swift; sourceTree = "<group>"; };
 		020100252C00000000000001 /* TabRecommendationsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabRecommendationsModel.swift; sourceTree = "<group>"; };
 		020100262C00000000000001 /* ExpertTipsCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpertTipsCardView.swift; sourceTree = "<group>"; };
+		020100272C00000000000001 /* LoanCapacityCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoanCapacityCardView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -154,6 +156,7 @@
 				0201000C2C00000000000001 /* DonutChartView.swift */,
 				020100192C00000000000001 /* AmortizationChartView.swift */,
 				020100262C00000000000001 /* ExpertTipsCardView.swift */,
+				020100272C00000000000001 /* LoanCapacityCardView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -282,6 +285,7 @@
 				0101001D2C00000000000001 /* CityLocationSearchView.swift in Sources */,
 				0101001E2C00000000000001 /* TabRecommendationsModel.swift in Sources */,
 				0101001F2C00000000000001 /* ExpertTipsCardView.swift in Sources */,
+				010100202C00000000000001 /* LoanCapacityCardView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

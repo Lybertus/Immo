@@ -244,6 +244,9 @@ public struct AffordabilityView: View {
                     )
                 }
                 
+                // MARK: 5. Kredithöhe aus Gesamtlaufzeit & Monatsrate (inkl. Sondertilgung)
+                LoanCapacityCardView(viewModel: viewModel)
+                
                 // MARK: Experten-Empfehlungen
                 if viewModel.showBeginnerTips {
                     ExpertTipsCardView(

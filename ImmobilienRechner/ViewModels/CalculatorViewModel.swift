@@ -28,6 +28,12 @@ public class CalculatorViewModel: ObservableObject {
     @Published public var selectedGoal: CalculationGoal = .purchasePriceToRate
     @Published public var isInvestmentModeActive: Bool = false
     
+    // MARK: - Kredithöhe aus Laufzeit & monatlichem Abschlag (Ziel 2)
+    @Published public var targetLoanTermYears: Double = 25
+    @Published public var targetMonthlyPayment: Double = 1_800
+    @Published public var targetAnnualSondertilgung: Double = 2_500
+    @Published public var useNetIncomeForDeduction: Bool = false
+    
     // MARK: - Themes & Customization
     @Published public var selectedAppearanceMode: AppearanceMode = .dark {
         didSet { UserDefaults.standard.set(selectedAppearanceMode.rawValue, forKey: appearanceKey) }
@@ -165,6 +171,20 @@ public class CalculatorViewModel: ObservableObject {
         )
     }
     
+    public var loanCapacityResult: LoanCapacityResult {
+        let monthlyRate = useNetIncomeForDeduction ? affordabilityResult.maxMonatsrate : targetMonthlyPayment
+        let nebenkostenSatz = input.aktiverSteuersatz + input.notarGrundbuchSatz + input.aktiverMaklersatz
+        return LoanCapacityResult.calculate(
+            zielLaufzeitJahre: targetLoanTermYears,
+            monatlicheRate: monthlyRate,
+            sondertilgungProJahr: targetAnnualSondertilgung,
+            sollzins: input.sollzins,
+            eigenkapital: input.eigenkapital,
+            nebenkostenSatz: nebenkostenSatz,
+            modernisierung: input.modernisierungskosten
+        )
+    }
+    
     // MARK: - Market Rates & Term Update
     
     /// Übernimmt die Marktdaten einer Stadt in den Kaufrechner
@@ -215,6 +235,20 @@ public class CalculatorViewModel: ObservableObject {
     
     public func applyRequiredTilgung() {
         input.tilgungssatz = requiredTilgungForTargetYears
+    }
+    
+    public func applyLoanCapacityToCalculator() {
+        let cap = loanCapacityResult
+        let roundedKaufpreis = (cap.maxKaufpreis / 5000.0).rounded() * 5000.0
+        self.input.kaufpreis = max(50_000, roundedKaufpreis)
+        self.input.tilgungssatz = max(0.5, (cap.effTilgungssatz * 10).rounded() / 10.0)
+        self.input.sondertilgungProJahr = targetAnnualSondertilgung
+        self.input.wunschrate = useNetIncomeForDeduction ? affordabilityResult.maxMonatsrate : targetMonthlyPayment
+        self.selectedGoal = .purchasePriceToRate
+    }
+    
+    public func applyRecommendedRepaymentForLoan() {
+        input.tilgungssatz = loanCapacityResult.empfohleneMindestTilgung
     }
     
     public func setEquityPercentage(_ percentage: Double) {

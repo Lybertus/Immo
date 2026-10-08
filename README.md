@@ -73,6 +73,18 @@ Mit flexiblem **Dark Mode / OLED-Dunkelmodus**, **16 wählbaren Apple-Akzentfarb
   * **Rendite**: Brutto- vs. Netto-Mietrendite, Cashflow-Risiken.
 * **Ein- und Ausblendbar**: Über die Einstellungen oder direkt per Klick ein- und ausklappbar, damit Fortgeschrittene die Ansicht kompakt halten können.
 
+### 🎯 9. Kredithöhe aus Gesamtlaufzeit & monatlichem Abschlag (Ziel-Rechner)
+* **Berechnung der Kredithöhe nach Wunschlaufzeit**:
+  * Lege fest, in wie vielen Jahren der Kredit abbezahlt sein soll (z. B. **25 Jahre**) und wie hoch der monatliche Abschlag ist (z. B. **1.800 €** oder abgeleitet aus 35 % Haushaltsnetto).
+  * Die Barwert-Formel ermittelt auf den Cent genau die **maximal aufnehmbare Kreditsumme** sowie den daraus **möglichen Kaufpreis**.
+* **Berücksichtigung jährlicher Sondertilgungen**:
+  * Eingabe einer jährlichen Sondertilgung (z. B. **2.500 € / Jahr**).
+  * Weist den massiven Hebel aus: **Zinsersparnis** (z. B. über 65.000 € gespart) und **Laufzeitverkürzung** (z. B. 6 Jahre früher schuldenfrei).
+* **Tilgungs- & Sondertilgungs-Empfehlungen**:
+  * **Tilgungssatz-Empfehlung**: Bei aktuellen Zinsen (> 4 %) mindestens 2,0 % bis 2,5 % Anfangstilgung.
+  * **Banken-Rahmen**: Kostenfreie Sondertilgung von bis zu 5 % p.a. (Bankstandard) sowie realistische Sparrate (1–2 % der Kreditsumme).
+  * **1-Klick-Übernahme**: Überträgt die Kreditsumme und den Kaufpreis direkt in alle Tilgungspläne und Charts.
+
 ---
 
 ## 📁 Projektstruktur
@@ -99,7 +111,7 @@ ImmobilienRechner/
 │   │   ├── InvestmentModel.swift     # Rendite & Cashflow
 │   │   ├── ComparisonScenario.swift  # Variantenvergleich
 │   │   ├── ThemeModel.swift          # Dark Mode & 16 Akzentfarben
-│   │   ├── AffordabilityModel.swift  # Haushaltsrechner & 30-35% Regel
+│   │   ├── AffordabilityModel.swift  # Haushaltsrechner, 30-35% Regel & Kredithöhe
 │   │   ├── MarketRatesModel.swift    # Interhyp Marktzins-Benchmarks
 │   │   ├── RentVsBuyModel.swift      # Mieten vs. Kaufen Simulation
 │   │   └── AffordabilityIndexModel.swift # Interhyp Erschwinglichkeitsindex
@@ -108,6 +120,7 @@ ImmobilienRechner/
 │   └── Views/
 │       ├── ContentView.swift         # Adaptives SplitView/TabBar Layout
 │       ├── Components/               # Karten, Slider, Donut-Diagramm, Kurvendiagramm
+│       │   ├── LoanCapacityCardView.swift # Kredithöhe aus Laufzeit & Abschlag
 │       │   ├── ExpertTipsCardView.swift  # Ausklappbare Empfehlungskarte
 │       │   ├── CurrencyInputField.swift  # Direkte Tastatureingabe
 │       │   └── AmortizationChartView.swift # Interaktive Kurve

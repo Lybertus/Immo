@@ -470,6 +470,13 @@
 
       <!-- TAB 1: KAUFRECHNER -->
       <div id="tabCalc">
+        <!-- Ziel-Schnellauswahl -->
+        <div style="display: flex; gap: 8px; margin-bottom: 12px; overflow-x: auto;">
+          <button class="btn-chip active" style="font-size: 11px;">💶 Kaufpreis ➔ Rate</button>
+          <button class="btn-chip" onclick="setTab('budget', document.querySelectorAll('.tab-nav')[2])" style="font-size: 11px;">💳 Laufzeit &amp; Rate ➔ Kreditsumme</button>
+          <button class="btn-chip" onclick="setTab('budget', document.querySelectorAll('.tab-nav')[2])" style="font-size: 11px;">💼 Budget &amp; Max. Kaufpreis</button>
+        </div>
+
         <div class="card">
           <h2>Objekt & Kaufnebenkosten</h2>
           <div class="form-group">
@@ -791,6 +798,83 @@
               </div>
             </div>
           </div>
+        </div>
+
+        <!-- NEU: KREDITHÖHE AUS LAUFZEIT & ABSCHLAG -->
+        <div class="card" style="border: 2px solid var(--primary-bg); background: var(--card-bg);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <h2 style="margin: 0;">💳 Kredithöhe aus Gesamtlaufzeit &amp; Rate</h2>
+            <span class="badge-pill badge-blue" style="font-size: 10px;">Ziel-Rechner</span>
+          </div>
+          <p style="font-size: 12px; color: var(--text-sec); margin-bottom: 14px; line-height: 1.4;">
+            Lege fest, wie viele Jahre der Kredit laufen soll und wie viel du monatlich zahlst – inklusive Sondertilgung und Empfehlungen!
+          </p>
+
+          <div class="form-group">
+            <div class="field-header">
+              <label>Geplante Gesamtlaufzeit:</label>
+              <div class="num-input-box" style="width: 80px;">
+                <input type="number" id="txtZielLaufzeit" value="25" min="5" max="45" step="1" oninput="calculateLoanCapacity()"> J.
+              </div>
+            </div>
+            <input type="range" id="rngZielLaufzeit" min="10" max="40" step="1" value="25" oninput="document.getElementById('txtZielLaufzeit').value=this.value; calculateLoanCapacity();">
+          </div>
+
+          <div class="form-group">
+            <label style="font-size: 12px; display: flex; align-items: center; gap: 8px; cursor: pointer; margin-bottom: 8px;">
+              <input type="checkbox" id="chkUseNettoRate" onchange="calculateLoanCapacity()">
+              <span>Abschlag aus Haushaltsnetto verwenden (35 % = <span id="lblNettoRate">1.575 €</span> / Monat)</span>
+            </label>
+            <div id="abschlagInputWrap">
+              <div class="field-header">
+                <label>Monatlicher Abschlag / Wunschrate:</label>
+                <div class="num-input-box">
+                  <input type="number" id="txtWunschAbschlag" value="1800" step="50" oninput="calculateLoanCapacity()"> €
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="field-header">
+              <label>Jährliche Sondertilgung:</label>
+              <div class="num-input-box">
+                <input type="number" id="txtSondertilgJahr" value="2500" step="500" oninput="calculateLoanCapacity()"> €
+              </div>
+            </div>
+          </div>
+
+          <!-- Live Capacity Box -->
+          <div style="background: var(--primary-bg); padding: 14px; border-radius: 12px; margin-top: 14px;">
+            <div style="font-size: 11px; font-weight: bold; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px;">Maximal mögliche Kreditsumme</div>
+            <div id="resCapDarlehen" style="font-size: 30px; font-weight: 800; color: var(--text); margin: 4px 0 8px 0;">359.814 €</div>
+            
+            <div style="display: flex; justify-content: space-between; font-size: 12px; border-top: 1px solid var(--border); padding-top: 8px;">
+              <div>Daraus mögl. Kaufpreis: <strong id="resCapKaufpreis">394.072 €</strong></div>
+              <div>Anfängl. Tilgung: <strong id="resCapTilgung" style="color: var(--primary);">2,16 %</strong></div>
+            </div>
+            <div id="resCapMehr" style="font-size: 11px; color: var(--green); font-weight: 600; margin-top: 6px;"></div>
+          </div>
+
+          <!-- Empfehlungs-Box für Tilgung & Sondertilgung -->
+          <div style="margin-top: 14px; display: flex; flex-direction: column; gap: 8px;">
+            <div style="background: var(--bg); padding: 10px 12px; border-radius: 10px; font-size: 11px; line-height: 1.4;">
+              <div style="font-weight: 700; color: var(--primary); margin-bottom: 2px;">📐 Tilgungssatz-Empfehlung:</div>
+              <div>Bei aktuellen Zinsen (&gt; 4 %) empfehlen Banken <strong>mindestens 2,0 % bis 2,5 % Anfangstilgung</strong>, um nach 25–28 Jahren schuldenfrei zu sein.</div>
+            </div>
+
+            <div style="background: var(--bg); padding: 10px 12px; border-radius: 10px; font-size: 11px; line-height: 1.4;">
+              <div style="font-weight: 700; color: var(--primary); margin-bottom: 2px;">💡 Sondertilgungs-Empfehlung &amp; Hebel:</div>
+              <div>Bank-Limit (5 % p.a. kostenfrei): bis zu <strong id="resCapLimit5">17.990 €/Jahr</strong>. Realistisch empfohlen: 1 % bis 2 % der Kreditsumme.</div>
+              <div id="resCapSavingWrap" style="margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--border); font-size: 11px; color: var(--green);">
+                <span id="resCapSavingText"></span>
+              </div>
+            </div>
+          </div>
+
+          <button onclick="applyCapacityToCalculator()" class="btn-chip active" style="width: 100%; padding: 10px; margin-top: 14px; border-radius: 10px; font-size: 12px; font-weight: 700; background: var(--primary); color: #fff;">
+            🚀 Kreditsumme &amp; Kaufpreis im Hauptrechner aktivieren
+          </button>
         </div>
 
         <!-- EXPERTEN-TIPPS TAB 3 -->
@@ -1256,6 +1340,99 @@
         : `Angespannter Markt. Die Kombination aus Preis und Zins erfordert Budgetdisziplin.`;
 
       renderSvgCurve(darlehen, jahresPunkte, bindung);
+      calculateLoanCapacity();
+    }
+
+    function calculateLoanCapacity() {
+      const jahreInput = document.getElementById('txtZielLaufzeit');
+      if (!jahreInput) return;
+      const jahre = parseFloat(jahreInput.value) || 25;
+      const chkNetto = document.getElementById('chkUseNettoRate');
+      const useNetto = chkNetto ? chkNetto.checked : false;
+      
+      const netto = parseFloat(document.getElementById('txtNetto').value) || 4500;
+      const quote = (parseFloat(document.getElementById('txtQuote').value) || 35) / 100;
+      const zins = parseFloat(document.getElementById('txtZins').value) || 4.52;
+      const ek = parseFloat(document.getElementById('txtEigenkapital').value) || 90000;
+      const steuer = parseFloat(document.getElementById('bundesland').value) || 3.5;
+      const notar = parseFloat(document.getElementById('txtNotar').value) || 2.0;
+      const makler = parseFloat(document.getElementById('txtMakler').value) || 3.57;
+      const sondertilg = parseFloat(document.getElementById('txtSondertilgJahr').value) || 0;
+      
+      const nettoRate = netto * quote;
+      const lblNetto = document.getElementById('lblNettoRate');
+      if (lblNetto) lblNetto.innerText = fmt(nettoRate);
+
+      const wrapAbschlag = document.getElementById('abschlagInputWrap');
+      if (wrapAbschlag) wrapAbschlag.style.display = useNetto ? 'none' : 'block';
+
+      const monatsRate = useNetto ? nettoRate : (parseFloat(document.getElementById('txtWunschAbschlag').value) || 1800);
+
+      const iM = (zins / 100) / 12;
+      const nM = jahre * 12;
+      
+      const pvM = monatsRate * (1 - Math.pow(1 + iM, -nM)) / iM;
+      const annEff = Math.pow(1 + iM, 12) - 1;
+      const pvS = (sondertilg > 0 && annEff > 0) ? (sondertilg * (1 - Math.pow(1 + annEff, -jahre)) / annEff) : 0;
+      
+      const maxDarlehen = pvM + pvS;
+      const nebenkostenPct = steuer + notar + makler;
+      const maxKaufpreis = (maxDarlehen + ek) / (1 + nebenkostenPct / 100);
+      const effTilgung = ((monatsRate * 12 / maxDarlehen) * 100) - zins;
+      
+      const elDarlehen = document.getElementById('resCapDarlehen');
+      if (elDarlehen) elDarlehen.innerText = fmt(maxDarlehen);
+      const elKaufpreis = document.getElementById('resCapKaufpreis');
+      if (elKaufpreis) elKaufpreis.innerText = fmt(maxKaufpreis);
+      const elTilgung = document.getElementById('resCapTilgung');
+      if (elTilgung) elTilgung.innerText = `${effTilgung.toFixed(2)} %`;
+      const elMehr = document.getElementById('resCapMehr');
+      if (elMehr) elMehr.innerText = pvS > 0 ? `+ ${fmt(pvS)} mehr Kreditspielraum durch Sondertilgung` : '';
+      
+      const limit5 = maxDarlehen * 0.05;
+      const elLimit5 = document.getElementById('resCapLimit5');
+      if (elLimit5) elLimit5.innerText = fmt(limit5);
+      
+      const saveWrap = document.getElementById('resCapSavingWrap');
+      const saveText = document.getElementById('resCapSavingText');
+      if (sondertilg > 0 && monatsRate > maxDarlehen * iM) {
+        const monateOhne = -Math.log(1 - (maxDarlehen * iM / monatsRate)) / Math.log(1 + iM);
+        const zinsenOhne = (monateOhne * monatsRate) - maxDarlehen;
+        const gezahltMit = (monatsRate * nM) + (sondertilg * jahre);
+        const zinsenMit = Math.max(0, gezahltMit - maxDarlehen);
+        const ersparnis = Math.max(0, zinsenOhne - zinsenMit);
+        const jahreErsparnis = Math.max(0, (monateOhne / 12) - jahre);
+        
+        if (saveText) {
+          saveText.innerHTML = `💰 <strong>${fmt(ersparnis)} Zinsersparnis</strong> • ⏳ <strong>ca. ${jahreErsparnis.toFixed(1)} Jahre früher schuldenfrei!</strong>`;
+        }
+        if (saveWrap) saveWrap.style.display = 'block';
+      } else if (saveWrap) {
+        saveWrap.style.display = 'none';
+      }
+    }
+
+    function applyCapacityToCalculator() {
+      const elKaufpreis = document.getElementById('resCapKaufpreis');
+      const elTilgung = document.getElementById('resCapTilgung');
+      if (!elKaufpreis || !elTilgung) return;
+
+      const kaufpreisStr = elKaufpreis.innerText.replace(/[^0-9]/g, '');
+      const kaufpreis = parseFloat(kaufpreisStr) || 350000;
+      const tilgStr = elTilgung.innerText.replace('%', '').trim().replace(',', '.');
+      const tilgung = parseFloat(tilgStr) || 2.0;
+
+      const roundedKp = Math.round(kaufpreis / 5000) * 5000;
+      document.getElementById('txtKaufpreis').value = roundedKp;
+      document.getElementById('kaufpreis').value = roundedKp;
+      
+      const roundedTilg = Math.max(0.5, tilgung).toFixed(1);
+      document.getElementById('txtTilgung').value = roundedTilg;
+      document.getElementById('tilgung').value = roundedTilg;
+      
+      calculate();
+      setTab('calc', document.querySelectorAll('.tab-nav')[0]);
+      alert(`Erfolgreich übernommen: Kaufpreis auf ${fmt(roundedKp)} und Tilgung auf ${roundedTilg} % gesetzt!`);
     }
 
     function renderSvgCurve(darlehen, punkte, bindung) {
