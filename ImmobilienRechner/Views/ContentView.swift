@@ -2,8 +2,9 @@ import SwiftUI
 
 public enum NavigationTab: String, CaseIterable, Identifiable {
     case eingabe = "Eingabe"
-    case budget = "Budget"
+    case orte = "Orte & Preise"
     case mietenVsKaufen = "Mieten vs. Kaufen"
+    case budget = "Budget"
     case uebersicht = "Übersicht"
     case tilgungsplan = "Tilgungsplan"
     case rendite = "Rendite"
@@ -15,8 +16,9 @@ public enum NavigationTab: String, CaseIterable, Identifiable {
     public var icon: String {
         switch self {
         case .eingabe: return "slider.horizontal.3"
-        case .budget: return "wallet.pass.fill"
+        case .orte: return "map.fill"
         case .mietenVsKaufen: return "scalemass.fill"
+        case .budget: return "wallet.pass.fill"
         case .uebersicht: return "chart.pie.fill"
         case .tilgungsplan: return "list.bullet.rectangle.portrait.fill"
         case .rendite: return "eurosign.circle.fill"
@@ -66,7 +68,7 @@ public struct ContentView: View {
                     }
             }
         }
-        .frame(minWidth: 900, minHeight: 640)
+        .frame(minWidth: 920, minHeight: 650)
         .preferredColorScheme(viewModel.selectedAppearanceMode.colorScheme)
         .tint(viewModel.selectedAccentColor.color)
         .confirmationDialog("Zurücksetzen?", isPresented: $showResetConfirmation) {
@@ -93,6 +95,15 @@ public struct ContentView: View {
                 Label("Eingabe", systemImage: "slider.horizontal.3")
             }
             .tag(NavigationTab.eingabe)
+            
+            NavigationStack {
+                CityLocationSearchView(viewModel: viewModel)
+                    .navigationTitle("Orte & Marktpreise")
+            }
+            .tabItem {
+                Label("Orte", systemImage: "map.fill")
+            }
+            .tag(NavigationTab.orte)
             
             NavigationStack {
                 RentVsBuyView(viewModel: viewModel)
@@ -173,6 +184,8 @@ public struct ContentView: View {
         switch tab {
         case .eingabe:
             CalculatorInputView(viewModel: viewModel)
+        case .orte:
+            CityLocationSearchView(viewModel: viewModel)
         case .mietenVsKaufen:
             RentVsBuyView(viewModel: viewModel)
         case .budget:

@@ -52,6 +52,20 @@ Mit flexiblem **Dark Mode / OLED-Dunkelmodus**, **16 wählbaren Apple-Akzentfarb
 * 16 kuratierte Akzentfarben (Apple Blau, Smaragdgrün, Cyan, Royal Lila, etc.).
 * 3 Design-Stile: *Modern Apple*, *Minimal Clean* und *Finanz-Kompakt*.
 
+### 📍 7. Ortssuche & Immobilien-Marktpreise (38 deutsche Städte & Regionen)
+* **Live-Suche & Filter nach 4 Preisklassen**:
+  * 🟢 **Günstig** (< 2.800 €/m²): z. B. Dortmund, Essen, Chemnitz, Magdeburg, Görlitz
+  * 🟡 **Mittel / Fair** (2.800 – 4.500 €/m²): z. B. Nürnberg, Hannover, Leipzig, Dresden, Bremen
+  * 🟠 **Teuer** (4.500 – 6.500 €/m²): z. B. Berlin, Köln, Düsseldorf, Münster, Mainz
+  * 🔴 **Sehr teuer (Metropolen)** (> 6.500 €/m²): München, Frankfurt, Hamburg, Stuttgart, Freiburg, Potsdam
+* **Detaillierte Kennzahlen je Stadt**:
+  * Durchschnittspreis Wohnung pro m² (sowie typischer Kaufpreis 80 m²)
+  * Durchschnittspreis Haus pro m² (sowie typischer Kaufpreis 140 m²)
+  * Durchschnittliche Kaltmiete pro m² (sowie typische Monatsmiete)
+  * Exakter Grunderwerbsteuersatz des zugehörigen Bundeslandes
+* **1-Klick-Übernahme in den Rechner**:
+  * Kaufpreis, Bundesland und Vergleichsmiete werden auf Knopfdruck übernommen!
+
 ---
 
 ## 📁 Projektstruktur
@@ -71,6 +85,7 @@ ImmobilienRechner/
 │   ├── Assets.xcassets/              # Icons & Akzentfarben
 │   ├── Models/
 │   │   ├── FederalState.swift        # 16 Bundesländer & Steuersätze
+│   │   ├── CityMarketData.swift      # 38 Städte, Preisklassen & qm-Preise
 │   │   ├── AmortizationYear.swift    # Tilgungsplan-Modell
 │   │   ├── CalculationModel.swift    # Finanzmathematik
 │   │   ├── InvestmentModel.swift     # Rendite & Cashflow
@@ -87,6 +102,7 @@ ImmobilienRechner/
 │       ├── Components/               # Karten, Slider, Donut-Diagramm, Kurvendiagramm
 │       └── Tabs/
 │           ├── CalculatorInputView.swift   # Rechner & 2% Badge
+│           ├── CityLocationSearchView.swift # Ortssuche, Preise & Filter
 │           ├── RentVsBuyView.swift         # Mieten vs. Kaufen & Index
 │           ├── AffordabilityView.swift     # Haushalts- & Budgetcheck
 │           ├── ResultsSummaryView.swift    # Ergebnisse & Kurvendiagramm

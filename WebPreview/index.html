@@ -304,6 +304,83 @@
     th, td { padding: 8px 10px; text-align: right; }
     th:first-child, td:first-child { text-align: left; }
     th { background: var(--bg); position: sticky; top: 0; }
+    .city-card {
+      background: var(--bg);
+      border-radius: 14px;
+      padding: 14px;
+      border: 1px solid var(--border);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .city-card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+    .city-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .city-name {
+      font-size: 15px;
+      font-weight: 700;
+    }
+    .city-state {
+      font-size: 11px;
+      color: var(--text-sec);
+    }
+    .city-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      margin: 10px 0;
+      background: var(--card-bg);
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+    .city-stat-label {
+      font-size: 10px;
+      color: var(--text-sec);
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+    .city-stat-val {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .city-stat-sub {
+      font-size: 10px;
+      color: var(--text-sec);
+    }
+    .city-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .btn-city-apply {
+      padding: 7px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      color: var(--text);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: background-color 0.15s, border-color 0.15s;
+    }
+    .btn-city-apply:hover {
+      background: var(--primary-bg);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    .badge-yellow { background: rgba(255, 204, 0, 0.2); color: #d4a017; }
   </style>
 </head>
 <body>
@@ -330,6 +407,7 @@
         <button class="tab-nav active" onclick="setTab('calc', this)">💶 1. Kredit</button>
         <button class="tab-nav" onclick="setTab('rvb', this)">⚖️ 2. Mieten vs. Kaufen</button>
         <button class="tab-nav" onclick="setTab('budget', this)">💼 3. Haushalt</button>
+        <button class="tab-nav" onclick="setTab('cities', this)">📍 4. Orte & Marktpreise</button>
       </div>
 
       <!-- TAB 1: KAUFRECHNER -->
@@ -544,6 +622,45 @@
           </div>
         </div>
       </div>
+
+      <!-- TAB 4: ORTE & MARKTPREISE -->
+      <div id="tabCities" style="display: none;">
+        <div class="card">
+          <h2>📍 Immobilien-Marktpreise nach Orten</h2>
+          <p style="font-size: 12px; color: var(--text-sec); margin-bottom: 12px; line-height: 1.4;">
+            Vergleiche Durchschnittspreise pro m² für Wohnungen &amp; Häuser sowie Kaltmieten in 38 deutschen Städten. Mit 1 Klick in den Rechner übernehmen!
+          </p>
+
+          <!-- Search Input -->
+          <div class="form-group" style="margin-bottom: 12px;">
+            <input type="text" id="citySearchInput" placeholder="🔍 Stadt oder Bundesland suchen (z. B. München, Dortmund, Leipzig)..."
+              oninput="renderCities()"
+              style="width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 13px; outline: none;">
+          </div>
+
+          <!-- Category Filter Chips -->
+          <div class="btn-group" style="margin-bottom: 14px;">
+            <button class="btn-chip active" id="chip-all" onclick="setCityCategory('all', this)">Alle</button>
+            <button class="btn-chip" id="chip-guenstig" onclick="setCityCategory('guenstig', this)">🟢 Günstig (&lt; 2.800 €/m²)</button>
+            <button class="btn-chip" id="chip-mittel" onclick="setCityCategory('mittel', this)">🟡 Mittel (2.800 – 4.500 €)</button>
+            <button class="btn-chip" id="chip-teuer" onclick="setCityCategory('teuer', this)">🟠 Teuer (4.500 – 6.500 €)</button>
+            <button class="btn-chip" id="chip-sehrTeuer" onclick="setCityCategory('sehrTeuer', this)">🔴 Sehr teuer (&gt; 6.500 €)</button>
+          </div>
+
+          <!-- Toast Notification Banner -->
+          <div id="cityToast" style="display: none; padding: 10px 14px; background: rgba(52, 199, 89, 0.15); border: 1px solid var(--green); color: var(--green); border-radius: 10px; font-size: 12px; font-weight: 600; margin-bottom: 12px;"></div>
+
+          <!-- City Count Header -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span id="cityCountLabel" style="font-size: 12px; font-weight: 600; color: var(--text-sec);">38 Städte geladen</span>
+          </div>
+
+          <!-- City Cards Container -->
+          <div id="citiesListContainer" style="display: flex; flex-direction: column; gap: 10px; max-height: 480px; overflow-y: auto; padding-right: 4px;">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- RIGHT: RESULTS -->
@@ -630,6 +747,10 @@
       document.getElementById('tabCalc').style.display = (tab === 'calc') ? 'block' : 'none';
       document.getElementById('tabRvB').style.display = (tab === 'rvb') ? 'block' : 'none';
       document.getElementById('tabBudget').style.display = (tab === 'budget') ? 'block' : 'none';
+      document.getElementById('tabCities').style.display = (tab === 'cities') ? 'block' : 'none';
+      if (tab === 'cities') {
+        renderCities();
+      }
     }
 
     function syncRangeToText(rangeId, textId) {
@@ -837,6 +958,164 @@
         <path d="${debtD}" fill="none" stroke="var(--primary)" stroke-width="3" stroke-linecap="round"/>
         <circle cx="${fixedX}" cy="${h - (punkte.find(p => p.jahr === bindung)?.rest || 0) / maxVal * (h * 0.85) - 10}" r="4" fill="var(--primary)"/>
       `;
+    }
+
+    let selectedCityCategory = 'all';
+
+    const citiesData = [
+      // SEHR TEUER (> 6.500 € / m²)
+      { name: "München", bl: "Bayern", blVal: 3.5, aptQm: 8400, houseQm: 8900, rentQm: 21.50, cat: "sehrTeuer", catLabel: "Sehr teuer (Metropole)" },
+      { name: "Frankfurt am Main", bl: "Hessen", blVal: 6.0, aptQm: 6300, houseQm: 5900, rentQm: 17.00, cat: "sehrTeuer", catLabel: "Sehr teuer (Metropole)" },
+      { name: "Hamburg", bl: "Hamburg", blVal: 5.5, aptQm: 6100, houseQm: 5400, rentQm: 15.80, cat: "sehrTeuer", catLabel: "Sehr teuer (Metropole)" },
+      { name: "Stuttgart", bl: "Baden-Württemberg", blVal: 5.0, aptQm: 5100, houseQm: 5300, rentQm: 15.50, cat: "sehrTeuer", catLabel: "Sehr teuer (Metropole)" },
+      { name: "Freiburg im Breisgau", bl: "Baden-Württemberg", blVal: 5.0, aptQm: 5300, houseQm: 5600, rentQm: 15.50, cat: "sehrTeuer", catLabel: "Sehr teuer" },
+      { name: "Heidelberg", bl: "Baden-Württemberg", blVal: 5.0, aptQm: 5200, houseQm: 5400, rentQm: 15.20, cat: "sehrTeuer", catLabel: "Sehr teuer" },
+      { name: "Potsdam", bl: "Brandenburg", blVal: 6.5, aptQm: 5100, houseQm: 5200, rentQm: 14.00, cat: "sehrTeuer", catLabel: "Sehr teuer" },
+
+      // TEUER (4.500 € – 6.500 € / m²)
+      { name: "Berlin", bl: "Berlin", blVal: 6.0, aptQm: 5200, houseQm: 4800, rentQm: 15.50, cat: "teuer", catLabel: "Teuer" },
+      { name: "Düsseldorf", bl: "Nordrhein-Westfalen", blVal: 6.5, aptQm: 4900, houseQm: 4700, rentQm: 14.50, cat: "teuer", catLabel: "Teuer" },
+      { name: "Köln", bl: "Nordrhein-Westfalen", blVal: 6.5, aptQm: 4700, houseQm: 4400, rentQm: 14.20, cat: "teuer", catLabel: "Teuer" },
+      { name: "Regensburg", bl: "Bayern", blVal: 3.5, aptQm: 4800, houseQm: 4900, rentQm: 13.50, cat: "teuer", catLabel: "Teuer" },
+      { name: "Augsburg", bl: "Bayern", blVal: 3.5, aptQm: 4500, houseQm: 4600, rentQm: 13.00, cat: "teuer", catLabel: "Teuer" },
+      { name: "Münster", bl: "Nordrhein-Westfalen", blVal: 6.5, aptQm: 4600, houseQm: 4400, rentQm: 13.20, cat: "teuer", catLabel: "Teuer" },
+      { name: "Mainz", bl: "Rheinland-Pfalz", blVal: 5.0, aptQm: 4500, houseQm: 4300, rentQm: 13.50, cat: "teuer", catLabel: "Teuer" },
+
+      // MITTEL / FAIR (2.800 € – 4.500 € / m²)
+      { name: "Nürnberg", bl: "Bayern", blVal: 3.5, aptQm: 3900, houseQm: 4100, rentQm: 12.20, cat: "mittel", catLabel: "Mittel / Fair" },
+      { name: "Wiesbaden", bl: "Hessen", blVal: 6.0, aptQm: 4200, houseQm: 4300, rentQm: 13.00, cat: "mittel", catLabel: "Mittel / Fair" },
+      { name: "Bonn", bl: "Nordrhein-Westfalen", blVal: 6.5, aptQm: 3900, houseQm: 3800, rentQm: 12.50, cat: "mittel", catLabel: "Mittel / Fair" },
+      { name: "Karlsruhe", bl: "Baden-Württemberg", blVal: 5.0, aptQm: 4100, houseQm: 4200, rentQm: 12.80, cat: "mittel", catLabel: "Mittel / Fair" },
+      { name: "Mannheim", bl: "Baden-Württemberg", blVal: 5.0, aptQm: 3600, houseQm: 3800, rentQm: 12.00, cat: "mittel", catLabel: "Mittel / Fair" },
+      { name: "Hannover", bl: "Niedersachsen", blVal: 5.0, aptQm: 3500, houseQm: 3600, rentQm: 11.20, cat: "mittel", catLabel: "Mittel / Fair" },
+      { name: "Leipzig", bl: "Sachsen", blVal: 5.5, aptQm: 3200, houseQm: 3400, rentQm: 9.80, cat: "mittel", catLabel: "Mittel / Fair" },
+      { name: "Dresden", bl: "Sachsen", blVal: 5.5, aptQm: 3100, houseQm: 3300, rentQm: 9.50, cat: "mittel", catLabel: "Mittel / Fair" },
+      { name: "Bremen", bl: "Bremen", blVal: 5.0, aptQm: 2900, houseQm: 2800, rentQm: 9.80, cat: "mittel", catLabel: "Mittel / Fair" },
+      { name: "Kiel", bl: "Schleswig-Holstein", blVal: 6.5, aptQm: 3400, houseQm: 3300, rentQm: 10.80, cat: "mittel", catLabel: "Mittel / Fair" },
+      { name: "Lübeck", bl: "Schleswig-Holstein", blVal: 6.5, aptQm: 3600, houseQm: 3500, rentQm: 11.00, cat: "mittel", catLabel: "Mittel / Fair" },
+      { name: "Rostock", bl: "Mecklenburg-Vorpommern", blVal: 6.0, aptQm: 3600, houseQm: 3500, rentQm: 10.50, cat: "mittel", catLabel: "Mittel / Fair" },
+      { name: "Erfurt", bl: "Thüringen", blVal: 5.0, aptQm: 2900, houseQm: 2900, rentQm: 9.20, cat: "mittel", catLabel: "Mittel / Fair" },
+
+      // GÜNSTIG (< 2.800 € / m²)
+      { name: "Dortmund", bl: "Nordrhein-Westfalen", blVal: 6.5, aptQm: 2400, houseQm: 2600, rentQm: 8.90, cat: "guenstig", catLabel: "Günstig" },
+      { name: "Essen", bl: "Nordrhein-Westfalen", blVal: 6.5, aptQm: 2500, houseQm: 2700, rentQm: 9.10, cat: "guenstig", catLabel: "Günstig" },
+      { name: "Bielefeld", bl: "Nordrhein-Westfalen", blVal: 6.5, aptQm: 2700, houseQm: 2800, rentQm: 9.50, cat: "guenstig", catLabel: "Günstig" },
+      { name: "Kassel", bl: "Hessen", blVal: 6.0, aptQm: 2600, houseQm: 2700, rentQm: 8.80, cat: "guenstig", catLabel: "Günstig" },
+      { name: "Saarbrücken", bl: "Saarland", blVal: 6.5, aptQm: 2300, houseQm: 2200, rentQm: 8.50, cat: "guenstig", catLabel: "Günstig" },
+      { name: "Magdeburg", bl: "Sachsen-Anhalt", blVal: 5.0, aptQm: 2100, houseQm: 2300, rentQm: 7.80, cat: "guenstig", catLabel: "Günstig" },
+      { name: "Halle (Saale)", bl: "Sachsen-Anhalt", blVal: 5.0, aptQm: 2200, houseQm: 2400, rentQm: 7.90, cat: "guenstig", catLabel: "Günstig" },
+      { name: "Chemnitz", bl: "Sachsen", blVal: 5.5, aptQm: 1650, houseQm: 1950, rentQm: 6.20, cat: "guenstig", catLabel: "Günstig" },
+      { name: "Gelsenkirchen", bl: "Nordrhein-Westfalen", blVal: 6.5, aptQm: 1750, houseQm: 2100, rentQm: 7.20, cat: "guenstig", catLabel: "Günstig" },
+      { name: "Görlitz", bl: "Sachsen", blVal: 5.5, aptQm: 1450, houseQm: 1750, rentQm: 5.90, cat: "guenstig", catLabel: "Günstig" }
+    ];
+
+    function setCityCategory(cat, el) {
+      selectedCityCategory = cat;
+      document.querySelectorAll('#tabCities .btn-chip').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
+      renderCities();
+    }
+
+    function renderCities() {
+      const q = (document.getElementById('citySearchInput')?.value || '').trim().toLowerCase();
+      const filtered = citiesData.filter(c => {
+        const matchesCat = (selectedCityCategory === 'all') || (c.cat === selectedCityCategory);
+        const matchesQuery = !q || c.name.toLowerCase().includes(q) || c.bl.toLowerCase().includes(q);
+        return matchesCat && matchesQuery;
+      });
+
+      const countLabel = document.getElementById('cityCountLabel');
+      if (countLabel) countLabel.innerText = `${filtered.length} Städte geladen`;
+
+      const container = document.getElementById('citiesListContainer');
+      if (!container) return;
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-sec); font-size: 13px;">Keine Städte für diese Suche gefunden.</div>';
+        return;
+      }
+
+      let html = '';
+      filtered.forEach((city) => {
+        const origIdx = citiesData.indexOf(city);
+        let badgeClass = 'badge-green';
+        if (city.cat === 'mittel') badgeClass = 'badge-yellow';
+        else if (city.cat === 'teuer') badgeClass = 'badge-orange';
+        else if (city.cat === 'sehrTeuer') badgeClass = 'badge-red';
+
+        const apt80 = city.aptQm * 80;
+        const house140 = city.houseQm * 140;
+        const rent80 = city.rentQm * 80;
+
+        html += `
+          <div class="city-card">
+            <div class="city-card-header">
+              <div>
+                <div class="city-name">${city.name}</div>
+                <div class="city-state">${city.bl} (Grunderwerbsteuer ${city.blVal.toFixed(1)} %)</div>
+              </div>
+              <span class="badge-pill ${badgeClass}">${city.catLabel}</span>
+            </div>
+            <div class="city-stats">
+              <div>
+                <div class="city-stat-label">🏢 Wohnung</div>
+                <div class="city-stat-val">${fmt(city.aptQm)} / m²</div>
+                <div class="city-stat-sub">ca. ${fmt(apt80)} (80m²)</div>
+              </div>
+              <div>
+                <div class="city-stat-label">🏡 Haus</div>
+                <div class="city-stat-val">${fmt(city.houseQm)} / m²</div>
+                <div class="city-stat-sub">ca. ${fmt(house140)} (140m²)</div>
+              </div>
+              <div>
+                <div class="city-stat-label">🔑 Kaltmiete</div>
+                <div class="city-stat-val">${city.rentQm.toFixed(2)} € / m²</div>
+                <div class="city-stat-sub">ca. ${fmt(rent80)} / M.</div>
+              </div>
+            </div>
+            <div class="city-actions">
+              <button class="btn-city-apply" onclick="applyCityToCalculator(${origIdx}, false)">
+                🏢 Als Wohnung (80 m²) rechnen
+              </button>
+              <button class="btn-city-apply" onclick="applyCityToCalculator(${origIdx}, true)">
+                🏡 Als Haus (140 m²) rechnen
+              </button>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function applyCityToCalculator(cityIdx, isHouse) {
+      const city = citiesData[cityIdx];
+      if (!city) return;
+
+      const price = isHouse ? (city.houseQm * 140) : (city.aptQm * 80);
+      const rent = isHouse ? Math.round(city.rentQm * 140) : Math.round(city.rentQm * 80);
+      const qm = isHouse ? 140 : 80;
+
+      // Update inputs
+      document.getElementById('txtKaufpreis').value = price;
+      document.getElementById('kaufpreis').value = price;
+      document.getElementById('bundesland').value = city.blVal.toFixed(1);
+      document.getElementById('txtMiete').value = rent;
+      document.getElementById('txtQm').value = qm;
+
+      calculate();
+
+      // Show toast
+      const toast = document.getElementById('cityToast');
+      if (toast) {
+        toast.innerHTML = `✓ <strong>${isHouse ? 'Haus' : 'Wohnung'} in ${city.name}</strong> (${fmt(price)}, ${city.bl}) erfolgreich in den Rechner übernommen!`;
+        toast.style.display = 'block';
+        setTimeout(() => { toast.style.display = 'none'; }, 5000);
+      }
+
+      // Switch to tab 1 (Kaufrechner)
+      const tab1Btn = document.querySelector('.tabs-header button:first-child');
+      if (tab1Btn) setTab('calc', tab1Btn);
     }
 
     calculate();

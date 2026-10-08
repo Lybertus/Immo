@@ -22,6 +22,7 @@ public class CalculatorViewModel: ObservableObject {
     
     // MARK: - Market Rates Data (Interhyp Benchmark)
     @Published public var marketRates: MarketInterestRates = MarketInterestRates()
+    @Published public var selectedCity: CityLocation? = nil
     
     // MARK: - Goal & Mode
     @Published public var selectedGoal: CalculationGoal = .purchasePriceToRate
@@ -150,6 +151,22 @@ public class CalculatorViewModel: ObservableObject {
     }
     
     // MARK: - Market Rates & Term Update
+    
+    /// Übernimmt die Marktdaten einer Stadt in den Kaufrechner
+    public func applyCityData(_ city: CityLocation, isHouse: Bool) {
+        self.selectedCity = city
+        self.input.bundesland = city.bundesland
+        if isHouse {
+            self.input.kaufpreis = city.avgHaus140qm
+            self.rentVsBuyInput.wohnflaecheQm = 140
+            self.rentVsBuyInput.aktuelleKaltmiete = city.avgKaltmieteQm * 140.0
+        } else {
+            self.input.kaufpreis = city.avgWohnung80qm
+            self.rentVsBuyInput.wohnflaecheQm = 80
+            self.rentVsBuyInput.aktuelleKaltmiete = city.avgMiete80qm
+        }
+        self.selectedGoal = .purchasePriceToRate
+    }
     
     public func setInterestTerm(_ years: Int) {
         input.zinsbindungJahre = years
