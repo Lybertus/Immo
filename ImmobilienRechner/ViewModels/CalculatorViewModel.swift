@@ -181,16 +181,20 @@ public class CalculatorViewModel: ObservableObject {
         self.selectedGoal = .purchasePriceToRate
     }
     
+    public var currentInterhypReferenceRate: Double {
+        marketRates.rate(for: input.zinsbindungJahre, beleihungsauslauf: result.beleihungsauslauf, tier: input.interhypTier)
+    }
+    
     public func setInterestTerm(_ years: Int) {
         input.zinsbindungJahre = years
         if input.autoUpdateInterestWithMarketBenchmark {
-            let marketRate = marketRates.rate(for: years)
-            input.sollzins = marketRate
+            applyMarketBenchmarkRate()
         }
     }
     
     public func applyMarketBenchmarkRate() {
-        let marketRate = marketRates.rate(for: input.zinsbindungJahre)
+        let ltv = result.beleihungsauslauf
+        let marketRate = marketRates.rate(for: input.zinsbindungJahre, beleihungsauslauf: ltv, tier: input.interhypTier)
         input.sollzins = marketRate
     }
     

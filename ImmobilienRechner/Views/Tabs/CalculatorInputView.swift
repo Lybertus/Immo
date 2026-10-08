@@ -218,12 +218,37 @@ public struct CalculatorInputView: View {
                     }
                     .pickerStyle(.segmented)
                     
-                    HStack(spacing: 6) {
-                        Image(systemName: "chart.line.uptrend.xyaxis")
-                            .font(.system(size: 11))
-                            .foregroundColor(.blue)
-                        Text("Aktueller Interhyp-Referenzzins (\(viewModel.input.zinsbindungJahre) J.): **\(viewModel.formatPercent(viewModel.marketRates.rate(for: viewModel.input.zinsbindungJahre)))**")
-                            .font(.caption2)
+                    VStack(alignment: .leading, spacing: 4) {
+                        HStack(spacing: 6) {
+                            Image(systemName: "chart.line.uptrend.xyaxis")
+                                .font(.system(size: 11))
+                                .foregroundColor(.blue)
+                            Text("Interhyp-Livezins (\(viewModel.input.zinsbindungJahre) J.): **\(viewModel.formatPercent(viewModel.currentInterhypReferenceRate))**")
+                                .font(.caption2)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.primary)
+                            
+                            Spacer()
+                            
+                            Button(action: {
+                                withAnimation {
+                                    viewModel.applyMarketBenchmarkRate()
+                                }
+                            }) {
+                                Text("Live-Zins setzen")
+                                    .font(.system(size: 10, weight: .bold))
+                                    .padding(.horizontal, 6)
+                                    .padding(.vertical, 2)
+                                    .background(Color.blue.opacity(0.15))
+                                    .foregroundColor(.blue)
+                                    .clipShape(Capsule())
+                            }
+                            .buttonStyle(.plain)
+                        }
+                        
+                        let bracket = viewModel.marketRates.bracket(for: viewModel.input.zinsbindungJahre)
+                        Text("Dein Beleihungsauslauf: \(viewModel.formatPercent(viewModel.result.beleihungsauslauf, decimals: 1)) • Bestzins (<70%): \(viewModel.formatPercent(bracket.bestRate)) • Standard (80%): \(viewModel.formatPercent(bracket.standardRate)) • >90%: \(viewModel.formatPercent(bracket.highLtvRate))")
+                            .font(.system(size: 9))
                             .foregroundColor(.secondary)
                     }
                     .padding(.top, 2)
@@ -231,13 +256,13 @@ public struct CalculatorInputView: View {
                 
                 CustomSliderField(
                     title: "Sollzins (p.a.)",
-                    subtitle: "Aktuell voreingestellt nach Interhyp-Benchmark",
+                    subtitle: "Interhyp-Spiegel: ca. 4,23 % – 4,79 %",
                     value: $viewModel.input.sollzins,
                     range: 0.5...8.0,
                     step: 0.05,
                     unit: "%",
                     decimals: 2,
-                    presetButtons: [3.4, 3.6, 3.8, 4.0, 4.2]
+                    presetButtons: [4.23, 4.35, 4.52, 4.68, 4.85]
                 )
                 
                 // Anschlussfinanzierung

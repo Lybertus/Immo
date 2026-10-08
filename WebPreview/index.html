@@ -545,25 +545,28 @@
           </div>
 
           <div class="form-group">
-            <label style="font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Zinsbindung</label>
+            <label style="font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Zinsbindung &amp; Interhyp-Livezins</label>
             <select id="bindung" onchange="onTermChanged(this.value)">
-              <option value="5">5 Jahre (Marktzins ca. 3,40 %)</option>
-              <option value="10">10 Jahre (Marktzins ca. 3,60 %)</option>
-              <option value="15" selected>15 Jahre (Marktzins ca. 3,80 %)</option>
-              <option value="20">20 Jahre (Marktzins ca. 4,00 %)</option>
-              <option value="25">25 Jahre (Marktzins ca. 4,15 %)</option>
-              <option value="30">30 Jahre (Marktzins ca. 4,25 %)</option>
+              <option value="5">5 Jahre (Interhyp: 3,85 % – 4,30 %)</option>
+              <option value="10">10 Jahre (Interhyp: 4,23 % – 4,63 %)</option>
+              <option value="15" selected>15 Jahre (Interhyp: 4,41 % – 4,74 %)</option>
+              <option value="20">20 Jahre (Interhyp: 4,53 % – 4,79 %)</option>
+              <option value="25">25 Jahre (Interhyp: 4,65 % – 4,95 %)</option>
+              <option value="30">30 Jahre (Interhyp: 4,75 % – 5,05 %)</option>
             </select>
+            <div id="interhypLiveHint" style="font-size: 11px; color: var(--text-sec); margin-top: 5px; line-height: 1.4;">
+              Interhyp-Spiegel: Bestzins 4,41 % (&lt;70%) • Standard 4,52 % (80%) • &gt;90% Beleihung: 4,74 %
+            </div>
           </div>
 
           <div class="form-group">
             <div class="field-header">
               <label>Sollzins p.a.:</label>
               <div class="num-input-box" style="width: 80px;">
-                <input type="number" id="txtZins" value="3.80" step="0.05" oninput="syncTextToRange('txtZins', 'zins')"> %
+                <input type="number" id="txtZins" value="4.52" step="0.05" oninput="syncTextToRange('txtZins', 'zins')"> %
               </div>
             </div>
-            <input type="range" id="zins" min="0.5" max="8.0" step="0.05" value="3.80" oninput="syncRangeToText('zins', 'txtZins')">
+            <input type="range" id="zins" min="0.5" max="8.0" step="0.05" value="4.52" oninput="syncRangeToText('zins', 'txtZins')">
           </div>
 
           <div class="form-group">
@@ -983,7 +986,21 @@
   </div>
 
   <script>
-    const benchmarkRates = { 5: 3.40, 10: 3.60, 15: 3.80, 20: 4.00, 25: 4.15, 30: 4.25 };
+    const benchmarkRates = {
+      5:  { best: 3.85, std: 4.05, high: 4.30 },
+      10: { best: 4.23, std: 4.35, high: 4.63 },
+      15: { best: 4.41, std: 4.52, high: 4.74 },
+      20: { best: 4.53, std: 4.68, high: 4.79 },
+      25: { best: 4.65, std: 4.80, high: 4.95 },
+      30: { best: 4.75, std: 4.90, high: 5.05 }
+    };
+
+    function getInterhypRate(years, ltv) {
+      const b = benchmarkRates[years] || benchmarkRates[15];
+      if (ltv < 75) return b.best;
+      if (ltv <= 88) return b.std;
+      return b.high;
+    }
 
     function switchTheme(mode) {
       document.documentElement.setAttribute('data-theme', mode);
@@ -1045,9 +1062,19 @@
     }
     function onTermChanged(years) {
       years = parseInt(years);
-      const rate = benchmarkRates[years] || 3.80;
+      const kaufpreis = parseFloat(document.getElementById('txtKaufpreis').value) || 450000;
+      const eigenkapital = parseFloat(document.getElementById('txtEigenkapital').value) || 90000;
+      const darlehen = Math.max(0, kaufpreis - eigenkapital);
+      const ltv = (darlehen / kaufpreis) * 100;
+      const rate = getInterhypRate(years, ltv);
       document.getElementById('txtZins').value = rate.toFixed(2);
       document.getElementById('zins').value = rate;
+
+      const b = benchmarkRates[years] || benchmarkRates[15];
+      const hint = document.getElementById('interhypLiveHint');
+      if (hint) {
+        hint.innerHTML = `Interhyp-Spiegel (${years}J): Bestzins ${b.best.toFixed(2)} % (&lt;70%) • Standard ${b.std.toFixed(2)} % (80%) • &gt;90% Beleihung: ${b.high.toFixed(2)} %`;
+      }
       calculate();
     }
 
@@ -1061,7 +1088,7 @@
       const notarSatz = parseFloat(document.getElementById('txtNotar').value) || 0;
       const maklerSatz = parseFloat(document.getElementById('txtMakler').value) || 0;
       const eigenkapital = parseFloat(document.getElementById('txtEigenkapital').value) || 0;
-      const zins = parseFloat(document.getElementById('txtZins').value) || 3.8;
+      const zins = parseFloat(document.getElementById('txtZins').value) || 4.52;
       const bindung = parseInt(document.getElementById('bindung').value);
       const tilgung = parseFloat(document.getElementById('txtTilgung').value) || 2.0;
 

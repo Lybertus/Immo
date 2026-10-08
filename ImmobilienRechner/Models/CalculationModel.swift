@@ -21,9 +21,10 @@ public struct PropertyInput: Codable, Equatable {
     
     // Finanzierungsdaten
     public var eigenkapital: Double = 90_000
-    public var sollzins: Double = 3.80 // in % p.a. (Interhyp Referenz für 15 J.)
+    public var sollzins: Double = 4.52 // in % p.a. (Aktueller Interhyp-Referenzzins für 15 J., ca. 80 % Beleihung)
     public var zinsbindungJahre: Int = 15 // 5, 10, 15, 20, 25, 30
     public var autoUpdateInterestWithMarketBenchmark: Bool = true
+    public var interhypTier: InterhypRateTier = .auto
     public var anschlussOption: RefinancingOption = .sameRate
     public var anschlussZinsCustom: Double? = nil
     
