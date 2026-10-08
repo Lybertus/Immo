@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Immobilien-Kaufrechner Pro | Interhyp Standard (iPhone 15 Pro Max & Mac M4)</title>
+  <title>Immobilien-Kaufrechner Pro | Live-Zinsen & Tilgungskurve</title>
   <style>
     :root {
       --primary: #0071e3;
@@ -68,11 +68,6 @@
       align-items: center;
       gap: 8px;
     }
-    .theme-toolbar {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
     .container {
       max-width: 1100px;
       width: 100%;
@@ -90,7 +85,6 @@
       box-shadow: 0 4px 24px rgba(0,0,0,0.04);
       border: 1px solid var(--border);
       margin-bottom: 20px;
-      transition: all 0.25s;
     }
     .card h2 {
       font-size: 17px;
@@ -132,15 +126,38 @@
     .form-group {
       margin-bottom: 16px;
     }
-    .form-group label {
+    .field-header {
       display: flex;
       justify-content: space-between;
-      font-size: 13px;
-      font-weight: 600;
+      align-items: center;
       margin-bottom: 6px;
     }
-    .form-group .val {
+    .field-header label {
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .num-input-box {
+      display: inline-flex;
+      align-items: center;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 2px 8px;
+      font-size: 13px;
+      font-weight: 700;
       color: var(--primary);
+      width: 130px;
+      text-align: right;
+    }
+    .num-input-box input {
+      border: none;
+      background: transparent;
+      color: inherit;
+      font-weight: inherit;
+      font-size: inherit;
+      text-align: right;
+      width: 100%;
+      outline: none;
     }
     .form-group input[type="range"] {
       width: 100%;
@@ -159,7 +176,7 @@
       cursor: pointer;
       box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     }
-    select, input[type="number"] {
+    select {
       width: 100%;
       padding: 10px 12px;
       border-radius: 10px;
@@ -183,7 +200,6 @@
       border-radius: 14px;
       cursor: pointer;
       font-weight: 500;
-      transition: all 0.2s;
     }
     .btn-chip:hover, .btn-chip.active {
       background: var(--primary-bg);
@@ -217,6 +233,24 @@
       color: var(--text-sec);
       margin-top: 2px;
     }
+    /* SVG Curve Chart */
+    .chart-container {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+    svg.curve-chart {
+      width: 100%;
+      height: 180px;
+      overflow: visible;
+    }
+    .chart-tooltip {
+      font-size: 11px;
+      font-weight: 600;
+      fill: var(--text);
+    }
     .color-picker-grid {
       display: grid;
       grid-template-columns: repeat(8, 1fr);
@@ -231,55 +265,10 @@
       border: 2px solid transparent;
       transition: transform 0.2s;
     }
-    .color-dot:hover {
-      transform: scale(1.15);
-    }
+    .color-dot:hover { transform: scale(1.15); }
     .color-dot.active {
       border-color: #fff;
       box-shadow: 0 0 0 2px var(--text);
-    }
-    .badge-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-size: 12px;
-      font-weight: 600;
-    }
-    .badge-green { background: rgba(52, 199, 89, 0.15); color: #34c759; }
-    .badge-blue { background: rgba(0, 113, 227, 0.15); color: #0071e3; }
-    .badge-orange { background: rgba(255, 149, 0, 0.15); color: #ff9500; }
-    .badge-red { background: rgba(255, 59, 48, 0.15); color: #ff3b30; }
-    .table-container {
-      max-height: 280px;
-      overflow-y: auto;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      margin-top: 10px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 12px;
-    }
-    th, td {
-      padding: 8px 10px;
-      text-align: right;
-    }
-    th:first-child, td:first-child { text-align: left; }
-    th {
-      background: var(--bg);
-      position: sticky;
-      top: 0;
-      font-weight: 600;
-      color: var(--text-sec);
-    }
-    tr:nth-child(even) { background: rgba(0,0,0,0.02); }
-    .fixed-period-row {
-      background: var(--primary-bg) !important;
-      font-weight: bold;
-      color: var(--primary);
     }
     .btn-action {
       background: var(--primary);
@@ -292,9 +281,7 @@
       cursor: pointer;
       width: 100%;
       margin-top: 10px;
-      transition: opacity 0.2s;
     }
-    .btn-action:hover { opacity: 0.9; }
     .tabs-header {
       display: flex;
       gap: 6px;
@@ -316,6 +303,17 @@
       background: var(--primary-bg);
       color: var(--primary);
     }
+    .table-container {
+      max-height: 240px;
+      overflow-y: auto;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-top: 10px;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th, td { padding: 8px 10px; text-align: right; }
+    th:first-child, td:first-child { text-align: left; }
+    th { background: var(--bg); position: sticky; top: 0; }
   </style>
 </head>
 <body>
@@ -323,11 +321,10 @@
   <div class="header-bar">
     <div>
       <h1>🏠 Immobilien-Kaufrechner Pro</h1>
-      <span style="font-size: 12px; color: var(--text-sec);">Interhyp-Standard | Optimiert für iPhone 15 Pro Max & MacBook Pro M4</span>
+      <span style="font-size: 12px; color: var(--text-sec);">Live-Zinsen & Tilgungskurve | iPhone 15 Pro Max & Mac M4</span>
     </div>
 
-    <div class="theme-toolbar">
-      <!-- Dark Mode Switch -->
+    <div style="display: flex; gap: 10px;">
       <select id="themeSelect" onchange="switchTheme(this.value)" style="width: auto; padding: 6px 10px;">
         <option value="system">🌓 System</option>
         <option value="light">☀️ Hell</option>
@@ -337,13 +334,12 @@
   </div>
 
   <div class="container">
-    <!-- LEFT COLUMN -->
+    <!-- LEFT: INPUTS -->
     <div>
-      <!-- NAVIGATION TABS -->
       <div class="tabs-header">
         <button class="tab-nav active" onclick="setTab('calc', this)">💶 1. Kaufpreis & Kredit</button>
-        <button class="tab-nav" onclick="setTab('budget', this)">💼 2. Haushalts- & Budgetcheck</button>
-        <button class="tab-nav" onclick="setTab('settings', this)">🎨 3. Design & Farben</button>
+        <button class="tab-nav" onclick="setTab('budget', this)">💼 2. Haushaltscheck</button>
+        <button class="tab-nav" onclick="setTab('settings', this)">🎨 3. Design</button>
       </div>
 
       <!-- TAB 1: KAUFRECHNER -->
@@ -351,19 +347,24 @@
         <div class="card">
           <h2>Objekt & Kaufnebenkosten</h2>
           <div class="form-group">
-            <label>Kaufpreis <span class="val" id="valKaufpreis">450.000 €</span></label>
-            <input type="range" id="kaufpreis" min="50000" max="2000000" step="10000" value="450000" oninput="calculate()">
+            <div class="field-header">
+              <label>Kaufpreis (tippen zum Ändern):</label>
+              <div class="num-input-box">
+                <input type="number" id="txtKaufpreis" value="450000" step="5000" oninput="syncTextToRange('txtKaufpreis', 'kaufpreis')"> €
+              </div>
+            </div>
+            <input type="range" id="kaufpreis" min="50000" max="2000000" step="5000" value="450000" oninput="syncRangeToText('kaufpreis', 'txtKaufpreis')">
             <div class="btn-group">
-              <button class="btn-chip" onclick="setVal('kaufpreis', 250000)">250k</button>
-              <button class="btn-chip" onclick="setVal('kaufpreis', 350000)">350k</button>
-              <button class="btn-chip" onclick="setVal('kaufpreis', 450000)">450k</button>
-              <button class="btn-chip" onclick="setVal('kaufpreis', 650000)">650k</button>
-              <button class="btn-chip" onclick="setVal('kaufpreis', 850000)">850k</button>
+              <button class="btn-chip" onclick="setKaufpreis(250000)">250k</button>
+              <button class="btn-chip" onclick="setKaufpreis(350000)">350k</button>
+              <button class="btn-chip" onclick="setKaufpreis(450000)">450k</button>
+              <button class="btn-chip" onclick="setKaufpreis(650000)">650k</button>
+              <button class="btn-chip" onclick="setKaufpreis(850000)">850k</button>
             </div>
           </div>
 
           <div class="form-group">
-            <label>Bundesland (Grunderwerbsteuer)</label>
+            <label style="font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Bundesland</label>
             <select id="bundesland" onchange="calculate()">
               <option value="3.5">Bayern (3,5 %)</option>
               <option value="5.0">Baden-Württemberg (5,0 %)</option>
@@ -385,30 +386,41 @@
           </div>
 
           <div class="form-group">
-            <label>Notar & Grundbucheintrag <span class="val" id="valNotar">2,0 %</span></label>
-            <input type="range" id="notar" min="1.0" max="3.0" step="0.1" value="2.0" oninput="calculate()">
-          </div>
-
-          <div class="form-group">
-            <label>Maklerprovision <span class="val" id="valMakler">3,57 %</span></label>
-            <input type="range" id="makler" min="0" max="7.14" step="0.01" value="3.57" oninput="calculate()">
-            <div class="btn-group">
-              <button class="btn-chip" onclick="setVal('makler', 0)">0 % Provisionsfrei</button>
-              <button class="btn-chip" onclick="setVal('makler', 3.57)">3,57 % Standard</button>
+            <div class="field-header">
+              <label>Notar & Grundbuch:</label>
+              <div class="num-input-box" style="width: 80px;">
+                <input type="number" id="txtNotar" value="2.0" step="0.1" oninput="syncTextToRange('txtNotar', 'notar')"> %
+              </div>
             </div>
+            <input type="range" id="notar" min="1.0" max="3.0" step="0.1" value="2.0" oninput="syncRangeToText('notar', 'txtNotar')">
           </div>
 
           <div class="form-group">
-            <label>Modernisierungs- & Renovierungsbudget <span class="val" id="valModern">20.000 €</span></label>
-            <input type="range" id="modernisierung" min="0" max="250000" step="5000" value="20000" oninput="calculate()">
+            <div class="field-header">
+              <label>Maklerprovision:</label>
+              <div class="num-input-box" style="width: 80px;">
+                <input type="number" id="txtMakler" value="3.57" step="0.01" oninput="syncTextToRange('txtMakler', 'makler')"> %
+              </div>
+            </div>
+            <input type="range" id="makler" min="0" max="7.14" step="0.01" value="3.57" oninput="syncRangeToText('makler', 'txtMakler')">
+            <div class="btn-group">
+              <button class="btn-chip" onclick="setMakler(0)">0 % Provisionsfrei</button>
+              <button class="btn-chip" onclick="setMakler(3.57)">3,57 % Standard</button>
+            </div>
           </div>
         </div>
 
         <div class="card">
-          <h2>Finanzierungskonditionen</h2>
+          <h2>Finanzierung & Live-Zinsen</h2>
+          
           <div class="form-group">
-            <label>Eigenkapital <span class="val" id="valEigenkapital">90.000 €</span></label>
-            <input type="range" id="eigenkapital" min="0" max="800000" step="5000" value="90000" oninput="calculate()">
+            <div class="field-header">
+              <label>Eigenkapital (tippen zum Ändern):</label>
+              <div class="num-input-box">
+                <input type="number" id="txtEigenkapital" value="90000" step="5000" oninput="syncTextToRange('txtEigenkapital', 'eigenkapital')"> €
+              </div>
+            </div>
+            <input type="range" id="eigenkapital" min="0" max="800000" step="5000" value="90000" oninput="syncRangeToText('eigenkapital', 'txtEigenkapital')">
             <div class="btn-group">
               <button class="btn-chip" onclick="setEquityPct(0.15)">15 % Quote</button>
               <button class="btn-chip" onclick="setEquityPct(0.20)">20 % Quote</button>
@@ -416,122 +428,109 @@
             </div>
           </div>
 
+          <!-- ZINSBINDUNG MIT LIVE-ZINS-AUTODETECT -->
           <div class="form-group">
-            <label>Sollzins p.a. <span class="val" id="valZins">3,65 %</span></label>
-            <input type="range" id="zins" min="0.5" max="8.0" step="0.05" value="3.65" oninput="calculate()">
+            <label style="font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px;">Zinsbindung</label>
+            <select id="bindung" onchange="onTermChanged(this.value)">
+              <option value="5">5 Jahre (Marktzins ca. 3,40 %)</option>
+              <option value="10">10 Jahre (Marktzins ca. 3,60 %)</option>
+              <option value="15" selected>15 Jahre (Marktzins ca. 3,80 %)</option>
+              <option value="20">20 Jahre (Marktzins ca. 4,00 %)</option>
+              <option value="25">25 Jahre (Marktzins ca. 4,15 %)</option>
+              <option value="30">30 Jahre (Marktzins ca. 4,25 %)</option>
+            </select>
+            <div style="font-size: 11px; color: var(--text-sec); margin-top: 4px;" id="termHint">
+              ⚡ Automatisch voreingestellt auf aktuellen Interhyp-Benchmark für 15 Jahre (3,80 %).
+            </div>
           </div>
 
           <div class="form-group">
-            <label>Zinsbindung <span class="val" id="valBindung">15 Jahre</span></label>
-            <select id="bindung" onchange="calculate()">
-              <option value="5">5 Jahre</option>
-              <option value="10">10 Jahre</option>
-              <option value="15" selected>15 Jahre</option>
-              <option value="20">20 Jahre</option>
-              <option value="25">25 Jahre</option>
-              <option value="30">30 Jahre</option>
+            <div class="field-header">
+              <label>Sollzins p.a.:</label>
+              <div class="num-input-box" style="width: 80px;">
+                <input type="number" id="txtZins" value="3.80" step="0.05" oninput="syncTextToRange('txtZins', 'zins')"> %
+              </div>
+            </div>
+            <input type="range" id="zins" min="0.5" max="8.0" step="0.05" value="3.80" oninput="syncRangeToText('zins', 'txtZins')">
+          </div>
+
+          <div class="form-group">
+            <div class="field-header">
+              <label>Anfängliche Tilgung p.a.:</label>
+              <div class="num-input-box" style="width: 80px;">
+                <input type="number" id="txtTilgung" value="2.0" step="0.1" oninput="syncTextToRange('txtTilgung', 'tilgung')"> %
+              </div>
+            </div>
+            <input type="range" id="tilgung" min="1.0" max="6.0" step="0.1" value="2.0" oninput="syncRangeToText('tilgung', 'txtTilgung')">
+            <div style="margin-top: 4px;">
+              <button class="btn-chip active" onclick="setTilgung(2.0)">⭐ 2,0 % Empfehlung setzen</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="field-header">
+              <label>Anschlussfinanzierung nach Zinsbindung:</label>
+            </div>
+            <select id="anschlussOpt" onchange="calculate()">
+              <option value="same">Gleicher Zinssatz (Weiterrechnen)</option>
+              <option value="plus1">Stresstest (+1,0 % Zinsanstieg)</option>
+              <option value="plus2">Stresstest (+2,0 % Zinsanstieg)</option>
             </select>
           </div>
-
-          <div class="form-group">
-            <label>Anfängliche Tilgung p.a. <span class="val" id="valTilgung">2,0 %</span></label>
-            <input type="range" id="tilgung" min="1.0" max="6.0" step="0.1" value="2.0" oninput="calculate()">
-            <div style="margin-top: 6px;">
-              <button class="btn-chip active" onclick="setVal('tilgung', 2.0)">⭐ 2,0 % Empfehlung setzen</button>
-              <span style="font-size: 11px; color: var(--text-sec); margin-left: 6px;">Interhyp-Standard für sichere Entschuldung</span>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label>Jährliche Sondertilgung <span class="val" id="valSondertilgung">2.500 € / Jahr</span></label>
-            <input type="range" id="sondertilgung" min="0" max="30000" step="500" value="2500" oninput="calculate()">
-          </div>
         </div>
       </div>
 
-      <!-- TAB 2: HAUSHALT & BUDGET CHECK -->
+      <!-- TAB 2: BUDGET -->
       <div id="tabBudget" style="display: none;">
         <div class="card">
-          <h2>💼 Haushaltsrechner (Wie viel Haus kann ich mir leisten?)</h2>
-          
+          <h2>💼 Haushaltscheck (30–35 % Regel)</h2>
           <div class="form-group">
-            <label>Monatliches Haushaltsnettoeinkommen <span class="val" id="valNetto">4.500 €</span></label>
-            <input type="range" id="haushaltsNetto" min="1500" max="15000" step="100" value="4500" oninput="calculateBudget()">
-            <div class="btn-group">
-              <button class="btn-chip" onclick="setNetto(3500)">3.500 €</button>
-              <button class="btn-chip" onclick="setNetto(4500)">4.500 €</button>
-              <button class="btn-chip" onclick="setNetto(6000)">6.000 €</button>
-              <button class="btn-chip" onclick="setNetto(8000)">8.000 €</button>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label>Wohnkosten-Abschlag für die Kreditrate <span class="val" id="valQuote">35,0 %</span></label>
-            <input type="range" id="wohnQuote" min="20" max="45" step="1" value="35" oninput="calculateBudget()">
-            <div class="btn-group">
-              <button class="btn-chip" onclick="setQuote(25)">25 % (Vorsichtig)</button>
-              <button class="btn-chip" onclick="setQuote(30)">30 % (Konservativ)</button>
-              <button class="btn-chip active" onclick="setQuote(35)">35 % (Empfehlung ⭐)</button>
-              <button class="btn-chip" onclick="setQuote(40)">40 % (Maximum)</button>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label>Bestehende monatliche Raten (Kredite, Leasing) <span class="val" id="valFix">0 €</span></label>
-            <input type="range" id="fixkosten" min="0" max="2500" step="50" value="0" oninput="calculateBudget()">
-          </div>
-
-          <!-- BUDGET SUMMARY RESULT -->
-          <div style="background: var(--bg); padding: 16px; border-radius: 14px; margin-top: 14px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-              <span style="font-size: 13px; font-weight: 600;">Max. empfohlene Monatsrate:</span>
-              <strong style="font-size: 20px; color: var(--primary);" id="budgetRate">1.575 €</strong>
-            </div>
-            <div id="riskBadge" class="badge-pill badge-blue" style="margin-bottom: 12px;">Optimaler Banken-Standard (35 %)</div>
-            
-            <div style="border-top: 1px solid var(--border); padding-top: 10px;">
-              <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px;">
-                <span>Maximaler Kaufpreis der Immobilie:</span>
-                <strong id="budgetKaufpreis" style="color: var(--primary); font-size: 16px;">375.000 €</strong>
+            <div class="field-header">
+              <label>Haushaltsnettoeinkommen:</label>
+              <div class="num-input-box">
+                <input type="number" id="txtNetto" value="4500" step="100" oninput="syncBudget()"> €
               </div>
-              <div style="font-size: 11px; color: var(--text-sec); margin-bottom: 12px;">
-                Inklusive Kaufnebenkosten und deines vorhandenen Eigenkapitals.
-              </div>
-              
-              <button class="btn-action" onclick="applyBudgetToCalculator()">➔ Diesen Kaufpreis in den Hauptrechner übernehmen</button>
             </div>
+          </div>
+          <div class="form-group">
+            <div class="field-header">
+              <label>Wohnkosten-Abschlag:</label>
+              <div class="num-input-box" style="width: 80px;">
+                <input type="number" id="txtQuote" value="35" step="1" oninput="syncBudget()"> %
+              </div>
+            </div>
+          </div>
+          <div style="background: var(--bg); padding: 16px; border-radius: 14px; margin-top: 10px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+              <span>Max. empfohlene Monatsrate:</span>
+              <strong id="budgetRate" style="color: var(--primary); font-size: 18px;">1.575 €</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+              <span>Maximaler Kaufpreis der Immobilie:</span>
+              <strong id="budgetKaufpreis" style="color: var(--primary); font-size: 18px;">375.000 €</strong>
+            </div>
+            <button class="btn-action" onclick="applyBudgetToCalc()">➔ Diesen Kaufpreis in den Hauptrechner übernehmen</button>
           </div>
         </div>
       </div>
 
-      <!-- TAB 3: DESIGN & FARBEN -->
+      <!-- TAB 3: DESIGN -->
       <div id="tabSettings" style="display: none;">
         <div class="card">
-          <h2>🎨 Große Akzentfarben-Palette</h2>
-          <p style="font-size: 12px; color: var(--text-sec); margin-bottom: 12px;">Wähle deine bevorzugte Akzentfarbe für alle Diagramme, Buttons und Highlights:</p>
-          
+          <h2>🎨 16 Akzentfarben</h2>
           <div class="color-picker-grid" id="colorGrid"></div>
-        </div>
-
-        <div class="card">
-          <h2>💡 Interhyp & Experten-Faustregeln</h2>
-          <div style="font-size: 12px; line-height: 1.6; color: var(--text-sec);">
-            <p><strong>Warum 2 % Tilgung?</strong><br>Bei aktuellen Zinsen sichern 2 % Tilgung die Entschuldung in ca. 26–28 Jahren. Unter 1,5 % verlängert die Laufzeit auf über 40 Jahre und birgt ein hohes Zinsänderungsrisiko.</p>
-            <br>
-            <p><strong>Die 30–35 % Haushaltsnetto-Regel:</strong><br>Banken verlangen, dass Wohnkosten 35 % des bereinigten Nettoeinkommens nicht überschreiten, um Rücklagen für Instandhaltung und Lebenshaltung zu schützen.</p>
-          </div>
         </div>
       </div>
     </div>
 
-    <!-- RIGHT COLUMN: RESULTS -->
+    <!-- RIGHT: RESULTS & INTERACTIVE CURVE -->
     <div>
       <div class="hero-rate">
         <div class="label">Monatliche Rate (Annuität)</div>
-        <div class="rate" id="resRate">1.883 €</div>
+        <div class="rate" id="resRate">1.942 €</div>
         <div class="sub">
           <span>🟢 Tilgung: <strong id="resSubTilgung">666 €</strong></span>
-          <span>🟠 Zins: <strong id="resSubZins">1.217 €</strong></span>
+          <span>🟠 Zins: <strong id="resSubZins">1.276 €</strong></span>
         </div>
       </div>
 
@@ -541,35 +540,39 @@
           <div class="m-val" id="resDarlehen">400.000 €</div>
           <div class="m-sub" id="resEkQuote">EK-Quote: 20 %</div>
         </div>
-
-        <div class="metric-box">
-          <div class="m-title">Kaufnebenkosten</div>
-          <div class="m-val" id="resNebenkosten">40.815 €</div>
-          <div class="m-sub" id="resNebenkostenPct">9,1 % vom Kaufpreis</div>
-        </div>
-
         <div class="metric-box">
           <div class="m-title">Restschuld</div>
           <div class="m-val" id="resRestschuld">235.000 €</div>
-          <div class="m-sub" id="resRestschuldSub">nach 15 J. Zinsbindung</div>
+          <div class="m-sub" id="resRestschuldSub">nach Zinsbindung</div>
         </div>
-
         <div class="metric-box">
           <div class="m-title">Gesamtlaufzeit</div>
-          <div class="m-val" id="resLaufzeit">26 J. 4 M.</div>
+          <div class="m-val" id="resLaufzeit">27 J. 8 M.</div>
           <div class="m-sub">bis Volltilgung</div>
         </div>
-
         <div class="metric-box">
           <div class="m-title">Zinskosten gesamt</div>
-          <div class="m-val" id="resZinsenGesamt">180.000 €</div>
+          <div class="m-val" id="resZinsenGesamt">192.000 €</div>
           <div class="m-sub">über gesamte Laufzeit</div>
         </div>
+      </div>
 
-        <div class="metric-box">
-          <div class="m-title">Empf. Nettoeinkommen</div>
-          <div class="m-val" id="resNettoReq">5.380 €</div>
-          <div class="m-sub">bei 35 % Wohnkosten-Regel</div>
+      <!-- INTERACTIVE AMORTIZATION CURVE CHART -->
+      <div class="chart-container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <h2 style="margin: 0; font-size: 15px;">📈 Tilgungsverlauf & Restschuld-Kurve</h2>
+          <div style="font-size: 11px; color: var(--text-sec);">
+            <span style="color: var(--primary); font-weight: bold;">● Restschuld</span> &nbsp;
+            <span style="color: var(--orange); font-weight: bold;">● Zinsen</span>
+          </div>
+        </div>
+        
+        <svg class="curve-chart" id="amortSvg" viewBox="0 0 400 160" preserveAspectRatio="none"></svg>
+        
+        <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-sec); margin-top: 6px;">
+          <span>Jahr 0</span>
+          <span id="chartFixedLabel">Ende Bindung</span>
+          <span id="chartEndLabel">Schuldenfrei</span>
         </div>
       </div>
 
@@ -582,21 +585,20 @@
                 <th>Jahr</th>
                 <th>Zinsen</th>
                 <th>Tilgung</th>
-                <th>Sondertilg.</th>
                 <th>Restschuld</th>
               </tr>
             </thead>
             <tbody id="tableBody"></tbody>
           </table>
         </div>
-
         <button class="btn-action" onclick="copySummary()">📋 Zusammenfassung kopieren</button>
       </div>
     </div>
   </div>
 
   <script>
-    // 16 Apple curated colors
+    const benchmarkRates = { 5: 3.40, 10: 3.60, 15: 3.80, 20: 4.00, 25: 4.15, 30: 4.25 };
+
     const colors = [
       { name: "Apple Blau", hex: "#0071e3" },
       { name: "Ocean Cyan", hex: "#00a3ff" },
@@ -636,6 +638,7 @@
       document.documentElement.style.setProperty('--primary', hex);
       document.documentElement.style.setProperty('--primary-bg', hex + '20');
       renderColorGrid();
+      calculate();
     }
 
     function switchTheme(mode) {
@@ -650,202 +653,199 @@
       document.getElementById('tabSettings').style.display = (tab === 'settings') ? 'block' : 'none';
     }
 
-    function fmt(val) {
-      return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(val);
-    }
-    function fmtPct(val) {
-      return new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(val) + ' %';
-    }
-
-    function setVal(id, val) {
-      document.getElementById(id).value = val;
+    function syncRangeToText(rangeId, textId) {
+      document.getElementById(textId).value = document.getElementById(rangeId).value;
       calculate();
     }
-    function setNetto(val) {
-      document.getElementById('haushaltsNetto').value = val;
-      calculateBudget();
+
+    function syncTextToRange(textId, rangeId) {
+      const val = parseFloat(document.getElementById(textId).value) || 0;
+      document.getElementById(rangeId).value = val;
+      calculate();
     }
-    function setQuote(val) {
-      document.getElementById('wohnQuote').value = val;
-      calculateBudget();
+
+    function setKaufpreis(val) {
+      document.getElementById('txtKaufpreis').value = val;
+      document.getElementById('kaufpreis').value = val;
+      calculate();
+    }
+    function setMakler(val) {
+      document.getElementById('txtMakler').value = val;
+      document.getElementById('makler').value = val;
+      calculate();
+    }
+    function setTilgung(val) {
+      document.getElementById('txtTilgung').value = val;
+      document.getElementById('tilgung').value = val;
+      calculate();
+    }
+
+    function onTermChanged(years) {
+      years = parseInt(years);
+      const rate = benchmarkRates[years] || 3.80;
+      document.getElementById('txtZins').value = rate.toFixed(2);
+      document.getElementById('zins').value = rate;
+      document.getElementById('termHint').innerText = `⚡ Automatisch voreingestellt auf aktuellen Interhyp-Benchmark für ${years} Jahre (${rate.toFixed(2)} %).`;
+      calculate();
     }
 
     function setEquityPct(pct) {
-      const kaufpreis = parseFloat(document.getElementById('kaufpreis').value);
+      const kaufpreis = parseFloat(document.getElementById('txtKaufpreis').value);
       const steuerSatz = parseFloat(document.getElementById('bundesland').value);
-      const notarSatz = parseFloat(document.getElementById('notar').value);
-      const maklerSatz = parseFloat(document.getElementById('makler').value);
-      const modern = parseFloat(document.getElementById('modernisierung').value);
+      const notarSatz = parseFloat(document.getElementById('txtNotar').value);
+      const maklerSatz = parseFloat(document.getElementById('txtMakler').value);
       const nebenkosten = kaufpreis * ((steuerSatz + notarSatz + maklerSatz) / 100);
-      const gesamt = kaufpreis + nebenkosten + modern;
-      const targetEk = Math.round((gesamt * pct) / 1000) * 1000;
+      const targetEk = Math.round(((kaufpreis + nebenkosten) * pct) / 1000) * 1000;
+      document.getElementById('txtEigenkapital').value = targetEk;
       document.getElementById('eigenkapital').value = targetEk;
       calculate();
     }
 
     let calculatedBudgetPurchasePrice = 0;
 
-    function calculateBudget() {
-      const netto = parseFloat(document.getElementById('haushaltsNetto').value);
-      const quote = parseFloat(document.getElementById('wohnQuote').value);
-      const fix = parseFloat(document.getElementById('fixkosten').value);
-      
-      document.getElementById('valNetto').innerText = fmt(netto);
-      document.getElementById('valQuote').innerText = fmtPct(quote);
-      document.getElementById('valFix').innerText = fmt(fix);
-
-      const maxRate = Math.max(0, (netto * (quote / 100)) - fix);
+    function syncBudget() {
+      const netto = parseFloat(document.getElementById('txtNetto').value) || 0;
+      const quote = parseFloat(document.getElementById('txtQuote').value) || 0;
+      const maxRate = netto * (quote / 100);
       document.getElementById('budgetRate').innerText = fmt(maxRate);
 
-      const badge = document.getElementById('riskBadge');
-      if (quote <= 30) {
-        badge.className = 'badge-pill badge-green';
-        badge.innerText = 'Sehr solide & sicher (≤ 30 %)';
-      } else if (quote <= 35) {
-        badge.className = 'badge-pill badge-blue';
-        badge.innerText = 'Optimaler Banken-Standard (35 %) ⭐';
-      } else if (quote <= 40) {
-        badge.className = 'badge-pill badge-orange';
-        badge.innerText = 'Erhöhtes Risiko (35 - 40 %)';
-      } else {
-        badge.className = 'badge-pill badge-red';
-        badge.innerText = 'Kritisch! (> 40 %) Banken lehnen oft ab';
-      }
+      const zins = parseFloat(document.getElementById('txtZins').value) || 3.8;
+      const tilgung = parseFloat(document.getElementById('txtTilgung').value) || 2.0;
+      const ek = parseFloat(document.getElementById('txtEigenkapital').value) || 0;
+      const steuer = parseFloat(document.getElementById('bundesland').value);
+      const notar = parseFloat(document.getElementById('txtNotar').value);
+      const makler = parseFloat(document.getElementById('txtMakler').value);
 
-      const zins = parseFloat(document.getElementById('zins').value);
-      const tilgung = parseFloat(document.getElementById('tilgung').value);
-      const ek = parseFloat(document.getElementById('eigenkapital').value);
-      const steuerSatz = parseFloat(document.getElementById('bundesland').value);
-      const notarSatz = parseFloat(document.getElementById('notar').value);
-      const maklerSatz = parseFloat(document.getElementById('makler').value);
-      const modern = parseFloat(document.getElementById('modernisierung').value);
-
-      const annuitaetFaktor = (zins + tilgung) / 100;
-      const maxDarlehen = annuitaetFaktor > 0 ? (maxRate * 12) / annuitaetFaktor : 0;
-      const maxGesamt = maxDarlehen + ek;
-      const nebenkostenFaktor = 1 + ((steuerSatz + notarSatz + maklerSatz) / 100);
-      calculatedBudgetPurchasePrice = Math.max(0, (maxGesamt - modern) / nebenkostenFaktor);
-
+      const annuitaet = (zins + tilgung) / 100;
+      const maxDarlehen = annuitaet > 0 ? (maxRate * 12) / annuitaet : 0;
+      const maxBudget = maxDarlehen + ek;
+      const factor = 1 + ((steuer + notar + makler) / 100);
+      calculatedBudgetPurchasePrice = Math.max(0, maxBudget / factor);
       document.getElementById('budgetKaufpreis').innerText = fmt(calculatedBudgetPurchasePrice);
     }
 
-    function applyBudgetToCalculator() {
-      if (calculatedBudgetPurchasePrice > 50000) {
-        const rounded = Math.round(calculatedBudgetPurchasePrice / 5000) * 5000;
-        document.getElementById('kaufpreis').value = rounded;
-        calculate();
-        setTab('calc', document.querySelectorAll('.tab-nav')[0]);
-      }
+    function applyBudgetToCalc() {
+      const r = Math.round(calculatedBudgetPurchasePrice / 5000) * 5000;
+      setKaufpreis(r);
+      setTab('calc', document.querySelectorAll('.tab-nav')[0]);
+    }
+
+    function fmt(val) {
+      return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(val);
     }
 
     function calculate() {
-      const kaufpreis = parseFloat(document.getElementById('kaufpreis').value);
+      const kaufpreis = parseFloat(document.getElementById('txtKaufpreis').value) || 0;
       const steuerSatz = parseFloat(document.getElementById('bundesland').value);
-      const notarSatz = parseFloat(document.getElementById('notar').value);
-      const maklerSatz = parseFloat(document.getElementById('makler').value);
-      const modern = parseFloat(document.getElementById('modernisierung').value);
-      const eigenkapital = parseFloat(document.getElementById('eigenkapital').value);
-      const zins = parseFloat(document.getElementById('zins').value);
+      const notarSatz = parseFloat(document.getElementById('txtNotar').value) || 0;
+      const maklerSatz = parseFloat(document.getElementById('txtMakler').value) || 0;
+      const eigenkapital = parseFloat(document.getElementById('txtEigenkapital').value) || 0;
+      const zins = parseFloat(document.getElementById('txtZins').value) || 3.8;
       const bindung = parseInt(document.getElementById('bindung').value);
-      const tilgung = parseFloat(document.getElementById('tilgung').value);
-      const sondertilgung = parseFloat(document.getElementById('sondertilgung').value);
+      const tilgung = parseFloat(document.getElementById('txtTilgung').value) || 2.0;
+      const anschluss = document.getElementById('anschlussOpt').value;
 
-      document.getElementById('valKaufpreis').innerText = fmt(kaufpreis);
-      document.getElementById('valNotar').innerText = fmtPct(notarSatz);
-      document.getElementById('valMakler').innerText = fmtPct(maklerSatz);
-      document.getElementById('valModern').innerText = fmt(modern);
-      document.getElementById('valEigenkapital').innerText = fmt(eigenkapital);
-      document.getElementById('valZins').innerText = fmtPct(zins);
-      document.getElementById('valBindung').innerText = bindung + ' Jahre';
-      document.getElementById('valTilgung').innerText = fmtPct(tilgung);
-      document.getElementById('valSondertilgung').innerText = fmt(sondertilgung) + ' / Jahr';
+      let anschlussZins = zins;
+      if (anschluss === 'plus1') anschlussZins = zins + 1.0;
+      if (anschluss === 'plus2') anschlussZins = zins + 2.0;
 
-      const grunderwerbsteuer = kaufpreis * (steuerSatz / 100);
-      const notarKosten = kaufpreis * (notarSatz / 100);
-      const maklerKosten = kaufpreis * (maklerSatz / 100);
-      const nebenkostenGesamt = grunderwerbsteuer + notarKosten + maklerKosten;
-      const gesamtkosten = kaufpreis + nebenkostenGesamt + modern;
+      const nebenkosten = kaufpreis * ((steuerSatz + notarSatz + maklerSatz) / 100);
+      const gesamtkosten = kaufpreis + nebenkosten;
       const darlehen = Math.max(0, gesamtkosten - eigenkapital);
 
-      const monatsZinssatz = (zins / 100) / 12;
-      const jahresAnnuitaet = darlehen * ((zins + tilgung) / 100);
-      const monatsRate = jahresAnnuitaet / 12;
+      const monatsZinsSatz = (zins / 100) / 12;
+      const annuitaet = darlehen * ((zins + tilgung) / 100);
+      const rate = annuitaet / 12;
 
-      const anfangMonatsZins = darlehen * monatsZinssatz;
-      const anfangMonatsTilgung = Math.max(0, monatsRate - anfangMonatsZins);
+      document.getElementById('resRate').innerText = fmt(rate);
+      document.getElementById('resSubZins').innerText = fmt(darlehen * monatsZinsSatz);
+      document.getElementById('resSubTilgung').innerText = fmt(Math.max(0, rate - (darlehen * monatsZinsSatz)));
+      document.getElementById('resDarlehen').innerText = fmt(darlehen);
+      document.getElementById('resEkQuote').innerText = 'EK-Quote: ' + (gesamtkosten > 0 ? ((eigenkapital / gesamtkosten) * 100).toFixed(1) : 0) + ' %';
 
+      // Simulation
       let restschuld = darlehen;
-      let kumulierteZinsen = 0;
-      let restschuldZinsbindung = 0;
       let monate = 0;
+      let kumulierteZinsen = 0;
+      let restschuldBindung = 0;
       const bindungMonate = bindung * 12;
 
+      const jahresPunkte = [];
       let tableHtml = '';
-      let jahresZinsen = 0;
-      let jahresTilgung = 0;
+      let curJahresZins = 0;
+      let curJahresTilg = 0;
 
       while (restschuld > 0.01 && monate < 600) {
         monate++;
-        const mz = restschuld * monatsZinssatz;
-        const mt = Math.min(restschuld, monatsRate - mz);
+        const aktZins = (monate <= bindungMonate) ? zins : anschlussZins;
+        const mz = restschuld * ((aktZins / 100) / 12);
+        const mt = Math.min(restschuld, Math.max(0, rate - mz));
         restschuld -= mt;
         kumulierteZinsen += mz;
-        jahresZinsen += mz;
-        jahresTilgung += mt;
+        curJahresZins += mz;
+        curJahresTilg += mt;
 
-        let st = 0;
-        if (monate % 12 === 0 && sondertilgung > 0 && restschuld > 0.01) {
-          st = Math.min(restschuld, sondertilgung);
-          restschuld -= st;
-        }
-
-        if (monate === bindungMonate) restschuldZinsbindung = restschuld;
+        if (monate === bindungMonate) restschuldBindung = restschuld;
 
         if (monate % 12 === 0 || restschuld <= 0.01) {
           const yr = Math.ceil(monate / 12);
-          const isFixedEnd = (monate === bindungMonate);
-          tableHtml += `<tr class="${isFixedEnd ? 'fixed-period-row' : ''}">
-            <td>J. ${yr} ${isFixedEnd ? '🏁' : ''}</td>
-            <td style="color:var(--orange)">${fmt(jahresZinsen)}</td>
-            <td style="color:var(--green)">${fmt(jahresTilgung)}</td>
-            <td>${st > 0 ? fmt(st) : '-'}</td>
+          jahresPunkte.push({ jahr: yr, rest: restschuld, zinsen: kumulierteZinsen });
+          tableHtml += `<tr>
+            <td>Jahr ${yr} ${monate === bindungMonate ? '🏁' : ''}</td>
+            <td style="color:var(--orange)">${fmt(curJahresZins)}</td>
+            <td style="color:var(--green)">${fmt(curJahresTilg)}</td>
             <td><strong>${fmt(Math.max(0, restschuld))}</strong></td>
           </tr>`;
-          jahresZinsen = 0;
-          jahresTilgung = 0;
+          curJahresZins = 0; curJahresTilg = 0;
         }
       }
 
-      if (monate < bindungMonate) restschuldZinsbindung = 0;
-      const jahreGesamt = Math.floor(monate / 12);
-      const restMonate = monate % 12;
-
-      document.getElementById('resRate').innerText = fmt(monatsRate);
-      document.getElementById('resSubZins').innerText = fmt(anfangMonatsZins);
-      document.getElementById('resSubTilgung').innerText = fmt(anfangMonatsTilgung);
-      document.getElementById('resDarlehen').innerText = fmt(darlehen);
-      document.getElementById('resEkQuote').innerText = 'EK-Quote: ' + (gesamtkosten > 0 ? ((eigenkapital / gesamtkosten) * 100).toFixed(1) : 0) + ' %';
-      document.getElementById('resNebenkosten').innerText = fmt(nebenkostenGesamt);
-      document.getElementById('resNebenkostenPct').innerText = ((nebenkostenGesamt / kaufpreis) * 100).toFixed(1) + ' % vom Kaufpreis';
-      document.getElementById('resRestschuld').innerText = fmt(restschuldZinsbindung);
+      document.getElementById('resRestschuld').innerText = fmt(restschuldBindung);
       document.getElementById('resRestschuldSub').innerText = 'nach ' + bindung + ' J. Zinsbindung';
-      document.getElementById('resLaufzeit').innerText = `${jahreGesamt} J. ${restMonate > 0 ? restMonate + ' M.' : ''}`;
+      const j = Math.floor(monate / 12); const m = monate % 12;
+      document.getElementById('resLaufzeit').innerText = `${j} J. ${m > 0 ? m + ' M.' : ''}`;
       document.getElementById('resZinsenGesamt').innerText = fmt(kumulierteZinsen);
-      document.getElementById('resNettoReq').innerText = fmt(monatsRate / 0.35);
-
       document.getElementById('tableBody').innerHTML = tableHtml;
 
-      calculateBudget();
+      renderSvgCurve(darlehen, jahresPunkte, bindung);
+      syncBudget();
+    }
+
+    function renderSvgCurve(darlehen, punkte, bindung) {
+      if (!punkte.length) return;
+      const svg = document.getElementById('amortSvg');
+      const w = 400; const h = 160;
+      const maxVal = Math.max(darlehen, punkte[punkte.length - 1].zinsen);
+      const totalYrs = punkte.length;
+
+      document.getElementById('chartFixedLabel').innerText = `Jahr ${bindung} (🏁)`;
+      document.getElementById('chartEndLabel').innerText = `Jahr ${totalYrs}`;
+
+      let debtD = `M 0,${h - (darlehen / maxVal) * (h * 0.85) - 10} `;
+      let intD = `M 0,${h - 10} `;
+
+      punkte.forEach((p, i) => {
+        const x = ((i + 1) / totalYrs) * w;
+        const yDebt = h - (p.rest / maxVal) * (h * 0.85) - 10;
+        const yInt = h - (p.zinsen / maxVal) * (h * 0.85) - 10;
+        debtD += `L ${x},${yDebt} `;
+        intD += `L ${x},${yInt} `;
+      });
+
+      const fixedX = Math.min(w, (bindung / totalYrs) * w);
+
+      svg.innerHTML = `
+        <line x1="0" y1="${h-10}" x2="${w}" y2="${h-10}" stroke="var(--border)" stroke-width="1"/>
+        <line x1="${fixedX}" y1="0" x2="${fixedX}" y2="${h}" stroke="var(--primary)" stroke-width="1.5" stroke-dasharray="4,4"/>
+        <path d="${intD}" fill="none" stroke="var(--orange)" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="${debtD}" fill="none" stroke="var(--primary)" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="${fixedX}" cy="${h - (punkte.find(p => p.jahr === bindung)?.rest || 0) / maxVal * (h * 0.85) - 10}" r="4" fill="var(--primary)"/>
+      `;
     }
 
     function copySummary() {
-      const rate = document.getElementById('resRate').innerText;
-      const darlehen = document.getElementById('resDarlehen').innerText;
-      const kaufpreis = document.getElementById('valKaufpreis').innerText;
-      const text = `Immobilien-Kaufrechnung (Interhyp Standard):\nKaufpreis: ${kaufpreis}\nDarlehen: ${darlehen}\nMonatliche Rate: ${rate}\nBerechnet mit ImmobilienRechner Pro`;
-      navigator.clipboard.writeText(text).then(() => {
-        alert('Zusammenfassung kopiert!');
-      });
+      const text = `Immobilien-Kaufrechnung:\nKaufpreis: ${document.getElementById('txtKaufpreis').value} €\nDarlehen: ${document.getElementById('resDarlehen').innerText}\nMonatliche Rate: ${document.getElementById('resRate').innerText}\nBerechnet mit ImmobilienRechner Pro`;
+      navigator.clipboard.writeText(text).then(() => alert('Zusammenfassung kopiert!'));
     }
 
     renderColorGrid();

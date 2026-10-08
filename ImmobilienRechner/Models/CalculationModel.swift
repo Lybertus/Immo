@@ -21,8 +21,12 @@ public struct PropertyInput: Codable, Equatable {
     
     // Finanzierungsdaten
     public var eigenkapital: Double = 90_000
-    public var sollzins: Double = 3.65 // in % p.a.
+    public var sollzins: Double = 3.80 // in % p.a. (Interhyp Referenz für 15 J.)
     public var zinsbindungJahre: Int = 15 // 5, 10, 15, 20, 25, 30
+    public var autoUpdateInterestWithMarketBenchmark: Bool = true
+    public var anschlussOption: RefinancingOption = .sameRate
+    public var anschlussZinsCustom: Double? = nil
+    
     public var calculationMode: CalculationMode = .tilgungssatz
     public var tilgungssatz: Double = 2.0 // in % p.a.
     public var wunschrate: Double = 1_800 // € pro Monat
@@ -38,6 +42,20 @@ public struct PropertyInput: Codable, Equatable {
     /// Aktiver Maklersatz
     public var aktiverMaklersatz: Double {
         hatMakler ? maklerSatz : 0.0
+    }
+    
+    /// Effektiver Zinssatz für die Anschlussfinanzierung nach Zinsbindung
+    public var effektiverAnschlussZins: Double {
+        switch anschlussOption {
+        case .sameRate:
+            return sollzins
+        case .stressTestPlus1:
+            return sollzins + 1.0
+        case .stressTestPlus2:
+            return sollzins + 2.0
+        case .custom:
+            return anschlussZinsCustom ?? sollzins
+        }
     }
 }
 
@@ -68,7 +86,7 @@ public struct CalculationResult {
     public let gezahlteTilgungInZinsbindung: Double
     public let geleisteteSondertilgungInZinsbindung: Double
     
-    // Gesamtlaufzeit bis Volltilgung (unter Annahme gleichbleibender Zinsen)
+    // Gesamtlaufzeit bis Volltilgung
     public let gesamtlaufzeitJahre: Double
     public let gesamtlaufzeitMonate: Int
     public let zinsenBisVolltilgung: Double
@@ -104,7 +122,7 @@ public enum MortgageCalculator {
         
         // 3. Rate ermitteln
         let sollzins = max(0.01, input.sollzins)
-        let monatlicherZinssatz = (sollzins / 100.0) / 12.0
+        let monatlicherZinssatzAnfang = (sollzins / 100.0) / 12.0
         
         let monatlicheRate: Double
         let effTilgungssatz: Double
@@ -120,13 +138,13 @@ public enum MortgageCalculator {
                 let jahresAnnuität = darlehensbetrag * ((sollzins + initialTilgung) / 100.0)
                 monatlicheRate = jahresAnnuität / 12.0
             case .wunschrate:
-                monatlicheRate = max(darlehensbetrag * monatlicherZinssatz + 10, input.wunschrate)
+                monatlicheRate = max(darlehensbetrag * monatlicherZinssatzAnfang + 10, input.wunschrate)
                 let jahresAnnuität = monatlicheRate * 12.0
                 effTilgungssatz = max(0.1, ((jahresAnnuität / darlehensbetrag) * 100.0) - sollzins)
             }
         }
         
-        let anfaenglicheMonatsZinsen = darlehensbetrag * monatlicherZinssatz
+        let anfaenglicheMonatsZinsen = darlehensbetrag * monatlicherZinssatzAnfang
         let anfaenglicheMonatsTilgung = max(0, monatlicheRate - anfaenglicheMonatsZinsen)
         
         // 4. Monatliche Simulation für exakten Tilgungsplan
@@ -142,7 +160,7 @@ public enum MortgageCalculator {
         
         var tilgungsplanJahre: [AmortizationYear] = []
         var monate = 0
-        let maxMonate = 600 // max 50 Jahre Simulation
+        let maxMonate = 600 // max 50 Jahre
         let zinsbindungMonate = input.zinsbindungJahre * 12
         
         var jahresZinsen = 0.0
@@ -150,11 +168,24 @@ public enum MortgageCalculator {
         var jahresSondertilgung = 0.0
         var anfangsRestschuldDesJahres = restschuld
         
+        var laufendeMonatsRate = monatlicheRate
+        
         while restschuld > 0.01 && monate < maxMonate {
             monate += 1
             
-            let monatsZins = restschuld * monatlicherZinssatz
-            let verfuegbareTilgung = monatlicheRate - monatsZins
+            // Wenn Zinsbindung abläuft: ggf. Anschlussfinanzierungs-Zinssatz verwenden
+            let aktiverZins = (monate <= zinsbindungMonate) ? sollzins : input.effektiverAnschlussZins
+            let monatsZinsSatz = (aktiverZins / 100.0) / 12.0
+            
+            // Wenn Zinsbindung abgelaufen ist und der Zins sich geändert hat, Ratenanpassung
+            if monate == zinsbindungMonate + 1 && input.effektiverAnschlussZins != sollzins {
+                // Rate neu berechnen basierend auf Restschuld und Restlaufzeit / Annuität
+                let neuJahresAnnuitaet = restschuld * ((aktiverZins + effTilgungssatz) / 100.0)
+                laufendeMonatsRate = neuJahresAnnuitaet / 12.0
+            }
+            
+            let monatsZins = restschuld * monatsZinsSatz
+            let verfuegbareTilgung = laufendeMonatsRate - monatsZins
             let monatsTilgung = min(restschuld, max(0, verfuegbareTilgung))
             
             restschuld -= monatsTilgung
@@ -163,7 +194,7 @@ public enum MortgageCalculator {
             jahresZinsen += monatsZins
             jahresTilgung += monatsTilgung
             
-            // Jährliche Sondertilgung am Ende des Jahres (Monat 12, 24, etc.)
+            // Jährliche Sondertilgung am Ende des Jahres
             var monatsSondertilgung = 0.0
             if monate % 12 == 0 && input.sondertilgungProJahr > 0 && restschuld > 0.01 {
                 monatsSondertilgung = min(restschuld, input.sondertilgungProJahr)
@@ -181,7 +212,7 @@ public enum MortgageCalculator {
                 sondertilgungInZinsbindung = kumulierteSondertilgung
             }
             
-            // Wenn ein Jahr voll ist oder der Kredit getilgt ist
+            // Jahresabschluss
             if monate % 12 == 0 || restschuld <= 0.01 {
                 let aktuellesJahr = (monate + 11) / 12
                 let istZinsbindungsJahr = (monate == zinsbindungMonate) || (monate < zinsbindungMonate && restschuld <= 0.01)
@@ -200,7 +231,6 @@ public enum MortgageCalculator {
                 )
                 tilgungsplanJahre.append(eintrag)
                 
-                // Reset für nächstes Jahr
                 anfangsRestschuldDesJahres = restschuld
                 jahresZinsen = 0
                 jahresTilgung = 0
@@ -208,7 +238,6 @@ public enum MortgageCalculator {
             }
         }
         
-        // Falls Kredit vor Zinsbindung abbezahlt wurde
         if monate < zinsbindungMonate {
             restschuldAmZinsbindungsende = 0
             zinsenInZinsbindung = kumulierteZinsen
@@ -218,8 +247,6 @@ public enum MortgageCalculator {
         
         let gesamtlaufzeitJahre = Double(monate) / 12.0
         let gesamtRueckzahlung = darlehensbetrag + kumulierteZinsen
-        
-        // Faustregel: Wohnkosten sollten maximal ca. 35% des Nettoeinkommens ausmachen
         let empfohlenesNettoeinkommen = monatlicheRate > 0 ? (monatlicheRate / 0.35) : 0
         
         return CalculationResult(

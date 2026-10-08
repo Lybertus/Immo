@@ -26,7 +26,7 @@ public struct CalculatorInputView: View {
                     HStack {
                         Image(systemName: "lightbulb.fill")
                             .foregroundColor(.orange)
-                        Text("Im Tab **Budget / Haushaltsrechner** kannst du dein Haushaltsnetto eingeben und deinen maximalen Kaufpreis exakt berechnen.")
+                        Text("Im Tab **Budget** kannst du dein Haushaltsnetto eingeben und deinen maximalen Kaufpreis exakt berechnen.")
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
@@ -85,7 +85,7 @@ public struct CalculatorInputView: View {
             // 1. Objekt & Kaufpreis
             Section(header: Label("Objekt & Kaufnebenkosten", systemImage: "house.fill")) {
                 CurrencyInputField(
-                    title: "Kaufpreis",
+                    title: "Kaufpreis (Tippen zum Ändern)",
                     subtitle: "Reiner Kaufpreis der Immobilie",
                     value: $viewModel.input.kaufpreis,
                     step: 10_000,
@@ -159,7 +159,7 @@ public struct CalculatorInputView: View {
             // 2. Eigenkapital
             Section(header: Label("Eigenkapital", systemImage: "banknote.fill")) {
                 CurrencyInputField(
-                    title: "Eigenkapital",
+                    title: "Eigenkapital (Tippen zum Ändern)",
                     subtitle: "Verfügbares Erspartes für den Kauf",
                     value: $viewModel.input.eigenkapital,
                     step: 5_000,
@@ -167,7 +167,6 @@ public struct CalculatorInputView: View {
                     maxValue: 2_000_000
                 )
                 
-                // Quick Equity Percentages
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Schnellwahl Eigenkapital:")
                         .font(.caption)
@@ -198,28 +197,61 @@ public struct CalculatorInputView: View {
                 }
             }
             
-            // 3. Finanzierungskonditionen
-            Section(header: Label("Kreditkonditionen", systemImage: "percent")) {
+            // 3. Finanzierungskonditionen & Live-Zinsen
+            Section(header: Label("Kreditkonditionen & Live-Zinsen", systemImage: "percent")) {
+                // Zinsbindung Picker mit automatischer Interhyp-Marktzins-Anpassung
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Zinsbindung")
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                    
+                    Picker("Zinsbindung", selection: Binding(
+                        get: { viewModel.input.zinsbindungJahre },
+                        set: { viewModel.setInterestTerm($0) }
+                    )) {
+                        Text("5 Jahre").tag(5)
+                        Text("10 Jahre").tag(10)
+                        Text("15 Jahre").tag(15)
+                        Text("20 Jahre").tag(20)
+                        Text("25 Jahre").tag(25)
+                        Text("30 Jahre").tag(30)
+                    }
+                    .pickerStyle(.segmented)
+                    
+                    HStack(spacing: 6) {
+                        Image(systemName: "chart.line.uptrend.xyaxis")
+                            .font(.system(size: 11))
+                            .foregroundColor(.blue)
+                        Text("Aktueller Interhyp-Referenzzins (\(viewModel.input.zinsbindungJahre) J.): **\(viewModel.formatPercent(viewModel.marketRates.rate(for: viewModel.input.zinsbindungJahre)))**")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                    }
+                    .padding(.top, 2)
+                }
+                
                 CustomSliderField(
                     title: "Sollzins (p.a.)",
-                    subtitle: "Nominaler Zinssatz der Bank",
+                    subtitle: "Aktuell voreingestellt nach Interhyp-Benchmark",
                     value: $viewModel.input.sollzins,
                     range: 0.5...8.0,
                     step: 0.05,
                     unit: "%",
                     decimals: 2,
-                    presetButtons: [3.2, 3.5, 3.75, 4.0]
+                    presetButtons: [3.4, 3.6, 3.8, 4.0, 4.2]
                 )
                 
-                Picker("Zinsbindung", selection: $viewModel.input.zinsbindungJahre) {
-                    Text("5 Jahre").tag(5)
-                    Text("10 Jahre").tag(10)
-                    Text("15 Jahre").tag(15)
-                    Text("20 Jahre").tag(20)
-                    Text("25 Jahre").tag(25)
-                    Text("30 Jahre").tag(30)
+                // Anschlussfinanzierung
+                VStack(alignment: .leading, spacing: 6) {
+                    Picker("Anschlussfinanzierung", selection: $viewModel.input.anschlussOption) {
+                        ForEach(RefinancingOption.allCases) { opt in
+                            Text(opt.rawValue).tag(opt)
+                        }
+                    }
+                    
+                    Text("Nach Ablauf der \(viewModel.input.zinsbindungJahre) Jahre: Rechnet mit \(viewModel.formatPercent(viewModel.input.effektiverAnschlussZins)) weiter.")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
                 }
-                .pickerStyle(.segmented)
                 
                 Picker("Berechnungsart", selection: $viewModel.input.calculationMode) {
                     ForEach(CalculationMode.allCases) { mode in
@@ -261,7 +293,7 @@ public struct CalculatorInputView: View {
                             }
                             .buttonStyle(.plain)
                             
-                            Text("Interhyp-Empfehlung für solide Entschuldung")
+                            Text("Empfehlung für solide Entschuldung")
                                 .font(.caption2)
                                 .foregroundColor(.secondary)
                         }

@@ -112,7 +112,15 @@ public struct ResultsSummaryView: View {
                     )
                 }
                 
-                // Graphical Charts Breakdown
+                // Interactive Amortization Curve Chart
+                AmortizationChartView(
+                    tilgungsplan: res.tilgungsplan,
+                    zinsbindungJahre: viewModel.input.zinsbindungJahre,
+                    darlehensbetrag: res.darlehensbetrag,
+                    accentColor: accent
+                )
+                
+                // Financing Breakdown Donut Chart
                 VStack(alignment: .leading, spacing: 14) {
                     Text("Finanzierungsaufteilung")
                         .font(.headline)

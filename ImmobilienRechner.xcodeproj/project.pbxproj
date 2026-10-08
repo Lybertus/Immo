@@ -29,6 +29,8 @@
 		010100142C00000000000001 /* AffordabilityModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020100152C00000000000001 /* AffordabilityModel.swift */; };
 		010100152C00000000000001 /* AffordabilityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020100162C00000000000001 /* AffordabilityView.swift */; };
 		010100162C00000000000001 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020100172C00000000000001 /* SettingsView.swift */; };
+		010100172C00000000000001 /* MarketRatesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020100182C00000000000001 /* MarketRatesModel.swift */; };
+		010100182C00000000000001 /* AmortizationChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020100192C00000000000001 /* AmortizationChartView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -56,6 +58,8 @@
 		020100152C00000000000001 /* AffordabilityModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AffordabilityModel.swift; sourceTree = "<group>"; };
 		020100162C00000000000001 /* AffordabilityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AffordabilityView.swift; sourceTree = "<group>"; };
 		020100172C00000000000001 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		020100182C00000000000001 /* MarketRatesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketRatesModel.swift; sourceTree = "<group>"; };
+		020100192C00000000000001 /* AmortizationChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmortizationChartView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +104,7 @@
 				020100062C00000000000001 /* ComparisonScenario.swift */,
 				020100142C00000000000001 /* ThemeModel.swift */,
 				020100152C00000000000001 /* AffordabilityModel.swift */,
+				020100182C00000000000001 /* MarketRatesModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -129,6 +134,7 @@
 				0201000A2C00000000000001 /* CurrencyInputField.swift */,
 				0201000B2C00000000000001 /* CustomSliderField.swift */,
 				0201000C2C00000000000001 /* DonutChartView.swift */,
+				020100192C00000000000001 /* AmortizationChartView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -246,6 +252,8 @@
 				010100142C00000000000001 /* AffordabilityModel.swift in Sources */,
 				010100152C00000000000001 /* AffordabilityView.swift in Sources */,
 				010100162C00000000000001 /* SettingsView.swift in Sources */,
+				010100172C00000000000001 /* MarketRatesModel.swift in Sources */,
+				010100182C00000000000001 /* AmortizationChartView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -16,6 +16,9 @@ public class CalculatorViewModel: ObservableObject {
         didSet { saveAffordabilityState() }
     }
     
+    // MARK: - Market Rates Data (Interhyp Benchmark)
+    @Published public var marketRates: MarketInterestRates = MarketInterestRates()
+    
     // MARK: - Goal & Mode
     @Published public var selectedGoal: CalculationGoal = .purchasePriceToRate
     @Published public var isInvestmentModeActive: Bool = false
@@ -37,12 +40,12 @@ public class CalculatorViewModel: ObservableObject {
     @Published public var savedScenarios: [SavedScenario] = []
     
     // MARK: - Keys
-    private let userDefaultsKey = "immobilien_rechner_state_v2"
-    private let affordabilityKey = "immobilien_rechner_affordability_v2"
-    private let scenariosKey = "immobilien_rechner_scenarios_v2"
-    private let appearanceKey = "immobilien_rechner_appearance_v2"
-    private let styleKey = "immobilien_rechner_style_v2"
-    private let colorKey = "immobilien_rechner_color_v2"
+    private let userDefaultsKey = "immobilien_rechner_state_v3"
+    private let affordabilityKey = "immobilien_rechner_affordability_v3"
+    private let scenariosKey = "immobilien_rechner_scenarios_v3"
+    private let appearanceKey = "immobilien_rechner_appearance_v3"
+    private let styleKey = "immobilien_rechner_style_v3"
+    private let colorKey = "immobilien_rechner_color_v3"
     
     public init() {
         // Load Property State
@@ -94,7 +97,6 @@ public class CalculatorViewModel: ObservableObject {
         AffordabilityResult(input: affordabilityInput)
     }
     
-    /// Maximal möglicher Kaufpreis basierend auf Haushaltsrechner
     public var maxBudgetCalculation: (maxDarlehen: Double, maxKaufpreis: Double, maxGesamtbudget: Double) {
         let nebenkostenSatz = input.aktiverSteuersatz + input.notarGrundbuchSatz + input.aktiverMaklersatz
         return AffordabilityResult.calculateMaxPurchasePrice(
@@ -107,7 +109,6 @@ public class CalculatorViewModel: ObservableObject {
         )
     }
     
-    /// Benötigte Tilgung für Wunschlaufzeit
     public var requiredTilgungForTargetYears: Double {
         AffordabilityResult.calculateRequiredTilgung(
             sollzins: input.sollzins,
@@ -115,9 +116,24 @@ public class CalculatorViewModel: ObservableObject {
         )
     }
     
+    // MARK: - Market Rates & Term Update
+    
+    /// Ändert die Zinsbindung und passt automatisch den Sollzins an den aktuellen Interhyp-Marktzins an
+    public func setInterestTerm(_ years: Int) {
+        input.zinsbindungJahre = years
+        if input.autoUpdateInterestWithMarketBenchmark {
+            let marketRate = marketRates.rate(for: years)
+            input.sollzins = marketRate
+        }
+    }
+    
+    public func applyMarketBenchmarkRate() {
+        let marketRate = marketRates.rate(for: input.zinsbindungJahre)
+        input.sollzins = marketRate
+    }
+    
     // MARK: - Quick Actions
     
-    /// Übernimmt das berechnete Budget in den Kaufpreis
     public func applyBudgetToPurchasePrice() {
         let maxKaufpreis = maxBudgetCalculation.maxKaufpreis
         let gerundet = (maxKaufpreis / 5000.0).rounded() * 5000.0
@@ -125,12 +141,10 @@ public class CalculatorViewModel: ObservableObject {
         selectedGoal = .purchasePriceToRate
     }
     
-    /// Setzt die 2,0 % Tilgungsempfehlung
     public func applyRecommendedRepayment() {
         input.tilgungssatz = 2.0
     }
     
-    /// Wendet die ermittelte Tilgung für Wunschlaufzeit an
     public func applyRequiredTilgung() {
         input.tilgungssatz = requiredTilgungForTargetYears
     }
@@ -269,8 +283,9 @@ public class CalculatorViewModel: ObservableObject {
         ----------------------------------------------------
         Eigenkapital:                 \(formatCurrency(input.eigenkapital)) (\(formatPercent(res.eigenkapitalQuote, decimals: 1)))
         Darlehensbetrag:              \(formatCurrency(res.darlehensbetrag))
-        Sollzinssatz:                 \(formatPercent(input.sollzins)) p.a.
+        Sollzinssatz:                 \(formatPercent(input.sollzins)) p.a. (Interhyp Referenz für \(input.zinsbindungJahre) Jahre)
         Zinsbindung:                  \(input.zinsbindungJahre) Jahre
+        Anschlussfinanzierung:        \(input.anschlussOption.rawValue) (\(formatPercent(input.effektiverAnschlussZins)))
         Anfängliche Tilgung:          \(formatPercent(res.anfaenglicherTilgungssatz)) p.a. (Empfehlung: 2,0 %)
         Sondertilgung pro Jahr:       \(formatCurrency(input.sondertilgungProJahr))
 

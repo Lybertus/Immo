@@ -10,6 +10,10 @@ public struct CustomSliderField: View {
     public let decimals: Int
     public var presetButtons: [Double]? = nil
     
+    @State private var isEditingText: Bool = false
+    @State private var tempText: String = ""
+    @FocusState private var isFocused: Bool
+    
     public init(
         title: String,
         subtitle: String? = nil,
@@ -42,7 +46,7 @@ public struct CustomSliderField: View {
     
     public var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            HStack {
+            HStack(alignment: .center) {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(title)
                         .font(.subheadline)
@@ -58,10 +62,68 @@ public struct CustomSliderField: View {
                 
                 Spacer()
                 
-                Text(formattedValue)
-                    .font(.system(.headline, design: .rounded))
-                    .fontWeight(.bold)
-                    .foregroundColor(.accentColor)
+                // Editable text box
+                if isEditingText {
+                    HStack(spacing: 4) {
+                        TextField("Wert", text: $tempText)
+                            .font(.system(.headline, design: .rounded))
+                            .fontWeight(.bold)
+                            .multilineTextAlignment(.trailing)
+                            #if !os(macOS)
+                            .keyboardType(.decimalPad)
+                            #endif
+                            .focused($isFocused)
+                            .onSubmit {
+                                commitText()
+                            }
+                            .frame(minWidth: 70, maxWidth: 110)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .fill(Color(PlatformColor.secondarySystemBackground))
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .stroke(Color.accentColor, lineWidth: 1.5)
+                                    )
+                            )
+                        
+                        Button(action: commitText) {
+                            Image(systemName: "checkmark.circle.fill")
+                                .font(.system(size: 18))
+                                .foregroundColor(.green)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                } else {
+                    Button(action: {
+                        let formatter = NumberFormatter()
+                        formatter.locale = Locale(identifier: "de_DE")
+                        formatter.maximumFractionDigits = decimals
+                        tempText = formatter.string(from: NSNumber(value: value)) ?? String(format: "%.\(decimals)f", value)
+                        isEditingText = true
+                        isFocused = true
+                    }) {
+                        HStack(spacing: 4) {
+                            Text(formattedValue)
+                                .font(.system(.headline, design: .rounded))
+                                .fontWeight(.bold)
+                                .foregroundColor(.accentColor)
+                            
+                            Image(systemName: "pencil")
+                                .font(.system(size: 10))
+                                .foregroundColor(.secondary.opacity(0.7))
+                        }
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(
+                            RoundedRectangle(cornerRadius: 8)
+                                .fill(Color(PlatformColor.secondarySystemBackground).opacity(0.8))
+                        )
+                    }
+                    .buttonStyle(.plain)
+                    .help("Klicken zum manuellen Eintippen")
+                }
             }
             
             HStack(spacing: 8) {
@@ -78,7 +140,7 @@ public struct CustomSliderField: View {
                 .buttonStyle(.plain)
                 
                 Slider(value: $value, in: range, step: step)
-                    .accentColor(.blue)
+                    .accentColor(.accentColor)
                 
                 Button(action: {
                     let next = min(range.upperBound, value + step)
@@ -107,9 +169,9 @@ public struct CustomSliderField: View {
                                 .padding(.vertical, 4)
                                 .background(
                                     RoundedRectangle(cornerRadius: 10)
-                                        .fill(isSelected ? Color.blue.opacity(0.2) : Color(PlatformColor.secondarySystemBackground))
+                                        .fill(isSelected ? Color.accentColor.opacity(0.2) : Color(PlatformColor.secondarySystemBackground))
                                 )
-                                .foregroundColor(isSelected ? .blue : .secondary)
+                                .foregroundColor(isSelected ? .accentColor : .secondary)
                         }
                         .buttonStyle(.plain)
                     }
@@ -117,5 +179,20 @@ public struct CustomSliderField: View {
             }
         }
         .padding(.vertical, 4)
+        .onChange(of: isFocused) { focused in
+            if !focused && isEditingText {
+                commitText()
+            }
+        }
+    }
+    
+    private func commitText() {
+        let cleaned = tempText.replacingOccurrences(of: "%", with: "")
+            .replacingOccurrences(of: ",", with: ".")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        if let parsed = Double(cleaned) {
+            self.value = min(range.upperBound, max(range.lowerBound, parsed))
+        }
+        isEditingText = false
     }
 }
