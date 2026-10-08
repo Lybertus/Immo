@@ -3,26 +3,49 @@ import SwiftUI
 import Combine
 
 public class CalculatorViewModel: ObservableObject {
+    // MARK: - Inputs
     @Published public var input: PropertyInput {
-        didSet {
-            saveCurrentState()
-        }
+        didSet { saveCurrentState() }
     }
     
     @Published public var investmentInput: InvestmentInput {
-        didSet {
-            saveCurrentState()
-        }
+        didSet { saveCurrentState() }
     }
     
+    @Published public var affordabilityInput: AffordabilityInput {
+        didSet { saveAffordabilityState() }
+    }
+    
+    // MARK: - Goal & Mode
+    @Published public var selectedGoal: CalculationGoal = .purchasePriceToRate
     @Published public var isInvestmentModeActive: Bool = false
+    
+    // MARK: - Themes & Customization
+    @Published public var selectedAppearanceMode: AppearanceMode = .system {
+        didSet { UserDefaults.standard.set(selectedAppearanceMode.rawValue, forKey: appearanceKey) }
+    }
+    
+    @Published public var selectedDesignStyle: DesignStyle = .modern {
+        didSet { UserDefaults.standard.set(selectedDesignStyle.rawValue, forKey: styleKey) }
+    }
+    
+    @Published public var selectedAccentColor: AppAccentColor = .appleBlue {
+        didSet { UserDefaults.standard.set(selectedAccentColor.rawValue, forKey: colorKey) }
+    }
+    
+    // MARK: - Scenarios
     @Published public var savedScenarios: [SavedScenario] = []
     
-    private let userDefaultsKey = "immobilien_rechner_state_v1"
-    private let scenariosKey = "immobilien_rechner_scenarios_v1"
+    // MARK: - Keys
+    private let userDefaultsKey = "immobilien_rechner_state_v2"
+    private let affordabilityKey = "immobilien_rechner_affordability_v2"
+    private let scenariosKey = "immobilien_rechner_scenarios_v2"
+    private let appearanceKey = "immobilien_rechner_appearance_v2"
+    private let styleKey = "immobilien_rechner_style_v2"
+    private let colorKey = "immobilien_rechner_color_v2"
     
     public init() {
-        // Load saved state or default
+        // Load Property State
         if let data = UserDefaults.standard.data(forKey: userDefaultsKey),
            let saved = try? JSONDecoder().decode(PropertyInput.self, data) {
             self.input = saved
@@ -30,7 +53,30 @@ public class CalculatorViewModel: ObservableObject {
             self.input = PropertyInput()
         }
         
+        // Load Affordability State
+        if let data = UserDefaults.standard.data(forKey: affordabilityKey),
+           let savedAff = try? JSONDecoder().decode(AffordabilityInput.self, data) {
+            self.affordabilityInput = savedAff
+        } else {
+            self.affordabilityInput = AffordabilityInput()
+        }
+        
         self.investmentInput = InvestmentInput()
+        
+        // Load Themes
+        if let rawApp = UserDefaults.standard.string(forKey: appearanceKey),
+           let mode = AppearanceMode(rawValue: rawApp) {
+            self.selectedAppearanceMode = mode
+        }
+        if let rawStyle = UserDefaults.standard.string(forKey: styleKey),
+           let style = DesignStyle(rawValue: rawStyle) {
+            self.selectedDesignStyle = style
+        }
+        if let rawColor = UserDefaults.standard.string(forKey: colorKey),
+           let col = AppAccentColor(rawValue: rawColor) {
+            self.selectedAccentColor = col
+        }
+        
         self.loadSavedScenarios()
     }
     
@@ -44,15 +90,56 @@ public class CalculatorViewModel: ObservableObject {
         InvestmentResult(input: investmentInput, propertyInput: input, result: result)
     }
     
+    public var affordabilityResult: AffordabilityResult {
+        AffordabilityResult(input: affordabilityInput)
+    }
+    
+    /// Maximal möglicher Kaufpreis basierend auf Haushaltsrechner
+    public var maxBudgetCalculation: (maxDarlehen: Double, maxKaufpreis: Double, maxGesamtbudget: Double) {
+        let nebenkostenSatz = input.aktiverSteuersatz + input.notarGrundbuchSatz + input.aktiverMaklersatz
+        return AffordabilityResult.calculateMaxPurchasePrice(
+            maxRate: affordabilityResult.maxMonatsrate,
+            sollzins: input.sollzins,
+            tilgung: input.tilgungssatz,
+            eigenkapital: input.eigenkapital,
+            nebenkostenSatz: nebenkostenSatz,
+            modernisierung: input.modernisierungskosten
+        )
+    }
+    
+    /// Benötigte Tilgung für Wunschlaufzeit
+    public var requiredTilgungForTargetYears: Double {
+        AffordabilityResult.calculateRequiredTilgung(
+            sollzins: input.sollzins,
+            zielJahre: affordabilityInput.geplanteWunschlaufzeitJahre
+        )
+    }
+    
     // MARK: - Quick Actions
     
+    /// Übernimmt das berechnete Budget in den Kaufpreis
+    public func applyBudgetToPurchasePrice() {
+        let maxKaufpreis = maxBudgetCalculation.maxKaufpreis
+        let gerundet = (maxKaufpreis / 5000.0).rounded() * 5000.0
+        input.kaufpreis = max(50_000, gerundet)
+        selectedGoal = .purchasePriceToRate
+    }
+    
+    /// Setzt die 2,0 % Tilgungsempfehlung
+    public func applyRecommendedRepayment() {
+        input.tilgungssatz = 2.0
+    }
+    
+    /// Wendet die ermittelte Tilgung für Wunschlaufzeit an
+    public func applyRequiredTilgung() {
+        input.tilgungssatz = requiredTilgungForTargetYears
+    }
+    
     public func setEquityPercentage(_ percentage: Double) {
-        // Calculate based on Kaufpreis + Nebenkosten
         let kaufpreis = input.kaufpreis
         let nebenkosten = kaufpreis * ((input.aktiverSteuersatz + input.notarGrundbuchSatz + input.aktiverMaklersatz) / 100.0)
         let total = kaufpreis + nebenkosten + input.modernisierungskosten
         let newEquity = total * (percentage / 100.0)
-        // Round to clean thousands
         input.eigenkapital = (newEquity / 1000.0).rounded() * 1000.0
     }
     
@@ -69,6 +156,7 @@ public class CalculatorViewModel: ObservableObject {
     public func resetToDefaults() {
         input = PropertyInput()
         investmentInput = InvestmentInput()
+        affordabilityInput = AffordabilityInput()
     }
     
     // MARK: - Scenarios
@@ -109,7 +197,13 @@ public class CalculatorViewModel: ObservableObject {
         }
     }
     
-    // MARK: - Formatting Helpers
+    private func saveAffordabilityState() {
+        if let encoded = try? JSONEncoder().encode(affordabilityInput) {
+            UserDefaults.standard.set(encoded, forKey: affordabilityKey)
+        }
+    }
+    
+    // MARK: - Formatters
     
     public func formatCurrency(_ value: Double, fractionDigits: Int = 0) -> String {
         let formatter = NumberFormatter()
@@ -146,48 +240,55 @@ public class CalculatorViewModel: ObservableObject {
     
     public func generateExportSummary() -> String {
         let res = result
+        let aff = affordabilityResult
         return """
-        ========================================
-        IMMOBILIEN-KAUFRECHNER - ZUSAMMENFASSUNG
-        ========================================
+        ====================================================
+        IMMOBILIEN-KAUFRECHNER PRO (Interhyp Standard)
+        ====================================================
         Datum: \(Date().formatted(date: .numeric, time: .shortened))
 
-        1. OBJEKT & KOSTEN
-        ----------------------------------------
-        Kaufpreis:              \(formatCurrency(input.kaufpreis))
-        Bundesland:             \(input.bundesland.rawValue) (\(formatPercent(input.aktiverSteuersatz)))
-        Grunderwerbsteuer:      \(formatCurrency(res.grunderwerbsteuer))
-        Notar & Grundbuch:      \(formatCurrency(res.notarGrundbuchKosten)) (\(formatPercent(input.notarGrundbuchSatz)))
-        Maklerprovision:        \(formatCurrency(res.maklerKosten)) (\(formatPercent(input.aktiverMaklersatz)))
-        Kaufnebenkosten gesamt: \(formatCurrency(res.kaufnebenkostenGesamt)) (\(formatPercent(res.kaufnebenkostenProzent, decimals: 1)))
-        Modernisierungskosten:  \(formatCurrency(input.modernisierungskosten))
-        GESAMTKOSTEN:           \(formatCurrency(res.gesamtkosten))
+        1. HAUSHALTS- & BUDGETCHECK
+        ----------------------------------------------------
+        Monatliches Nettoeinkommen:   \(formatCurrency(affordabilityInput.haushaltsNettoeinkommen))
+        Wohnkosten-Quote:             \(formatPercent(affordabilityInput.wohnkostenQuote, decimals: 1)) (\(aff.risikotext))
+        Verfügbare Monatsrate:        \(formatCurrency(aff.maxMonatsrate, fractionDigits: 2))
+        Freies Einkommen nach Rate:   \(formatCurrency(aff.verfuegbarNachFixkosten))
 
-        2. FINANZIERUNG
-        ----------------------------------------
-        Eigenkapital:           \(formatCurrency(input.eigenkapital)) (\(formatPercent(res.eigenkapitalQuote, decimals: 1)))
-        Darlehensbetrag:        \(formatCurrency(res.darlehensbetrag))
-        Sollzins:               \(formatPercent(input.sollzins)) p.a.
-        Zinsbindung:            \(input.zinsbindungJahre) Jahre
-        Anfängliche Tilgung:    \(formatPercent(res.anfaenglicherTilgungssatz)) p.a.
-        Sondertilgung/Jahr:     \(formatCurrency(input.sondertilgungProJahr))
+        2. OBJEKT & KOSTEN
+        ----------------------------------------------------
+        Kaufpreis:                    \(formatCurrency(input.kaufpreis))
+        Bundesland:                   \(input.bundesland.rawValue) (\(formatPercent(input.aktiverSteuersatz)))
+        Grunderwerbsteuer:            \(formatCurrency(res.grunderwerbsteuer))
+        Notar & Grundbuch:            \(formatCurrency(res.notarGrundbuchKosten)) (\(formatPercent(input.notarGrundbuchSatz)))
+        Maklerprovision:              \(formatCurrency(res.maklerKosten)) (\(formatPercent(input.aktiverMaklersatz)))
+        Kaufnebenkosten gesamt:       \(formatCurrency(res.kaufnebenkostenGesamt)) (\(formatPercent(res.kaufnebenkostenProzent, decimals: 1)))
+        Modernisierungsbudget:        \(formatCurrency(input.modernisierungskosten))
+        GESAMTINVESTITION:            \(formatCurrency(res.gesamtkosten))
 
-        3. ERGEBNISSE & RATEN
-        ----------------------------------------
-        MONATLICHE RATE:        \(formatCurrency(res.monatlicheRate, fractionDigits: 2))
-        - Anfänglicher Zins:    \(formatCurrency(res.anfaenglicheMonatsZinsen, fractionDigits: 2)) / Monat
-        - Anfängliche Tilgung:  \(formatCurrency(res.anfaenglicheMonatsTilgung, fractionDigits: 2)) / Monat
+        3. FINANZIERUNGSKONDITIONEN
+        ----------------------------------------------------
+        Eigenkapital:                 \(formatCurrency(input.eigenkapital)) (\(formatPercent(res.eigenkapitalQuote, decimals: 1)))
+        Darlehensbetrag:              \(formatCurrency(res.darlehensbetrag))
+        Sollzinssatz:                 \(formatPercent(input.sollzins)) p.a.
+        Zinsbindung:                  \(input.zinsbindungJahre) Jahre
+        Anfängliche Tilgung:          \(formatPercent(res.anfaenglicherTilgungssatz)) p.a. (Empfehlung: 2,0 %)
+        Sondertilgung pro Jahr:       \(formatCurrency(input.sondertilgungProJahr))
 
-        Restschuld nach \(input.zinsbindungJahre) J.:   \(formatCurrency(res.restschuldNachZinsbindung))
-        Gezahlte Zinsen (Bindung):  \(formatCurrency(res.gezahlteZinsenInZinsbindung))
-        Gezahlte Tilgung (Bindung): \(formatCurrency(res.gezahlteTilgungInZinsbindung))
-        Laufzeit bis Volltilgung:   \(formatDuration(years: res.gesamtlaufzeitJahre))
-        Gesamtzinsen (Volltilgung): \(formatCurrency(res.zinsenBisVolltilgung))
-        Gesamtrückzahlung:          \(formatCurrency(res.gesamtRueckzahlung))
-        Empfohlenes Netto-Einkommen: \(formatCurrency(res.empfohlenesNettoeinkommen)) / Monat
+        4. FINANZIERUNGSERGEBNIS
+        ----------------------------------------------------
+        MONATLICHE RATE:              \(formatCurrency(res.monatlicheRate, fractionDigits: 2))
+        - Davon anfänglicher Zins:    \(formatCurrency(res.anfaenglicheMonatsZinsen, fractionDigits: 2))
+        - Davon anfängliche Tilgung:  \(formatCurrency(res.anfaenglicheMonatsTilgung, fractionDigits: 2))
 
-        Erstellt mit ImmobilienRechner für iPhone & Mac
-        ========================================
+        Restschuld nach Zinsbindung:  \(formatCurrency(res.restschuldNachZinsbindung))
+        Gezahlte Zinsen (Bindung):    \(formatCurrency(res.gezahlteZinsenInZinsbindung))
+        Gezahlte Tilgung (Bindung):   \(formatCurrency(res.gezahlteTilgungInZinsbindung))
+        Laufzeit bis Volltilgung:     \(formatDuration(years: res.gesamtlaufzeitJahre))
+        Gesamtzinsen bis 0 €:         \(formatCurrency(res.zinsenBisVolltilgung))
+        Gesamtrückzahlung:            \(formatCurrency(res.gesamtRueckzahlung))
+        
+        Erstellt mit ImmobilienRechner Pro (iOS & macOS)
+        ====================================================
         """
     }
 }

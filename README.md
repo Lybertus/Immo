@@ -1,50 +1,55 @@
-# 🏠 ImmobilienRechner (ImmoCalc Pro)
+# 🏠 ImmobilienRechner Pro (Interhyp-Standard)
 
-Ein nativer, moderner **Immobilien-Kauf- & Baufinanzierungsrechner**, entwickelt mit **SwiftUI** für das **iPhone 15 Pro Max** und den **MacBook Pro M4 (Apple Silicon)**.
+Ein hochmoderner, nativer **Immobilien-Kauf- & Baufinanzierungsrechner**, entwickelt mit **SwiftUI** für das **iPhone 15 Pro Max** und den **MacBook Pro M4 (Apple Silicon)**.
 
-Entwickelt für den universellen Einsatz: Läuft sowohl nativ auf iOS als auch auf macOS (via Mac Catalyst / "Designed for iPad on Mac") mit adaptivem Split-View-Layout.
+Mit flexiblem **Dark Mode / OLED-Dunkelmodus**, **16 wählbaren Apple-Akzentfarben**, **verschiedenen UI-Designstilen** sowie einem integrierten **Haushalts- & Budgetrechner nach Interhyp-Standard**.
 
 ---
 
-## ✨ Features im Überblick
+## ✨ Neue Features & Highlights
 
-### 1. 💶 Exakte Kaufpreis- & Nebenkostenkalkulation
-* **Reiner Kaufpreis** mit dynamischen Schiebereglern und Schnellauswahl-Buttons.
-* **Alle 16 deutschen Bundesländer** mit den jeweils aktuellen Grunderwerbsteuersätzen (z. B. Bayern 3,5 %, NRW 6,5 %, Hessen 6,0 %).
-* **Notar & Grundbucheintrag** (flexibel einstellbar, Richtwert 1,5 % – 2,0 %).
-* **Maklerprovision** an-/abschaltbar mit konfigurierbarem Käuferanteil (z. B. 3,57 % inkl. MwSt.).
-* **Modernisierungs- & Renovierungsbudget** zur Ermittlung der tatsächlichen Gesamtinvestition.
+### 🎨 1. Dark Mode & Großes Design-System
+* **Erscheinungsbild wählbar**: *System*, *Hell* oder *Dunkel (OLED)*.
+* **16 kuratierte Akzentfarben**:
+  * Apple Blau, Ocean Cyan, Tiefes Indigo, Royal Lila
+  * Magenta Pink, Rubinrot, Sunset Koralle, Warmes Bernstein
+  * Champagner Gold, Smaragdgrün, Frische Minze, Petrol Teal
+  * Waldgrün, Cyber Neon, Schiefergrau, Kupfer Bronze
+* **3 Design-Stile**:
+  * *Modern Apple* (weiche Rundungen, Glaseffekte)
+  * *Minimal Clean* (flach, puristisch, klare Linien)
+  * *Finanz-Kompakt* (hohe Informationsdichte, perfekt für Mac)
 
-### 2. 🏦 Finanzierungs- & Zinskonditionen
-* **Eigenkapital-Rechner** mit praktischer Schnellwahl (15 %, 20 %, 30 % Eigenkapitalquote oder reine Nebenkosten).
-* **Sollzins p.a.** mit Feinabstimmung (Schrittweite 0,05 %).
-* **Zinsbindung** (5, 10, 15, 20, 25 oder 30 Jahre).
-* **Berechnungsmodi**:
-  * *Über Tilgungssatz* (z. B. anfänglich 2,0 % p.a.)
-  * *Über Wunschrate* (maximale monatliche Rate vorgeben)
-* **Jährliche Sondertilgung** (z. B. bis zu 5 % der Darlehenssumme).
+### 💼 2. Haushaltsrechner & Leistbarkeit (Interhyp-Prinzip)
+* **Haushaltsnettoeinkommen** eingeben (z. B. 4.500 € monatlich).
+* **Wohnkosten-Abschlag einstellen (20 % bis 45 %)**:
+  * 25 % = Sehr vorsichtig
+  * 30 % = Solide & konservativ
+  * 35 % = **Empfohlener Standard** (Interhyp & Verbraucherzentrale) ⭐
+  * 40 % = Maximal vertretbare Belastungsgrenze
+* **Banken-Ampel**: Zeigt sofort an, ob die Rate für Banken finanzierbar ist.
+* **Maximaler Kaufpreis ermitteln**:
+  * Berechnet unter Berücksichtigung von Nebenkosten, Grunderwerbsteuer und Eigenkapital, wie teuer deine Immobilie maximal sein darf.
+  * **1-Klick-Übernahme**: Überträgt das Budget sofort in den Hauptrechner!
 
-### 3. 📈 Ergebnisse & Banken-Kennzahlen
-* **Monatliche Rate (Annuität)** mit visueller Aufteilung in Zins- und Tilgungsanteil ab dem 1. Monat.
-* **Restschuld** nach Ablauf der Zinsbindungsfrist.
-* **Gesamtlaufzeit** bis zur vollständigen Entschuldung (Monate und Jahre).
-* **Zinskosten gesamt** über die gesamte Kreditlaufzeit.
-* **Empfohlenes Mindest-Nettoeinkommen** nach der gängigen 35 %-Wohnkosten-Faustregel deutscher Banken.
+### 🎯 3. Multi-Ziel-Berechnung (Reverse-Calculator)
+* **Ziel A: Kaufpreis ➔ Rate** (Klassische Darlehensberechnung).
+* **Ziel B: Budget / Max. Kaufpreis** (Ausgehend von der Monatsrate).
+* **Ziel C: Wunschlaufzeit ➔ Tilgung** (z. B. schuldenfrei in 25 Jahren bis zur Rente – berechnet die exakt dafür nötige Tilgung!).
+* **2 % Tilgungsempfehlung**:
+  * Schnellbutton `⭐ 2,0 % Empfehlung setzen`.
+  * Ausführliche Erklärung, warum Banken 2,0 % Tilgung bei Zinsen um 3,5–4 % verlangen (Schuldenfreiheit in ~27 Jahren statt über 40 Jahren).
 
-### 4. 📅 Detaillierter Tilgungsplan
-* **Jahr-für-Jahr-Tabelle**: Anfangsschuld, gezahlte Zinsen, Tilgung, Sondertilgung und Restschuld.
-* Visuelle Hervorhebung des **Endes der Zinsbindung** mit Zielflagge.
-* Filterbar (Alle Jahre vs. nur Zinsbindungsjahre).
+### 💶 4. Kaufnebenkosten & 16 Bundesländer
+* Aktuelle Grunderwerbsteuer für alle 16 Bundesländer (Bayern 3,5 %, NRW 6,5 %, etc.).
+* Notar & Grundbuch (1,0 % – 3,0 %, Standard 2,0 %).
+* Maklerprovision konfigurierbar (z. B. 3,57 % inkl. MwSt. oder 0 %).
+* Modernisierungs- & Renovierungsbudget.
 
-### 5. 🏢 Rendite- & Cashflow-Rechner (Kapitalanlage / Vermieter)
-* Eingabe von **Kaltmiete**, nicht umlegbaren Nebenkosten und **Instandhaltungsrücklage**.
-* Automatische Berechnung von **Brutto-Mietrendite**, **Netto-Mietrendite** und **Mietmultiplikator** (Kaufpreisfaktor).
-* **Monatlicher Netto-Cashflow vor Steuer** mit dynamischer Farbcodierung (Überschuss vs. monatliche Zuzahlung).
-
-### 6. ⚖️ Szenarien-Vergleich & Export
-* Beliebig viele Finanzierungsvarianten lokal speichern (z. B. *10 Jahre Zinsbindung bei 3,4 %* vs. *15 Jahre Zinsbindung bei 3,7 %*).
-* Varianten nebeneinander vergleichen und mit einem Klick wieder in den Rechner laden.
-* **Zusammenfassung teilen / exportieren** via ShareSheet (Text/PDF-fähig).
+### 📅 5. Tilgungsplan & Rendite (Kapitalanlage)
+* Jahr-für-Jahr-Tilgungsplan mit Restschuld am Jahresende und Markierung des Zinsbindungsendes.
+* Renditerechner für Vermieter mit Kaltmiete, Instandhaltungsrücklage und Netto-Cashflow vor Steuer.
+* Szenarien speichern und direkt vergleichen.
 
 ---
 
@@ -52,92 +57,75 @@ Entwickelt für den universellen Einsatz: Läuft sowohl nativ auf iOS als auch a
 
 | Plattform | Highlights |
 | :--- | :--- |
-| **iPhone 15 Pro Max** | Optimiert für das 6,7-Zoll Display & Dynamic Island, flüssige Gesten, große Touch-Ziele, haptisches Feedback, native TabBar. |
-| **MacBook Pro M4** | Nutzen des Apple Silicon M4-Chips: Nativer Split-View mit Sidebar-Navigation, skalierbares Fenster, Tastatur-Shortcuts. |
+| **iPhone 15 Pro Max** | Speziell angepasst an das 6,7-Zoll Display, Dynamic Island, native TabBar, haptisches Feedback und große Slider. |
+| **MacBook Pro M4** | Apple Silicon M4 Support: Nativer Split-View mit Sidebar-Navigation, Fensterskalierung und Tastatur-Shortcuts. |
 
 ---
 
-## 🚀 Projektstruktur
+## 📁 Projektstruktur
 
 ```
 ImmobilienRechner/
 ├── .gitignore
 ├── LICENSE
 ├── README.md
-├── ImmobilienRechner.xcodeproj/       # Xcode-Projekt (iOS + macOS)
+├── ImmobilienRechner.xcodeproj/       # Xcode-Projekt für iOS & macOS
 │   ├── project.pbxproj
 │   └── xcshareddata/xcschemes/
 │       └── ImmobilienRechner.xcscheme
 ├── ImmobilienRechner/
 │   ├── ImmobilienRechnerApp.swift    # App-Startpunkt
 │   ├── Info.plist
-│   ├── Assets.xcassets/              # App-Icons & Akzentfarben
+│   ├── Assets.xcassets/              # Icons & Akzentfarben
 │   ├── Models/
-│   │   ├── FederalState.swift        # Bundesländer & Steuersätze
-│   │   ├── AmortizationYear.swift    # Tilgungsplan-Datenmodell
-│   │   ├── CalculationModel.swift    # Finanzmathematik & Simulation
-│   │   ├── InvestmentModel.swift     # Rendite- & Cashflow-Formeln
-│   │   └── ComparisonScenario.swift  # Gespeicherte Szenarien
+│   │   ├── FederalState.swift        # 16 Bundesländer & Steuersätze
+│   │   ├── AmortizationYear.swift    # Tilgungsplan-Modell
+│   │   ├── CalculationModel.swift    # Finanzmathematik
+│   │   ├── InvestmentModel.swift     # Rendite & Cashflow
+│   │   ├── ComparisonScenario.swift  # Variantenvergleich
+│   │   ├── ThemeModel.swift          # Dark Mode & 16 Akzentfarben
+│   │   └── AffordabilityModel.swift  # Haushaltsrechner & 30-35% Regel
 │   ├── ViewModels/
-│   │   └── CalculatorViewModel.swift # State, Berechnungen & Persistenz
+│   │   └── CalculatorViewModel.swift # State & Persistenz
 │   └── Views/
-│       ├── ContentView.swift         # Adaptives Navigation-Layout
-│       ├── Components/               # Reusable UI (Cards, Sliders, Donut-Chart)
-│       └── Tabs/                     # Eingabe, Übersicht, Tilgungsplan, Rendite, Vergleich
+│       ├── ContentView.swift         # Adaptives SplitView/TabBar Layout
+│       ├── Components/               # Karten, Slider, Donut-Diagramm
+│       └── Tabs/
+│           ├── CalculatorInputView.swift   # Rechner & 2% Badge
+│           ├── AffordabilityView.swift     # Haushalts- & Budgetcheck
+│           ├── ResultsSummaryView.swift    # Ergebnisse & Diagramme
+│           ├── AmortizationTableView.swift # Tilgungsplan
+│           ├── InvestmentYieldView.swift   # Mietrendite & Cashflow
+│           ├── ComparisonView.swift        # Szenarien
+│           └── SettingsView.swift          # Dark Mode & Farbpalette
 └── WebPreview/
-    └── index.html                    # Sofortiger Browser-Test auf Mac/PC
+    └── index.html                    # Interaktive Web-Vorschau für Mac
 ```
 
 ---
 
-## 🛠️ Öffnen & Starten in Xcode
+## ⚡ Schnellstart & Testen auf dem Mac
 
-1. **Voraussetzung**: Ein Mac mit macOS 14+ und [Xcode](https://developer.apple.com/xcode/) (kostenlos im Mac App Store).
-2. Doppelklicke auf die Datei `ImmobilienRechner.xcodeproj`, um das Projekt in Xcode zu öffnen.
-3. Wähle oben in der Menüleiste dein Zielgerät:
-   - Für das iPhone: **iPhone 15 Pro Max** (Simulator oder angeschlossenes Gerät)
-   - Für das MacBook Pro M4: **My Mac (Mac Catalyst)** oder **My Mac (Designed for iPad)**
-4. Drücke `Cmd + R` (oder klicke auf den Play-Button ▶️) zum Starten!
+### Option 1: Sofortiger Browser-Test (ohne Xcode)
+```bash
+open /Users/eugen/.gemini/antigravity/scratch/ImmobilienRechner/WebPreview/index.html
+```
 
----
-
-## 🌐 Sofortige Vorschau im Browser (ohne Xcode)
-
-Möchtest du den Rechner sofort auf deinem MacBook Pro M4 ausprobieren, ohne vorher Xcode zu öffnen?
-* Öffne einfach die Datei `WebPreview/index.html` in Safari oder Chrome:
-  ```bash
-  open WebPreview/index.html
-  ```
+### Option 2: In Xcode für iPhone 15 Pro Max & Mac M4 öffnen
+```bash
+open /Users/eugen/.gemini/antigravity/scratch/ImmobilienRechner/ImmobilienRechner.xcodeproj
+```
+Wähle als Zielgerät:
+* **iPhone 15 Pro Max**
+* oder **My Mac (Mac Catalyst)** für native Mac-Ausführung.
+Drücke `Cmd + R` zum Starten!
 
 ---
 
-## 📤 Auf GitHub hochladen
-
-Führe im Projektverzeichnis folgende Befehle im Terminal aus:
+## 🚀 Auf GitHub hochladen
 
 ```bash
-# 1. In das Projektverzeichnis wechseln
 cd /Users/eugen/.gemini/antigravity/scratch/ImmobilienRechner
-
-# 2. Git initialisieren
-git init
-
-# 3. Dateien zur Versionskontrolle hinzufügen
-git add .
-
-# 4. Ersten Commit erstellen
-git commit -m "Initial commit: Immobilien-Kaufrechner für iPhone 15 Pro Max & MacBook Pro M4"
-
-# 5. Remote-Repository bei GitHub verknüpfen (Erstelle vorher ein leeres Repo auf github.com)
-git branch -M main
-git remote add origin https://github.com/<DEIN-GITHUB-NUTZERNAME>/<DEIN-REPO-NAME>.git
-
-# 6. Auf GitHub pushen
+git remote add origin https://github.com/<DEIN-NUTZERNAME>/<DEIN-REPO-NAME>.git
 git push -u origin main
 ```
-
----
-
-## 📄 Lizenz
-
-Dieses Projekt ist unter der [MIT-Lizenz](LICENSE) lizenziert.

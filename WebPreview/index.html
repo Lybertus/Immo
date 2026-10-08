@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de" data-theme="system">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Immobilien-Kaufrechner | iPhone 15 Pro Max & MacBook Pro M4</title>
+  <title>Immobilien-Kaufrechner Pro | Interhyp Standard (iPhone 15 Pro Max & Mac M4)</title>
   <style>
     :root {
       --primary: #0071e3;
-      --primary-bg: #e8f2fc;
+      --primary-bg: rgba(0, 113, 227, 0.12);
       --bg: #f5f5f7;
       --card-bg: #ffffff;
       --text: #1d1d1f;
@@ -17,15 +17,22 @@
       --orange: #ff9500;
       --red: #ff3b30;
       --purple: #af52de;
+      --radius: 18px;
+    }
+    [data-theme="dark"] {
+      --bg: #000000;
+      --card-bg: #1c1c1e;
+      --text: #f5f5f7;
+      --text-sec: #98989d;
+      --border: #38383a;
     }
     @media (prefers-color-scheme: dark) {
-      :root {
+      [data-theme="system"] {
         --bg: #000000;
         --card-bg: #1c1c1e;
         --text: #f5f5f7;
         --text-sec: #98989d;
         --border: #38383a;
-        --primary-bg: #0d2642;
       }
     }
     * {
@@ -42,14 +49,17 @@
       align-items: center;
       min-height: 100vh;
       padding: 20px;
+      transition: background-color 0.25s, color 0.25s;
     }
     .header-bar {
-      max-width: 1000px;
+      max-width: 1100px;
       width: 100%;
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
     }
     .header-bar h1 {
       font-size: 24px;
@@ -58,13 +68,10 @@
       align-items: center;
       gap: 8px;
     }
-    .device-badge {
-      font-size: 12px;
-      font-weight: 600;
-      background: var(--primary-bg);
-      color: var(--primary);
-      padding: 6px 12px;
-      border-radius: 20px;
+    .theme-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
     .container {
       max-width: 1100px;
@@ -73,21 +80,20 @@
       grid-template-columns: 1fr 1fr;
       gap: 24px;
     }
-    @media (max-width: 860px) {
-      .container {
-        grid-template-columns: 1fr;
-      }
+    @media (max-width: 900px) {
+      .container { grid-template-columns: 1fr; }
     }
     .card {
       background: var(--card-bg);
-      border-radius: 18px;
+      border-radius: var(--radius);
       padding: 20px;
       box-shadow: 0 4px 24px rgba(0,0,0,0.04);
       border: 1px solid var(--border);
       margin-bottom: 20px;
+      transition: all 0.25s;
     }
     .card h2 {
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 600;
       margin-bottom: 16px;
       display: flex;
@@ -95,11 +101,11 @@
       gap: 8px;
     }
     .hero-rate {
-      background: linear-gradient(135deg, rgba(0, 113, 227, 0.12), rgba(0, 113, 227, 0.04));
-      border: 1.5px solid rgba(0, 113, 227, 0.3);
+      background: linear-gradient(135deg, var(--primary-bg), rgba(0, 113, 227, 0.02));
+      border: 1.5px solid var(--primary);
       text-align: center;
       padding: 24px 20px;
-      border-radius: 20px;
+      border-radius: var(--radius);
       margin-bottom: 20px;
     }
     .hero-rate .label {
@@ -134,7 +140,6 @@
       margin-bottom: 6px;
     }
     .form-group .val {
-      font-family: inherit;
       color: var(--primary);
     }
     .form-group input[type="range"] {
@@ -212,18 +217,42 @@
       color: var(--text-sec);
       margin-top: 2px;
     }
-    .breakdown-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 13px;
-      padding: 7px 0;
-      border-bottom: 1px solid var(--border);
+    .color-picker-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 8px;
+      margin-top: 8px;
     }
-    .breakdown-row:last-child {
-      border-bottom: none;
+    .color-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: transform 0.2s;
     }
+    .color-dot:hover {
+      transform: scale(1.15);
+    }
+    .color-dot.active {
+      border-color: #fff;
+      box-shadow: 0 0 0 2px var(--text);
+    }
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .badge-green { background: rgba(52, 199, 89, 0.15); color: #34c759; }
+    .badge-blue { background: rgba(0, 113, 227, 0.15); color: #0071e3; }
+    .badge-orange { background: rgba(255, 149, 0, 0.15); color: #ff9500; }
+    .badge-red { background: rgba(255, 59, 48, 0.15); color: #ff3b30; }
     .table-container {
-      max-height: 320px;
+      max-height: 280px;
       overflow-y: auto;
       border: 1px solid var(--border);
       border-radius: 12px;
@@ -238,9 +267,7 @@
       padding: 8px 10px;
       text-align: right;
     }
-    th:first-child, td:first-child {
-      text-align: left;
-    }
+    th:first-child, td:first-child { text-align: left; }
     th {
       background: var(--bg);
       position: sticky;
@@ -248,9 +275,7 @@
       font-weight: 600;
       color: var(--text-sec);
     }
-    tr:nth-child(even) {
-      background: rgba(0,0,0,0.02);
-    }
+    tr:nth-child(even) { background: rgba(0,0,0,0.02); }
     .fixed-period-row {
       background: var(--primary-bg) !important;
       font-weight: bold;
@@ -269,27 +294,25 @@
       margin-top: 10px;
       transition: opacity 0.2s;
     }
-    .btn-action:hover {
-      opacity: 0.9;
-    }
-    .tabs-nav {
+    .btn-action:hover { opacity: 0.9; }
+    .tabs-header {
       display: flex;
-      gap: 8px;
+      gap: 6px;
       margin-bottom: 16px;
       border-bottom: 1px solid var(--border);
       padding-bottom: 8px;
     }
-    .tab-btn {
+    .tab-nav {
       background: none;
       border: none;
       color: var(--text-sec);
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 600;
-      padding: 6px 14px;
+      padding: 6px 12px;
       border-radius: 8px;
       cursor: pointer;
     }
-    .tab-btn.active {
+    .tab-nav.active {
       background: var(--primary-bg);
       color: var(--primary);
     }
@@ -298,108 +321,205 @@
 <body>
 
   <div class="header-bar">
-    <h1>🏠 Immobilien-Kaufrechner</h1>
-    <span class="device-badge"> iPhone 15 Pro Max & MacBook Pro M4 Ready</span>
+    <div>
+      <h1>🏠 Immobilien-Kaufrechner Pro</h1>
+      <span style="font-size: 12px; color: var(--text-sec);">Interhyp-Standard | Optimiert für iPhone 15 Pro Max & MacBook Pro M4</span>
+    </div>
+
+    <div class="theme-toolbar">
+      <!-- Dark Mode Switch -->
+      <select id="themeSelect" onchange="switchTheme(this.value)" style="width: auto; padding: 6px 10px;">
+        <option value="system">🌓 System</option>
+        <option value="light">☀️ Hell</option>
+        <option value="dark">🌙 Dunkel (OLED)</option>
+      </select>
+    </div>
   </div>
 
   <div class="container">
-    <!-- LEFT COLUMN: INPUTS -->
+    <!-- LEFT COLUMN -->
     <div>
-      <div class="card">
-        <h2>💶 1. Objekt & Kaufnebenkosten</h2>
-        
-        <div class="form-group">
-          <label>Kaufpreis <span class="val" id="valKaufpreis">450.000 €</span></label>
-          <input type="range" id="kaufpreis" min="50000" max="2000000" step="10000" value="450000" oninput="calculate()">
-          <div class="btn-group">
-            <button class="btn-chip" onclick="setVal('kaufpreis', 250000)">250k</button>
-            <button class="btn-chip" onclick="setVal('kaufpreis', 350000)">350k</button>
-            <button class="btn-chip" onclick="setVal('kaufpreis', 450000)">450k</button>
-            <button class="btn-chip" onclick="setVal('kaufpreis', 650000)">650k</button>
-            <button class="btn-chip" onclick="setVal('kaufpreis', 850000)">850k</button>
+      <!-- NAVIGATION TABS -->
+      <div class="tabs-header">
+        <button class="tab-nav active" onclick="setTab('calc', this)">💶 1. Kaufpreis & Kredit</button>
+        <button class="tab-nav" onclick="setTab('budget', this)">💼 2. Haushalts- & Budgetcheck</button>
+        <button class="tab-nav" onclick="setTab('settings', this)">🎨 3. Design & Farben</button>
+      </div>
+
+      <!-- TAB 1: KAUFRECHNER -->
+      <div id="tabCalc">
+        <div class="card">
+          <h2>Objekt & Kaufnebenkosten</h2>
+          <div class="form-group">
+            <label>Kaufpreis <span class="val" id="valKaufpreis">450.000 €</span></label>
+            <input type="range" id="kaufpreis" min="50000" max="2000000" step="10000" value="450000" oninput="calculate()">
+            <div class="btn-group">
+              <button class="btn-chip" onclick="setVal('kaufpreis', 250000)">250k</button>
+              <button class="btn-chip" onclick="setVal('kaufpreis', 350000)">350k</button>
+              <button class="btn-chip" onclick="setVal('kaufpreis', 450000)">450k</button>
+              <button class="btn-chip" onclick="setVal('kaufpreis', 650000)">650k</button>
+              <button class="btn-chip" onclick="setVal('kaufpreis', 850000)">850k</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Bundesland (Grunderwerbsteuer)</label>
+            <select id="bundesland" onchange="calculate()">
+              <option value="3.5">Bayern (3,5 %)</option>
+              <option value="5.0">Baden-Württemberg (5,0 %)</option>
+              <option value="6.0">Berlin (6,0 %)</option>
+              <option value="6.5">Brandenburg (6,5 %)</option>
+              <option value="5.0">Bremen (5,0 %)</option>
+              <option value="5.5">Hamburg (5,5 %)</option>
+              <option value="6.0">Hessen (6,0 %)</option>
+              <option value="6.0">Mecklenburg-Vorpommern (6,0 %)</option>
+              <option value="5.0">Niedersachsen (5,0 %)</option>
+              <option value="6.5">Nordrhein-Westfalen (6,5 %)</option>
+              <option value="5.0">Rheinland-Pfalz (5,0 %)</option>
+              <option value="6.5">Saarland (6,5 %)</option>
+              <option value="5.5">Sachsen (5,5 %)</option>
+              <option value="5.0">Sachsen-Anhalt (5,0 %)</option>
+              <option value="6.5">Schleswig-Holstein (6,5 %)</option>
+              <option value="5.0">Thüringen (5,0 %)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Notar & Grundbucheintrag <span class="val" id="valNotar">2,0 %</span></label>
+            <input type="range" id="notar" min="1.0" max="3.0" step="0.1" value="2.0" oninput="calculate()">
+          </div>
+
+          <div class="form-group">
+            <label>Maklerprovision <span class="val" id="valMakler">3,57 %</span></label>
+            <input type="range" id="makler" min="0" max="7.14" step="0.01" value="3.57" oninput="calculate()">
+            <div class="btn-group">
+              <button class="btn-chip" onclick="setVal('makler', 0)">0 % Provisionsfrei</button>
+              <button class="btn-chip" onclick="setVal('makler', 3.57)">3,57 % Standard</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Modernisierungs- & Renovierungsbudget <span class="val" id="valModern">20.000 €</span></label>
+            <input type="range" id="modernisierung" min="0" max="250000" step="5000" value="20000" oninput="calculate()">
           </div>
         </div>
 
-        <div class="form-group">
-          <label>Bundesland (Grunderwerbsteuer)</label>
-          <select id="bundesland" onchange="updateTax()">
-            <option value="3.5">Bayern (3,5 %)</option>
-            <option value="5.0">Baden-Württemberg (5,0 %)</option>
-            <option value="6.0">Berlin (6,0 %)</option>
-            <option value="6.5">Brandenburg (6,5 %)</option>
-            <option value="5.0">Bremen (5,0 %)</option>
-            <option value="5.5">Hamburg (5,5 %)</option>
-            <option value="6.0">Hessen (6,0 %)</option>
-            <option value="6.0">Mecklenburg-Vorpommern (6,0 %)</option>
-            <option value="5.0">Niedersachsen (5,0 %)</option>
-            <option value="6.5">Nordrhein-Westfalen (6,5 %)</option>
-            <option value="5.0">Rheinland-Pfalz (5,0 %)</option>
-            <option value="6.5">Saarland (6,5 %)</option>
-            <option value="5.5">Sachsen (5,5 %)</option>
-            <option value="5.0">Sachsen-Anhalt (5,0 %)</option>
-            <option value="6.5">Schleswig-Holstein (6,5 %)</option>
-            <option value="5.0">Thüringen (5,0 %)</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>Notar & Grundbucheintrag <span class="val" id="valNotar">2,0 %</span></label>
-          <input type="range" id="notar" min="1.0" max="3.0" step="0.1" value="2.0" oninput="calculate()">
-        </div>
-
-        <div class="form-group">
-          <label>Maklerprovision (Käuferanteil) <span class="val" id="valMakler">3,57 %</span></label>
-          <input type="range" id="makler" min="0" max="7.14" step="0.01" value="3.57" oninput="calculate()">
-          <div class="btn-group">
-            <button class="btn-chip" onclick="setVal('makler', 0)">Kein Makler (0 %)</button>
-            <button class="btn-chip" onclick="setVal('makler', 3.57)">Standard (3,57 %)</button>
+        <div class="card">
+          <h2>Finanzierungskonditionen</h2>
+          <div class="form-group">
+            <label>Eigenkapital <span class="val" id="valEigenkapital">90.000 €</span></label>
+            <input type="range" id="eigenkapital" min="0" max="800000" step="5000" value="90000" oninput="calculate()">
+            <div class="btn-group">
+              <button class="btn-chip" onclick="setEquityPct(0.15)">15 % Quote</button>
+              <button class="btn-chip" onclick="setEquityPct(0.20)">20 % Quote</button>
+              <button class="btn-chip" onclick="setEquityPct(0.30)">30 % Quote</button>
+            </div>
           </div>
-        </div>
 
-        <div class="form-group">
-          <label>Modernisierungs- & Renovierungskosten <span class="val" id="valModernisierung">20.000 €</span></label>
-          <input type="range" id="modernisierung" min="0" max="300000" step="5000" value="20000" oninput="calculate()">
+          <div class="form-group">
+            <label>Sollzins p.a. <span class="val" id="valZins">3,65 %</span></label>
+            <input type="range" id="zins" min="0.5" max="8.0" step="0.05" value="3.65" oninput="calculate()">
+          </div>
+
+          <div class="form-group">
+            <label>Zinsbindung <span class="val" id="valBindung">15 Jahre</span></label>
+            <select id="bindung" onchange="calculate()">
+              <option value="5">5 Jahre</option>
+              <option value="10">10 Jahre</option>
+              <option value="15" selected>15 Jahre</option>
+              <option value="20">20 Jahre</option>
+              <option value="25">25 Jahre</option>
+              <option value="30">30 Jahre</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Anfängliche Tilgung p.a. <span class="val" id="valTilgung">2,0 %</span></label>
+            <input type="range" id="tilgung" min="1.0" max="6.0" step="0.1" value="2.0" oninput="calculate()">
+            <div style="margin-top: 6px;">
+              <button class="btn-chip active" onclick="setVal('tilgung', 2.0)">⭐ 2,0 % Empfehlung setzen</button>
+              <span style="font-size: 11px; color: var(--text-sec); margin-left: 6px;">Interhyp-Standard für sichere Entschuldung</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Jährliche Sondertilgung <span class="val" id="valSondertilgung">2.500 € / Jahr</span></label>
+            <input type="range" id="sondertilgung" min="0" max="30000" step="500" value="2500" oninput="calculate()">
+          </div>
         </div>
       </div>
 
-      <div class="card">
-        <h2>🏦 2. Finanzierung & Konditionen</h2>
-        
-        <div class="form-group">
-          <label>Eigenkapital <span class="val" id="valEigenkapital">90.000 €</span></label>
-          <input type="range" id="eigenkapital" min="0" max="800000" step="5000" value="90000" oninput="calculate()">
-          <div class="btn-group">
-            <button class="btn-chip" onclick="setEquityPct(0.15)">15 % Quote</button>
-            <button class="btn-chip" onclick="setEquityPct(0.20)">20 % Quote</button>
-            <button class="btn-chip" onclick="setEquityPct(0.30)">30 % Quote</button>
+      <!-- TAB 2: HAUSHALT & BUDGET CHECK -->
+      <div id="tabBudget" style="display: none;">
+        <div class="card">
+          <h2>💼 Haushaltsrechner (Wie viel Haus kann ich mir leisten?)</h2>
+          
+          <div class="form-group">
+            <label>Monatliches Haushaltsnettoeinkommen <span class="val" id="valNetto">4.500 €</span></label>
+            <input type="range" id="haushaltsNetto" min="1500" max="15000" step="100" value="4500" oninput="calculateBudget()">
+            <div class="btn-group">
+              <button class="btn-chip" onclick="setNetto(3500)">3.500 €</button>
+              <button class="btn-chip" onclick="setNetto(4500)">4.500 €</button>
+              <button class="btn-chip" onclick="setNetto(6000)">6.000 €</button>
+              <button class="btn-chip" onclick="setNetto(8000)">8.000 €</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Wohnkosten-Abschlag für die Kreditrate <span class="val" id="valQuote">35,0 %</span></label>
+            <input type="range" id="wohnQuote" min="20" max="45" step="1" value="35" oninput="calculateBudget()">
+            <div class="btn-group">
+              <button class="btn-chip" onclick="setQuote(25)">25 % (Vorsichtig)</button>
+              <button class="btn-chip" onclick="setQuote(30)">30 % (Konservativ)</button>
+              <button class="btn-chip active" onclick="setQuote(35)">35 % (Empfehlung ⭐)</button>
+              <button class="btn-chip" onclick="setQuote(40)">40 % (Maximum)</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Bestehende monatliche Raten (Kredite, Leasing) <span class="val" id="valFix">0 €</span></label>
+            <input type="range" id="fixkosten" min="0" max="2500" step="50" value="0" oninput="calculateBudget()">
+          </div>
+
+          <!-- BUDGET SUMMARY RESULT -->
+          <div style="background: var(--bg); padding: 16px; border-radius: 14px; margin-top: 14px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <span style="font-size: 13px; font-weight: 600;">Max. empfohlene Monatsrate:</span>
+              <strong style="font-size: 20px; color: var(--primary);" id="budgetRate">1.575 €</strong>
+            </div>
+            <div id="riskBadge" class="badge-pill badge-blue" style="margin-bottom: 12px;">Optimaler Banken-Standard (35 %)</div>
+            
+            <div style="border-top: 1px solid var(--border); padding-top: 10px;">
+              <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px;">
+                <span>Maximaler Kaufpreis der Immobilie:</span>
+                <strong id="budgetKaufpreis" style="color: var(--primary); font-size: 16px;">375.000 €</strong>
+              </div>
+              <div style="font-size: 11px; color: var(--text-sec); margin-bottom: 12px;">
+                Inklusive Kaufnebenkosten und deines vorhandenen Eigenkapitals.
+              </div>
+              
+              <button class="btn-action" onclick="applyBudgetToCalculator()">➔ Diesen Kaufpreis in den Hauptrechner übernehmen</button>
+            </div>
           </div>
         </div>
+      </div>
 
-        <div class="form-group">
-          <label>Sollzins p.a. <span class="val" id="valZins">3,65 %</span></label>
-          <input type="range" id="zins" min="0.5" max="8.0" step="0.05" value="3.65" oninput="calculate()">
+      <!-- TAB 3: DESIGN & FARBEN -->
+      <div id="tabSettings" style="display: none;">
+        <div class="card">
+          <h2>🎨 Große Akzentfarben-Palette</h2>
+          <p style="font-size: 12px; color: var(--text-sec); margin-bottom: 12px;">Wähle deine bevorzugte Akzentfarbe für alle Diagramme, Buttons und Highlights:</p>
+          
+          <div class="color-picker-grid" id="colorGrid"></div>
         </div>
 
-        <div class="form-group">
-          <label>Zinsbindung <span class="val" id="valBindung">15 Jahre</span></label>
-          <select id="bindung" onchange="calculate()">
-            <option value="5">5 Jahre</option>
-            <option value="10">10 Jahre</option>
-            <option value="15" selected>15 Jahre</option>
-            <option value="20">20 Jahre</option>
-            <option value="25">25 Jahre</option>
-            <option value="30">30 Jahre</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>Anfängliche Tilgung p.a. <span class="val" id="valTilgung">2,0 %</span></label>
-          <input type="range" id="tilgung" min="1.0" max="6.0" step="0.1" value="2.0" oninput="calculate()">
-        </div>
-
-        <div class="form-group">
-          <label>Jährliche Sondertilgung <span class="val" id="valSondertilgung">2.500 € / Jahr</span></label>
-          <input type="range" id="sondertilgung" min="0" max="30000" step="500" value="2500" oninput="calculate()">
+        <div class="card">
+          <h2>💡 Interhyp & Experten-Faustregeln</h2>
+          <div style="font-size: 12px; line-height: 1.6; color: var(--text-sec);">
+            <p><strong>Warum 2 % Tilgung?</strong><br>Bei aktuellen Zinsen sichern 2 % Tilgung die Entschuldung in ca. 26–28 Jahren. Unter 1,5 % verlängert die Laufzeit auf über 40 Jahre und birgt ein hohes Zinsänderungsrisiko.</p>
+            <br>
+            <p><strong>Die 30–35 % Haushaltsnetto-Regel:</strong><br>Banken verlangen, dass Wohnkosten 35 % des bereinigten Nettoeinkommens nicht überschreiten, um Rücklagen für Instandhaltung und Lebenshaltung zu schützen.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -443,41 +563,13 @@
         <div class="metric-box">
           <div class="m-title">Zinskosten gesamt</div>
           <div class="m-val" id="resZinsenGesamt">180.000 €</div>
-          <div class="m-sub">bis vollständiger Tilgung</div>
+          <div class="m-sub">über gesamte Laufzeit</div>
         </div>
 
         <div class="metric-box">
           <div class="m-title">Empf. Nettoeinkommen</div>
-          <div class="m-val" id="resNetto">5.380 €</div>
+          <div class="m-val" id="resNettoReq">5.380 €</div>
           <div class="m-sub">bei 35 % Wohnkosten-Regel</div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h2>📊 Nebenkosten-Aufstellung</h2>
-        <div class="breakdown-row">
-          <span>Kaufpreis der Immobilie</span>
-          <strong id="bkKaufpreis">450.000 €</strong>
-        </div>
-        <div class="breakdown-row">
-          <span id="bkSteuerLabel">Grunderwerbsteuer (Bayern 3,5 %)</span>
-          <span id="bkSteuer">15.750 €</span>
-        </div>
-        <div class="breakdown-row">
-          <span>Notar- & Grundbuchkosten (2,0 %)</span>
-          <span id="bkNotar">9.000 €</span>
-        </div>
-        <div class="breakdown-row">
-          <span>Maklerprovision</span>
-          <span id="bkMakler">16.065 €</span>
-        </div>
-        <div class="breakdown-row">
-          <span>Modernisierung / Sanierung</span>
-          <span id="bkModern">20.000 €</span>
-        </div>
-        <div class="breakdown-row" style="font-weight: 700; color: var(--primary);">
-          <span>Gesamtinvestition</span>
-          <span id="bkGesamt">510.815 €</span>
         </div>
       </div>
 
@@ -504,6 +596,60 @@
   </div>
 
   <script>
+    // 16 Apple curated colors
+    const colors = [
+      { name: "Apple Blau", hex: "#0071e3" },
+      { name: "Ocean Cyan", hex: "#00a3ff" },
+      { name: "Tiefes Indigo", hex: "#5856d6" },
+      { name: "Royal Lila", hex: "#af52de" },
+      { name: "Magenta Pink", hex: "#ff2d55" },
+      { name: "Rubinrot", hex: "#ff3b30" },
+      { name: "Sunset Koralle", hex: "#ff643d" },
+      { name: "Warmes Bernstein", hex: "#ff9500" },
+      { name: "Champagner Gold", hex: "#d4af37" },
+      { name: "Smaragdgrün", hex: "#34c759" },
+      { name: "Frische Minze", hex: "#00c7be" },
+      { name: "Petrol Teal", hex: "#30b0c7" },
+      { name: "Waldgrün", hex: "#248a3d" },
+      { name: "Cyber Neon", hex: "#a4e000" },
+      { name: "Schiefergrau", hex: "#636366" },
+      { name: "Kupfer Bronze", hex: "#b87333" }
+    ];
+
+    let currentAccent = colors[0].hex;
+
+    function renderColorGrid() {
+      const grid = document.getElementById('colorGrid');
+      grid.innerHTML = '';
+      colors.forEach(c => {
+        const d = document.createElement('div');
+        d.className = 'color-dot' + (c.hex === currentAccent ? ' active' : '');
+        d.style.backgroundColor = c.hex;
+        d.title = c.name;
+        d.onclick = () => setAccentColor(c.hex);
+        grid.appendChild(d);
+      });
+    }
+
+    function setAccentColor(hex) {
+      currentAccent = hex;
+      document.documentElement.style.setProperty('--primary', hex);
+      document.documentElement.style.setProperty('--primary-bg', hex + '20');
+      renderColorGrid();
+    }
+
+    function switchTheme(mode) {
+      document.documentElement.setAttribute('data-theme', mode);
+    }
+
+    function setTab(tab, el) {
+      document.querySelectorAll('.tab-nav').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('tabCalc').style.display = (tab === 'calc') ? 'block' : 'none';
+      document.getElementById('tabBudget').style.display = (tab === 'budget') ? 'block' : 'none';
+      document.getElementById('tabSettings').style.display = (tab === 'settings') ? 'block' : 'none';
+    }
+
     function fmt(val) {
       return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(val);
     }
@@ -515,9 +661,13 @@
       document.getElementById(id).value = val;
       calculate();
     }
-
-    function updateTax() {
-      calculate();
+    function setNetto(val) {
+      document.getElementById('haushaltsNetto').value = val;
+      calculateBudget();
+    }
+    function setQuote(val) {
+      document.getElementById('wohnQuote').value = val;
+      calculateBudget();
     }
 
     function setEquityPct(pct) {
@@ -533,10 +683,64 @@
       calculate();
     }
 
+    let calculatedBudgetPurchasePrice = 0;
+
+    function calculateBudget() {
+      const netto = parseFloat(document.getElementById('haushaltsNetto').value);
+      const quote = parseFloat(document.getElementById('wohnQuote').value);
+      const fix = parseFloat(document.getElementById('fixkosten').value);
+      
+      document.getElementById('valNetto').innerText = fmt(netto);
+      document.getElementById('valQuote').innerText = fmtPct(quote);
+      document.getElementById('valFix').innerText = fmt(fix);
+
+      const maxRate = Math.max(0, (netto * (quote / 100)) - fix);
+      document.getElementById('budgetRate').innerText = fmt(maxRate);
+
+      const badge = document.getElementById('riskBadge');
+      if (quote <= 30) {
+        badge.className = 'badge-pill badge-green';
+        badge.innerText = 'Sehr solide & sicher (≤ 30 %)';
+      } else if (quote <= 35) {
+        badge.className = 'badge-pill badge-blue';
+        badge.innerText = 'Optimaler Banken-Standard (35 %) ⭐';
+      } else if (quote <= 40) {
+        badge.className = 'badge-pill badge-orange';
+        badge.innerText = 'Erhöhtes Risiko (35 - 40 %)';
+      } else {
+        badge.className = 'badge-pill badge-red';
+        badge.innerText = 'Kritisch! (> 40 %) Banken lehnen oft ab';
+      }
+
+      const zins = parseFloat(document.getElementById('zins').value);
+      const tilgung = parseFloat(document.getElementById('tilgung').value);
+      const ek = parseFloat(document.getElementById('eigenkapital').value);
+      const steuerSatz = parseFloat(document.getElementById('bundesland').value);
+      const notarSatz = parseFloat(document.getElementById('notar').value);
+      const maklerSatz = parseFloat(document.getElementById('makler').value);
+      const modern = parseFloat(document.getElementById('modernisierung').value);
+
+      const annuitaetFaktor = (zins + tilgung) / 100;
+      const maxDarlehen = annuitaetFaktor > 0 ? (maxRate * 12) / annuitaetFaktor : 0;
+      const maxGesamt = maxDarlehen + ek;
+      const nebenkostenFaktor = 1 + ((steuerSatz + notarSatz + maklerSatz) / 100);
+      calculatedBudgetPurchasePrice = Math.max(0, (maxGesamt - modern) / nebenkostenFaktor);
+
+      document.getElementById('budgetKaufpreis').innerText = fmt(calculatedBudgetPurchasePrice);
+    }
+
+    function applyBudgetToCalculator() {
+      if (calculatedBudgetPurchasePrice > 50000) {
+        const rounded = Math.round(calculatedBudgetPurchasePrice / 5000) * 5000;
+        document.getElementById('kaufpreis').value = rounded;
+        calculate();
+        setTab('calc', document.querySelectorAll('.tab-nav')[0]);
+      }
+    }
+
     function calculate() {
       const kaufpreis = parseFloat(document.getElementById('kaufpreis').value);
       const steuerSatz = parseFloat(document.getElementById('bundesland').value);
-      const bundeslandText = document.getElementById('bundesland').options[document.getElementById('bundesland').selectedIndex].text;
       const notarSatz = parseFloat(document.getElementById('notar').value);
       const maklerSatz = parseFloat(document.getElementById('makler').value);
       const modern = parseFloat(document.getElementById('modernisierung').value);
@@ -546,18 +750,16 @@
       const tilgung = parseFloat(document.getElementById('tilgung').value);
       const sondertilgung = parseFloat(document.getElementById('sondertilgung').value);
 
-      // Labels
       document.getElementById('valKaufpreis').innerText = fmt(kaufpreis);
       document.getElementById('valNotar').innerText = fmtPct(notarSatz);
       document.getElementById('valMakler').innerText = fmtPct(maklerSatz);
-      document.getElementById('valModernisierung').innerText = fmt(modern);
+      document.getElementById('valModern').innerText = fmt(modern);
       document.getElementById('valEigenkapital').innerText = fmt(eigenkapital);
       document.getElementById('valZins').innerText = fmtPct(zins);
       document.getElementById('valBindung').innerText = bindung + ' Jahre';
       document.getElementById('valTilgung').innerText = fmtPct(tilgung);
       document.getElementById('valSondertilgung').innerText = fmt(sondertilgung) + ' / Jahr';
 
-      // Math
       const grunderwerbsteuer = kaufpreis * (steuerSatz / 100);
       const notarKosten = kaufpreis * (notarSatz / 100);
       const maklerKosten = kaufpreis * (maklerSatz / 100);
@@ -572,7 +774,6 @@
       const anfangMonatsZins = darlehen * monatsZinssatz;
       const anfangMonatsTilgung = Math.max(0, monatsRate - anfangMonatsZins);
 
-      // Simulation
       let restschuld = darlehen;
       let kumulierteZinsen = 0;
       let restschuldZinsbindung = 0;
@@ -598,9 +799,7 @@
           restschuld -= st;
         }
 
-        if (monate === bindungMonate) {
-          restschuldZinsbindung = restschuld;
-        }
+        if (monate === bindungMonate) restschuldZinsbindung = restschuld;
 
         if (monate % 12 === 0 || restschuld <= 0.01) {
           const yr = Math.ceil(monate / 12);
@@ -617,14 +816,10 @@
         }
       }
 
-      if (monate < bindungMonate) {
-        restschuldZinsbindung = 0;
-      }
-
+      if (monate < bindungMonate) restschuldZinsbindung = 0;
       const jahreGesamt = Math.floor(monate / 12);
       const restMonate = monate % 12;
 
-      // Update UI
       document.getElementById('resRate').innerText = fmt(monatsRate);
       document.getElementById('resSubZins').innerText = fmt(anfangMonatsZins);
       document.getElementById('resSubTilgung').innerText = fmt(anfangMonatsTilgung);
@@ -636,30 +831,24 @@
       document.getElementById('resRestschuldSub').innerText = 'nach ' + bindung + ' J. Zinsbindung';
       document.getElementById('resLaufzeit').innerText = `${jahreGesamt} J. ${restMonate > 0 ? restMonate + ' M.' : ''}`;
       document.getElementById('resZinsenGesamt').innerText = fmt(kumulierteZinsen);
-      document.getElementById('resNetto').innerText = fmt(monatsRate / 0.35);
-
-      // Breakdown
-      document.getElementById('bkKaufpreis').innerText = fmt(kaufpreis);
-      document.getElementById('bkSteuerLabel').innerText = 'Grunderwerbsteuer (' + bundeslandText + ')';
-      document.getElementById('bkSteuer').innerText = fmt(grunderwerbsteuer);
-      document.getElementById('bkNotar').innerText = fmt(notarKosten);
-      document.getElementById('bkMakler').innerText = fmt(maklerKosten);
-      document.getElementById('bkModern').innerText = fmt(modern);
-      document.getElementById('bkGesamt').innerText = fmt(gesamtkosten);
+      document.getElementById('resNettoReq').innerText = fmt(monatsRate / 0.35);
 
       document.getElementById('tableBody').innerHTML = tableHtml;
+
+      calculateBudget();
     }
 
     function copySummary() {
       const rate = document.getElementById('resRate').innerText;
       const darlehen = document.getElementById('resDarlehen').innerText;
       const kaufpreis = document.getElementById('valKaufpreis').innerText;
-      const text = `Immobilien-Kaufrechnung:\nKaufpreis: ${kaufpreis}\nDarlehen: ${darlehen}\nMonatliche Rate: ${rate}\nBerechnet mit ImmobilienRechner für iPhone & Mac`;
+      const text = `Immobilien-Kaufrechnung (Interhyp Standard):\nKaufpreis: ${kaufpreis}\nDarlehen: ${darlehen}\nMonatliche Rate: ${rate}\nBerechnet mit ImmobilienRechner Pro`;
       navigator.clipboard.writeText(text).then(() => {
-        alert('Zusammenfassung in Zwischenablage kopiert!');
+        alert('Zusammenfassung kopiert!');
       });
     }
 
+    renderColorGrid();
     calculate();
   </script>
 </body>

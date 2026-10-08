@@ -2,20 +2,24 @@ import SwiftUI
 
 public enum NavigationTab: String, CaseIterable, Identifiable {
     case eingabe = "Eingabe"
+    case budget = "Budget"
     case uebersicht = "Übersicht"
     case tilgungsplan = "Tilgungsplan"
     case rendite = "Rendite"
     case vergleich = "Vergleich"
+    case einstellungen = "Einstellungen"
     
     public var id: String { rawValue }
     
     public var icon: String {
         switch self {
         case .eingabe: return "slider.horizontal.3"
+        case .budget: return "wallet.pass.fill"
         case .uebersicht: return "chart.pie.fill"
         case .tilgungsplan: return "list.bullet.rectangle.portrait.fill"
         case .rendite: return "eurosign.circle.fill"
         case .vergleich: return "square.split.2x2.fill"
+        case .einstellungen: return "gearshape.fill"
         }
     }
 }
@@ -60,7 +64,9 @@ public struct ContentView: View {
                     }
             }
         }
-        .frame(minWidth: 800, minHeight: 600)
+        .frame(minWidth: 880, minHeight: 620)
+        .preferredColorScheme(viewModel.selectedAppearanceMode.colorScheme)
+        .tint(viewModel.selectedAccentColor.color)
         .confirmationDialog("Zurücksetzen?", isPresented: $showResetConfirmation) {
             Button("Auf Standardwerte zurücksetzen", role: .destructive) {
                 viewModel.resetToDefaults()
@@ -87,6 +93,15 @@ public struct ContentView: View {
             .tag(NavigationTab.eingabe)
             
             NavigationStack {
+                AffordabilityView(viewModel: viewModel)
+                    .navigationTitle("Budget & Haushalt")
+            }
+            .tabItem {
+                Label("Budget", systemImage: "wallet.pass.fill")
+            }
+            .tag(NavigationTab.budget)
+            
+            NavigationStack {
                 ResultsSummaryView(viewModel: viewModel)
                     .navigationTitle("Ergebnis")
             }
@@ -106,7 +121,7 @@ public struct ContentView: View {
             
             NavigationStack {
                 InvestmentYieldView(viewModel: viewModel)
-                    .navigationTitle("Rendite & Cashflow")
+                    .navigationTitle("Rendite")
             }
             .tabItem {
                 Label("Rendite", systemImage: "eurosign.circle.fill")
@@ -121,7 +136,18 @@ public struct ContentView: View {
                 Label("Vergleich", systemImage: "square.split.2x2.fill")
             }
             .tag(NavigationTab.vergleich)
+            
+            NavigationStack {
+                SettingsView(viewModel: viewModel)
+                    .navigationTitle("Einstellungen")
+            }
+            .tabItem {
+                Label("Design", systemImage: "paintpalette.fill")
+            }
+            .tag(NavigationTab.einstellungen)
         }
+        .preferredColorScheme(viewModel.selectedAppearanceMode.colorScheme)
+        .tint(viewModel.selectedAccentColor.color)
         .confirmationDialog("Zurücksetzen?", isPresented: $showResetConfirmation) {
             Button("Auf Standardwerte zurücksetzen", role: .destructive) {
                 viewModel.resetToDefaults()
@@ -136,6 +162,8 @@ public struct ContentView: View {
         switch tab {
         case .eingabe:
             CalculatorInputView(viewModel: viewModel)
+        case .budget:
+            AffordabilityView(viewModel: viewModel)
         case .uebersicht:
             ResultsSummaryView(viewModel: viewModel)
         case .tilgungsplan:
@@ -144,6 +172,8 @@ public struct ContentView: View {
             InvestmentYieldView(viewModel: viewModel)
         case .vergleich:
             ComparisonView(viewModel: viewModel)
+        case .einstellungen:
+            SettingsView(viewModel: viewModel)
         }
     }
 }

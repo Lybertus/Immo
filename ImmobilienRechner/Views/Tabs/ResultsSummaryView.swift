@@ -10,8 +10,13 @@ public struct ResultsSummaryView: View {
         self.viewModel = viewModel
     }
     
+    private var accent: Color {
+        viewModel.selectedAccentColor.color
+    }
+    
     public var body: some View {
         let res = viewModel.result
+        let cornerRadius = viewModel.selectedDesignStyle.cornerRadius
         
         ScrollView {
             VStack(spacing: 20) {
@@ -20,7 +25,7 @@ public struct ResultsSummaryView: View {
                     Text("MONATLICHE RATE")
                         .font(.caption)
                         .fontWeight(.bold)
-                        .foregroundColor(.blue)
+                        .foregroundColor(accent)
                         .tracking(1.5)
                     
                     Text(viewModel.formatCurrency(res.monatlicheRate, fractionDigits: 2))
@@ -48,11 +53,11 @@ public struct ResultsSummaryView: View {
                 .padding(20)
                 .frame(maxWidth: .infinity)
                 .background(
-                    RoundedRectangle(cornerRadius: 20, style: .continuous)
-                        .fill(Color.blue.opacity(0.08))
+                    RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                        .fill(accent.opacity(0.08))
                         .overlay(
-                            RoundedRectangle(cornerRadius: 20, style: .continuous)
-                                .stroke(Color.blue.opacity(0.25), lineWidth: 1.5)
+                            RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                                .stroke(accent.opacity(0.25), lineWidth: 1.5)
                         )
                 )
                 
@@ -63,7 +68,7 @@ public struct ResultsSummaryView: View {
                         value: viewModel.formatCurrency(res.darlehensbetrag),
                         subtitle: "Nötiger Kredit",
                         systemImage: "banknote.fill",
-                        tintColor: .indigo
+                        tintColor: accent
                     )
                     
                     MetricCardView(
@@ -116,7 +121,7 @@ public struct ResultsSummaryView: View {
                     DonutChartView(
                         slices: [
                             ChartSlice(label: "Eigenkapital", value: viewModel.input.eigenkapital, color: .green),
-                            ChartSlice(label: "Bankdarlehen", value: res.darlehensbetrag, color: .indigo)
+                            ChartSlice(label: "Bankdarlehen", value: res.darlehensbetrag, color: accent)
                         ],
                         centerTitle: "Gesamtkosten",
                         centerValue: viewModel.formatCurrency(res.gesamtkosten)
@@ -148,13 +153,13 @@ public struct ResultsSummaryView: View {
                             Spacer()
                             Text(viewModel.formatCurrency(res.gesamtkosten))
                                 .fontWeight(.bold)
-                                .foregroundColor(.blue)
+                                .foregroundColor(accent)
                         }
                         .font(.subheadline)
                     }
                     .padding(16)
                     .background(
-                        RoundedRectangle(cornerRadius: 16)
+                        RoundedRectangle(cornerRadius: cornerRadius)
                             .fill(Color(PlatformColor.secondarySystemBackground))
                     )
                 }
@@ -170,7 +175,7 @@ public struct ResultsSummaryView: View {
                             .fontWeight(.semibold)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 12)
-                            .background(Color.blue)
+                            .background(accent)
                             .foregroundColor(.white)
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                     }

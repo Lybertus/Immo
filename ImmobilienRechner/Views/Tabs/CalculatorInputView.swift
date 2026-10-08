@@ -7,8 +7,33 @@ public struct CalculatorInputView: View {
         self.viewModel = viewModel
     }
     
+    private var accent: Color {
+        viewModel.selectedAccentColor.color
+    }
+    
     public var body: some View {
         Form {
+            // MARK: Rechenziel-Auswahl
+            Section(header: Label("Rechenziel wählen", systemImage: "target")) {
+                Picker("Ziel", selection: $viewModel.selectedGoal) {
+                    ForEach(CalculationGoal.allCases) { goal in
+                        Label(goal.rawValue, systemImage: goal.icon).tag(goal)
+                    }
+                }
+                .pickerStyle(.segmented)
+                
+                if viewModel.selectedGoal == .rateToPurchasePrice {
+                    HStack {
+                        Image(systemName: "lightbulb.fill")
+                            .foregroundColor(.orange)
+                        Text("Im Tab **Budget / Haushaltsrechner** kannst du dein Haushaltsnetto eingeben und deinen maximalen Kaufpreis exakt berechnen.")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    .padding(.vertical, 2)
+                }
+            }
+            
             // Live Quick Banner
             Section {
                 VStack(spacing: 12) {
@@ -22,7 +47,7 @@ public struct CalculatorInputView: View {
                             Text(viewModel.formatCurrency(viewModel.result.monatlicheRate, fractionDigits: 2))
                                 .font(.system(.title, design: .rounded))
                                 .fontWeight(.heavy)
-                                .foregroundColor(.blue)
+                                .foregroundColor(accent)
                         }
                         
                         Spacer()
@@ -204,16 +229,44 @@ public struct CalculatorInputView: View {
                 .pickerStyle(.segmented)
                 
                 if viewModel.input.calculationMode == .tilgungssatz {
-                    CustomSliderField(
-                        title: "Anfängliche Tilgung (p.a.)",
-                        subtitle: "Banken fordern meist mind. 1.5 - 2 %",
-                        value: $viewModel.input.tilgungssatz,
-                        range: 1.0...6.0,
-                        step: 0.1,
-                        unit: "%",
-                        decimals: 1,
-                        presetButtons: [1.5, 2.0, 2.5, 3.0]
-                    )
+                    VStack(alignment: .leading, spacing: 6) {
+                        CustomSliderField(
+                            title: "Anfängliche Tilgung (p.a.)",
+                            subtitle: "Banken fordern meist mind. 1.5 - 2 %",
+                            value: $viewModel.input.tilgungssatz,
+                            range: 1.0...6.0,
+                            step: 0.1,
+                            unit: "%",
+                            decimals: 1,
+                            presetButtons: [1.5, 2.0, 2.5, 3.0]
+                        )
+                        
+                        // 2% Empfehlungs-Badge
+                        HStack(spacing: 8) {
+                            Button(action: {
+                                viewModel.applyRecommendedRepayment()
+                            }) {
+                                HStack(spacing: 4) {
+                                    Image(systemName: "star.fill")
+                                        .font(.system(size: 11))
+                                    Text("⭐ 2,0 % Empfehlung setzen")
+                                        .font(.caption2)
+                                        .fontWeight(.bold)
+                                }
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 5)
+                                .background(accent.opacity(0.12))
+                                .foregroundColor(accent)
+                                .clipShape(Capsule())
+                            }
+                            .buttonStyle(.plain)
+                            
+                            Text("Interhyp-Empfehlung für solide Entschuldung")
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+                        }
+                        .padding(.top, 2)
+                    }
                 } else {
                     CurrencyInputField(
                         title: "Wunschrate monatlich",

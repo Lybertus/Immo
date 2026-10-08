@@ -25,6 +25,10 @@
 		010100102C00000000000001 /* InvestmentYieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020100102C00000000000001 /* InvestmentYieldView.swift */; };
 		010100112C00000000000001 /* ComparisonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020100112C00000000000001 /* ComparisonView.swift */; };
 		010100122C00000000000001 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 020100122C00000000000001 /* Assets.xcassets */; };
+		010100132C00000000000001 /* ThemeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020100142C00000000000001 /* ThemeModel.swift */; };
+		010100142C00000000000001 /* AffordabilityModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020100152C00000000000001 /* AffordabilityModel.swift */; };
+		010100152C00000000000001 /* AffordabilityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020100162C00000000000001 /* AffordabilityView.swift */; };
+		010100162C00000000000001 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020100172C00000000000001 /* SettingsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +52,10 @@
 		020100112C00000000000001 /* ComparisonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComparisonView.swift; sourceTree = "<group>"; };
 		020100122C00000000000001 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		020100132C00000000000001 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		020100142C00000000000001 /* ThemeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeModel.swift; sourceTree = "<group>"; };
+		020100152C00000000000001 /* AffordabilityModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AffordabilityModel.swift; sourceTree = "<group>"; };
+		020100162C00000000000001 /* AffordabilityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AffordabilityView.swift; sourceTree = "<group>"; };
+		020100172C00000000000001 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,6 +98,8 @@
 				020100042C00000000000001 /* CalculationModel.swift */,
 				020100052C00000000000001 /* InvestmentModel.swift */,
 				020100062C00000000000001 /* ComparisonScenario.swift */,
+				020100142C00000000000001 /* ThemeModel.swift */,
+				020100152C00000000000001 /* AffordabilityModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -127,10 +137,12 @@
 			isa = PBXGroup;
 			children = (
 				0201000D2C00000000000001 /* CalculatorInputView.swift */,
+				020100162C00000000000001 /* AffordabilityView.swift */,
 				0201000E2C00000000000001 /* ResultsSummaryView.swift */,
 				0201000F2C00000000000001 /* AmortizationTableView.swift */,
 				020100102C00000000000001 /* InvestmentYieldView.swift */,
 				020100112C00000000000001 /* ComparisonView.swift */,
+				020100172C00000000000001 /* SettingsView.swift */,
 			);
 			path = Tabs;
 			sourceTree = "<group>";
@@ -230,6 +242,10 @@
 				0101000F2C00000000000001 /* AmortizationTableView.swift in Sources */,
 				010100102C00000000000001 /* InvestmentYieldView.swift in Sources */,
 				010100112C00000000000001 /* ComparisonView.swift in Sources */,
+				010100132C00000000000001 /* ThemeModel.swift in Sources */,
+				010100142C00000000000001 /* AffordabilityModel.swift in Sources */,
+				010100152C00000000000001 /* AffordabilityView.swift in Sources */,
+				010100162C00000000000001 /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
