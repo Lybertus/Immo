@@ -2,9 +2,9 @@ import SwiftUI
 
 /// Erscheinungsbild-Modus (Light, Dark, System)
 public enum AppearanceMode: String, CaseIterable, Identifiable, Codable {
-    case system = "System"
-    case light = "Hell"
     case dark = "Dunkel (OLED)"
+    case light = "Hell"
+    case system = "System"
     
     public var id: String { rawValue }
     

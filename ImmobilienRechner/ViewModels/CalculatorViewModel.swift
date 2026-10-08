@@ -29,7 +29,7 @@ public class CalculatorViewModel: ObservableObject {
     @Published public var isInvestmentModeActive: Bool = false
     
     // MARK: - Themes & Customization
-    @Published public var selectedAppearanceMode: AppearanceMode = .system {
+    @Published public var selectedAppearanceMode: AppearanceMode = .dark {
         didSet { UserDefaults.standard.set(selectedAppearanceMode.rawValue, forKey: appearanceKey) }
     }
     
@@ -90,6 +90,8 @@ public class CalculatorViewModel: ObservableObject {
         if let rawApp = UserDefaults.standard.string(forKey: appearanceKey),
            let mode = AppearanceMode(rawValue: rawApp) {
             self.selectedAppearanceMode = mode
+        } else {
+            self.selectedAppearanceMode = .dark
         }
         if let rawStyle = UserDefaults.standard.string(forKey: styleKey),
            let style = DesignStyle(rawValue: rawStyle) {

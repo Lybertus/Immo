@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de" data-theme="system">
+<html lang="de" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -451,9 +451,9 @@
     <div style="display: flex; gap: 10px; align-items: center;">
       <button id="btnToggleTips" onclick="toggleGlobalTips()" class="btn-chip active" style="padding: 6px 12px; font-size: 12px; border-radius: 10px;">💡 Einsteiger-Tipps</button>
       <select id="themeSelect" onchange="switchTheme(this.value)" style="width: auto; padding: 6px 10px;">
-        <option value="system">🌓 System</option>
+        <option value="dark" selected>🌙 Dunkel (OLED)</option>
         <option value="light">☀️ Hell</option>
-        <option value="dark">🌙 Dunkel (OLED)</option>
+        <option value="system">🌓 System</option>
       </select>
     </div>
   </div>
@@ -1004,7 +1004,20 @@
 
     function switchTheme(mode) {
       document.documentElement.setAttribute('data-theme', mode);
+      try { localStorage.setItem('immobilien_theme', mode); } catch (e) {}
     }
+
+    // Standardmäßig im Dark Mode starten
+    (function initTheme() {
+      try {
+        const saved = localStorage.getItem('immobilien_theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', saved);
+        const sel = document.getElementById('themeSelect');
+        if (sel) sel.value = saved;
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
 
     let globalTipsVisible = true;
 
