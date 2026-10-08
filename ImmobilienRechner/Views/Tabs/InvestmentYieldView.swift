@@ -181,6 +181,15 @@ public struct InvestmentYieldView: View {
                             .fill(Color(PlatformColor.secondarySystemBackground))
                     )
                 }
+                
+                // MARK: Experten-Empfehlungen
+                if viewModel.showBeginnerTips {
+                    ExpertTipsCardView(
+                        tab: .rendite,
+                        accentColor: viewModel.selectedAccentColor.color,
+                        cornerRadius: viewModel.selectedDesignStyle.cornerRadius
+                    )
+                }
             }
             .padding(16)
         }

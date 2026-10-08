@@ -41,6 +41,11 @@ public class CalculatorViewModel: ObservableObject {
         didSet { UserDefaults.standard.set(selectedAccentColor.rawValue, forKey: colorKey) }
     }
     
+    // MARK: - Einsteiger-Empfehlungen
+    @Published public var showBeginnerTips: Bool = true {
+        didSet { UserDefaults.standard.set(showBeginnerTips, forKey: beginnerTipsKey) }
+    }
+    
     // MARK: - Scenarios
     @Published public var savedScenarios: [SavedScenario] = []
     
@@ -52,6 +57,7 @@ public class CalculatorViewModel: ObservableObject {
     private let appearanceKey = "immobilien_rechner_appearance_v4"
     private let styleKey = "immobilien_rechner_style_v4"
     private let colorKey = "immobilien_rechner_color_v4"
+    private let beginnerTipsKey = "immobilien_rechner_beginnertips_v4"
     
     public init() {
         // Load Property State
@@ -92,6 +98,13 @@ public class CalculatorViewModel: ObservableObject {
         if let rawColor = UserDefaults.standard.string(forKey: colorKey),
            let col = AppAccentColor(rawValue: rawColor) {
             self.selectedAccentColor = col
+        }
+        
+        // Load Beginner Tips setting
+        if UserDefaults.standard.object(forKey: beginnerTipsKey) != nil {
+            self.showBeginnerTips = UserDefaults.standard.bool(forKey: beginnerTipsKey)
+        } else {
+            self.showBeginnerTips = true
         }
         
         self.loadSavedScenarios()
@@ -221,6 +234,7 @@ public class CalculatorViewModel: ObservableObject {
         investmentInput = InvestmentInput()
         affordabilityInput = AffordabilityInput()
         rentVsBuyInput = RentVsBuyInput()
+        showBeginnerTips = true
     }
     
     // MARK: - Scenarios

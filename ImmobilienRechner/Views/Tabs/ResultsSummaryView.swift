@@ -172,6 +172,15 @@ public struct ResultsSummaryView: View {
                     )
                 }
                 
+                // MARK: Experten-Empfehlungen
+                if viewModel.showBeginnerTips {
+                    ExpertTipsCardView(
+                        tab: .uebersicht,
+                        accentColor: accent,
+                        cornerRadius: cornerRadius
+                    )
+                }
+                
                 // Action Buttons: Save & Share
                 HStack(spacing: 12) {
                     Button(action: {

@@ -243,6 +243,15 @@ public struct AffordabilityView: View {
                             .fill(Color(PlatformColor.secondarySystemBackground))
                     )
                 }
+                
+                // MARK: Experten-Empfehlungen
+                if viewModel.showBeginnerTips {
+                    ExpertTipsCardView(
+                        tab: .budget,
+                        accentColor: accentColor,
+                        cornerRadius: viewModel.selectedDesignStyle.cornerRadius
+                    )
+                }
             }
             .padding(16)
         }

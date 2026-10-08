@@ -322,6 +322,15 @@ public struct RentVsBuyView: View {
                             .fill(Color(PlatformColor.secondarySystemBackground))
                     )
                 }
+                
+                // MARK: Experten-Empfehlungen
+                if viewModel.showBeginnerTips {
+                    ExpertTipsCardView(
+                        tab: .mietenVsKaufen,
+                        accentColor: accent,
+                        cornerRadius: cornerRadius
+                    )
+                }
             }
             .padding(16)
         }

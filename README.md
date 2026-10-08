@@ -63,8 +63,15 @@ Mit flexiblem **Dark Mode / OLED-Dunkelmodus**, **16 wählbaren Apple-Akzentfarb
   * Durchschnittspreis Haus pro m² (sowie typischer Kaufpreis 140 m²)
   * Durchschnittliche Kaltmiete pro m² (sowie typische Monatsmiete)
   * Exakter Grunderwerbsteuersatz des zugehörigen Bundeslandes
-* **1-Klick-Übernahme in den Rechner**:
-  * Kaufpreis, Bundesland und Vergleichsmiete werden auf Knopfdruck übernommen!
+### 💡 8. Fundierte Experten-Empfehlungen & Faustregeln für Einsteiger
+* **In jedem Reiter integriert**:
+  * **Kaufrechner**: 20 % Eigenkapital-Regel, Notgroschen-Puffer (3–6 Monatsgehälter), 2 % Tilgungsminimum, 15–20 Jahre Zinsbindung, kostenlose Sondertilgung.
+  * **Orte & Marktpreise**: Mikrolage vs. Makrolage, Grunderwerbsteuer-Gefälle (3,5 % vs. 6,5 %), Rücklagen für Haus vs. Eigentumswohnung.
+  * **Mieten vs. Kaufen**: Mietmultiplikator-Ampel (< 20x vs. > 30x), Kaufnebenkosten als verlorenes Geld, Opportunitätskosten des ETF-Depots, Interhyp-Index.
+  * **Haushalt & Budget**: Die 30–35 % Regel, Warmkosten-Aufschlag (3,50 €/m²), Schuldenfreiheit bis Renteneintritt (67 Jahre).
+  * **Auswertung & Tilgungsplan**: Restschuldfalle am Bindungsende, Annuitäten-Effekt, Zinsersparnis durch Sondertilgungen.
+  * **Rendite**: Brutto- vs. Netto-Mietrendite, Cashflow-Risiken.
+* **Ein- und Ausblendbar**: Über die Einstellungen oder direkt per Klick ein- und ausklappbar, damit Fortgeschrittene die Ansicht kompakt halten können.
 
 ---
 
@@ -86,6 +93,7 @@ ImmobilienRechner/
 │   ├── Models/
 │   │   ├── FederalState.swift        # 16 Bundesländer & Steuersätze
 │   │   ├── CityMarketData.swift      # 38 Städte, Preisklassen & qm-Preise
+│   │   ├── TabRecommendationsModel.swift # Experten-Tipps für alle 9 Reiter
 │   │   ├── AmortizationYear.swift    # Tilgungsplan-Modell
 │   │   ├── CalculationModel.swift    # Finanzmathematik
 │   │   ├── InvestmentModel.swift     # Rendite & Cashflow
@@ -100,6 +108,9 @@ ImmobilienRechner/
 │   └── Views/
 │       ├── ContentView.swift         # Adaptives SplitView/TabBar Layout
 │       ├── Components/               # Karten, Slider, Donut-Diagramm, Kurvendiagramm
+│       │   ├── ExpertTipsCardView.swift  # Ausklappbare Empfehlungskarte
+│       │   ├── CurrencyInputField.swift  # Direkte Tastatureingabe
+│       │   └── AmortizationChartView.swift # Interaktive Kurve
 │       └── Tabs/
 │           ├── CalculatorInputView.swift   # Rechner & 2% Badge
 │           ├── CityLocationSearchView.swift # Ortssuche, Preise & Filter
@@ -109,7 +120,7 @@ ImmobilienRechner/
 │           ├── AmortizationTableView.swift # Tilgungsplan
 │           ├── InvestmentYieldView.swift   # Mietrendite & Cashflow
 │           ├── ComparisonView.swift        # Szenarien
-│           └── SettingsView.swift          # Dark Mode & Farbpalette
+│           └── SettingsView.swift          # Dark Mode, Farbpalette & Tipps
 └── WebPreview/
     └── index.html                    # Interaktive Web-Vorschau für Mac
 ```

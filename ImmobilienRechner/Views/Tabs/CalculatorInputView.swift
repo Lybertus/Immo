@@ -320,6 +320,19 @@ public struct CalculatorInputView: View {
                     quickButtons: [0, 1_500, 2_500, 5_000, 10_000]
                 )
             }
+            
+            // MARK: Experten-Empfehlungen für Einsteiger
+            if viewModel.showBeginnerTips {
+                Section {
+                    ExpertTipsCardView(
+                        tab: .eingabe,
+                        accentColor: accent,
+                        cornerRadius: viewModel.selectedDesignStyle.cornerRadius
+                    )
+                    .listRowInsets(EdgeInsets(top: 6, leading: 4, bottom: 6, trailing: 4))
+                    .listRowBackground(Color.clear)
+                }
+            }
         }
     }
 }

@@ -63,6 +63,18 @@ public struct CityLocationSearchView: View {
             
             // Cities List
             List {
+                if viewModel.showBeginnerTips {
+                    Section {
+                        ExpertTipsCardView(
+                            tab: .orte,
+                            accentColor: accent,
+                            cornerRadius: viewModel.selectedDesignStyle.cornerRadius
+                        )
+                        .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                        .listRowBackground(Color.clear)
+                    }
+                }
+                
                 Section(header: Text("\(filteredCities.count) gefundene Städte / Regionen")) {
                     ForEach(filteredCities) { city in
                         cityCard(city)

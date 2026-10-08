@@ -35,24 +35,45 @@ public struct ComparisonView: View {
                             .fontWeight(.semibold)
                             .padding(.horizontal, 20)
                             .padding(.vertical, 12)
-                            .background(Color.blue)
+                            .background(viewModel.selectedAccentColor.color)
                             .foregroundColor(.white)
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
                     .buttonStyle(.plain)
                     .padding(.top, 8)
+                    
+                    if viewModel.showBeginnerTips {
+                        ExpertTipsCardView(
+                            tab: .vergleich,
+                            accentColor: viewModel.selectedAccentColor.color,
+                            cornerRadius: viewModel.selectedDesignStyle.cornerRadius
+                        )
+                        .padding(.top, 12)
+                    }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .padding()
             } else {
                 List {
+                    if viewModel.showBeginnerTips {
+                        Section {
+                            ExpertTipsCardView(
+                                tab: .vergleich,
+                                accentColor: viewModel.selectedAccentColor.color,
+                                cornerRadius: viewModel.selectedDesignStyle.cornerRadius
+                            )
+                            .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                            .listRowBackground(Color.clear)
+                        }
+                    }
+                    
                     Section {
                         Button(action: {
                             newScenarioName = "\(viewModel.formatCurrency(viewModel.input.kaufpreis)) (\(viewModel.input.zinsbindungJahre) J.)"
                             showingAddAlert = true
                         }) {
                             Label("Aktuelles Setup als neues Szenario speichern", systemImage: "plus.circle")
-                                .foregroundColor(.blue)
+                                .foregroundColor(viewModel.selectedAccentColor.color)
                         }
                     }
                     

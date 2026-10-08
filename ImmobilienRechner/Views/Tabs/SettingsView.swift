@@ -66,8 +66,32 @@ public struct SettingsView: View {
                 .padding(.vertical, 4)
             }
             
-            // MARK: 3. Interhyp-Wissen & Finanz-Faustregeln
-            Section(header: Label("Experten-Tipps & Faustregeln", systemImage: "lightbulb.fill")) {
+            // MARK: 3. Lernhilfe & Einsteiger-Tipps
+            Section(header: Label("Lernhilfe & Einsteiger-Tipps", systemImage: "graduationcap.fill")) {
+                Toggle(isOn: $viewModel.showBeginnerTips) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Experten-Tipps in allen Reitern anzeigen")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                        Text("Blendet fundierte Faustregeln, Interhyp-Standards und Warnhinweise für Einsteiger in jedem Reiter ein.")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                .tint(viewModel.selectedAccentColor.color)
+                
+                if viewModel.showBeginnerTips {
+                    ExpertTipsCardView(
+                        tab: .einstellungen,
+                        accentColor: viewModel.selectedAccentColor.color,
+                        cornerRadius: viewModel.selectedDesignStyle.cornerRadius
+                    )
+                    .padding(.vertical, 4)
+                }
+            }
+            
+            // MARK: 3b. Interhyp-Wissen
+            Section(header: Label("Finanz-Wissen", systemImage: "lightbulb.fill")) {
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
                         Image(systemName: "checkmark.seal.fill")

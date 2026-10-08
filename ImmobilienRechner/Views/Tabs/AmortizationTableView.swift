@@ -51,6 +51,18 @@ public struct AmortizationTableView: View {
             
             // List of Years
             List {
+                if viewModel.showBeginnerTips {
+                    Section {
+                        ExpertTipsCardView(
+                            tab: .tilgungsplan,
+                            accentColor: viewModel.selectedAccentColor.color,
+                            cornerRadius: viewModel.selectedDesignStyle.cornerRadius
+                        )
+                        .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                        .listRowBackground(Color.clear)
+                    }
+                }
+                
                 ForEach(displayedYears) { year in
                     VStack(spacing: 6) {
                         HStack(spacing: 6) {

@@ -381,6 +381,63 @@
       color: var(--primary);
     }
     .badge-yellow { background: rgba(255, 204, 0, 0.2); color: #d4a017; }
+    .tips-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 16px;
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+    .tips-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+    .tips-header h3 {
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .tip-item {
+      display: flex;
+      gap: 10px;
+      padding: 10px;
+      background: var(--bg);
+      border-radius: 12px;
+      margin-top: 8px;
+    }
+    .tip-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+    .tip-content {
+      flex: 1;
+    }
+    .tip-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 3px;
+    }
+    .tip-headline {
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .tip-text {
+      font-size: 11px;
+      color: var(--text-sec);
+      line-height: 1.45;
+    }
   </style>
 </head>
 <body>
@@ -391,7 +448,8 @@
       <span style="font-size: 12px; color: var(--text-sec);">Mieten vs. Kaufen | Interhyp-Erschwinglichkeitsindex | iPhone 15 Pro Max & Mac M4</span>
     </div>
 
-    <div style="display: flex; gap: 10px;">
+    <div style="display: flex; gap: 10px; align-items: center;">
+      <button id="btnToggleTips" onclick="toggleGlobalTips()" class="btn-chip active" style="padding: 6px 12px; font-size: 12px; border-radius: 10px;">💡 Einsteiger-Tipps</button>
       <select id="themeSelect" onchange="switchTheme(this.value)" style="width: auto; padding: 6px 10px;">
         <option value="system">🌓 System</option>
         <option value="light">☀️ Hell</option>
@@ -518,6 +576,66 @@
             <input type="range" id="tilgung" min="1.0" max="6.0" step="0.1" value="2.0" oninput="syncRangeToText('tilgung', 'txtTilgung')">
           </div>
         </div>
+
+        <!-- EXPERTEN-TIPPS TAB 1 -->
+        <div class="tips-card tab-tips-box">
+          <div class="tips-header" onclick="toggleCardTips('tipsCalcContent', this)">
+            <h3>💡 Experten-Tipps für die Baufinanzierung <span class="badge-pill badge-blue" style="font-size: 10px;">5 Regeln</span></h3>
+            <span class="chevron" style="font-size: 11px; color: var(--text-sec);">▲</span>
+          </div>
+          <div id="tipsCalcContent" style="margin-top: 10px;">
+            <div class="tip-item">
+              <div class="tip-icon" style="background: rgba(0, 113, 227, 0.15); color: #0071e3;">%</div>
+              <div class="tip-content">
+                <div class="tip-title-row">
+                  <span class="tip-headline">20 % Eigenkapital + Nebenkosten mitbringen</span>
+                  <span class="badge-pill badge-blue" style="font-size: 9px;">Faustformel</span>
+                </div>
+                <div class="tip-text">Zahle die Kaufnebenkosten (ca. 10–12 %) sowie mindestens 20 % des Kaufpreises bar. So stufen dich Banken in die beste Zinskondition ein.</div>
+              </div>
+            </div>
+            <div class="tip-item">
+              <div class="tip-icon" style="background: rgba(255, 149, 0, 0.15); color: #ff9500;">🛡️</div>
+              <div class="tip-content">
+                <div class="tip-title-row">
+                  <span class="tip-headline">Notgroschen niemals für den Kauf opfern</span>
+                  <span class="badge-pill badge-orange" style="font-size: 9px;">Achtung Falle</span>
+                </div>
+                <div class="tip-text">Stecke niemals alle Ersparnisse in die Immobilie! Behalte 3 bis 6 Netto-Monatsgehälter auf dem Tagesgeldkonto für Reparaturen und Notfälle.</div>
+              </div>
+            </div>
+            <div class="tip-item">
+              <div class="tip-icon" style="background: rgba(52, 199, 89, 0.15); color: #34c759;">📈</div>
+              <div class="tip-content">
+                <div class="tip-title-row">
+                  <span class="tip-headline">Mindestens 2,0 % anfängliche Tilgung wählen</span>
+                  <span class="badge-pill badge-green" style="font-size: 9px;">Interhyp-Tipp</span>
+                </div>
+                <div class="tip-text">Bei unter 1,5 % Tilgung zahlst du über 40 Jahre ab und verschenkst zehntausende Euro Zinsen. 2,0–2,5 % ist das gesunde Minimum.</div>
+              </div>
+            </div>
+            <div class="tip-item">
+              <div class="tip-icon" style="background: rgba(175, 82, 222, 0.15); color: #af52de;">⏳</div>
+              <div class="tip-content">
+                <div class="tip-title-row">
+                  <span class="tip-headline">15 bis 20 Jahre Zinsbindung bevorzugen</span>
+                  <span class="badge-pill badge-blue" style="font-size: 9px;">Sicherheit</span>
+                </div>
+                <div class="tip-text">Lange Zinsbindung schützt vor Zinsüberraschungen. Nach 10 Jahren kannst du dank § 489 BGB ohnehin jederzeit kostenlos umschulden.</div>
+              </div>
+            </div>
+            <div class="tip-item">
+              <div class="tip-icon" style="background: rgba(52, 199, 89, 0.15); color: #34c759;">➕</div>
+              <div class="tip-content">
+                <div class="tip-title-row">
+                  <span class="tip-headline">5 % jährliche Sondertilgung vereinbaren</span>
+                  <span class="badge-pill badge-green" style="font-size: 9px;">Spartipp</span>
+                </div>
+                <div class="tip-text">Achte auf eine kostenlose Sondertilgungsoption von 5 % p.a. im Vertrag, um Boni oder Steuerrückzahlungen flexibel einbringen zu können.</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- TAB 2: MIETEN VS. KAUFEN & INTERHYP-INDEX -->
@@ -598,6 +716,56 @@
             Ausgewogener Markt. Der Kauf ist im historischen Vergleich gut finanzierbar.
           </p>
         </div>
+
+        <!-- EXPERTEN-TIPPS TAB 2 -->
+        <div class="tips-card tab-tips-box">
+          <div class="tips-header" onclick="toggleCardTips('tipsRvbContent', this)">
+            <h3>💡 Experten-Tipps: Mieten vs. Kaufen <span class="badge-pill badge-green" style="font-size: 10px;">4 Erkenntnisse</span></h3>
+            <span class="chevron" style="font-size: 11px; color: var(--text-sec);">▲</span>
+          </div>
+          <div id="tipsRvbContent" style="margin-top: 10px;">
+            <div class="tip-item">
+              <div class="tip-icon" style="background: rgba(0, 113, 227, 0.15); color: #0071e3;">⚖️</div>
+              <div class="tip-content">
+                <div class="tip-title-row">
+                  <span class="tip-headline">Mietmultiplikator als Orientierung</span>
+                  <span class="badge-pill badge-blue" style="font-size: 9px;">Faustformel</span>
+                </div>
+                <div class="tip-text">Kaufpreis / Jahreskaltmiete: Unter 20x ist Kaufen historisch attraktiv. Bei über 28–30x ist die Miete so günstig, dass Mieten rein rechnerisch gewinnt.</div>
+              </div>
+            </div>
+            <div class="tip-item">
+              <div class="tip-icon" style="background: rgba(255, 149, 0, 0.15); color: #ff9500;">💸</div>
+              <div class="tip-content">
+                <div class="tip-title-row">
+                  <span class="tip-headline">Kaufnebenkosten sind 'verlorenes Geld'</span>
+                  <span class="badge-pill badge-orange" style="font-size: 9px;">Wichtiger Fakt</span>
+                </div>
+                <div class="tip-text">Notar, Grunderwerbsteuer und Makler (ca. 10 %) steigern nicht den Immobilienwert. Es dauert 5–8 Jahre Wertsteigerung, nur um diese Kosten einzuholen.</div>
+              </div>
+            </div>
+            <div class="tip-item">
+              <div class="tip-icon" style="background: rgba(52, 199, 89, 0.15); color: #34c759;">📊</div>
+              <div class="tip-content">
+                <div class="tip-title-row">
+                  <span class="tip-headline">Die Macht des Mieter-ETF-Depots</span>
+                  <span class="badge-pill badge-green" style="font-size: 9px;">Spartipp</span>
+                </div>
+                <div class="tip-text">Legt ein Mieter das nicht gebundene Eigenkapital und die Monatsdifferenz im weltweiten ETF (MSCI World) an, schlägt er den Käufer oft beim Endvermögen.</div>
+              </div>
+            </div>
+            <div class="tip-item">
+              <div class="tip-icon" style="background: rgba(0, 113, 227, 0.15); color: #0071e3;">🎯</div>
+              <div class="tip-content">
+                <div class="tip-title-row">
+                  <span class="tip-headline">Erschwinglichkeitsindex über 100 Punkte</span>
+                  <span class="badge-pill badge-blue" style="font-size: 9px;">Interhyp-Index</span>
+                </div>
+                <div class="tip-text">Über 100 Punkte bedeutet: Ein typischer Haushalt kann sich mit aktuellem Zins und regionalen Preisen eine 85 m² Familienwohnung leisten.</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- TAB 3: BUDGET -->
@@ -621,6 +789,46 @@
             </div>
           </div>
         </div>
+
+        <!-- EXPERTEN-TIPPS TAB 3 -->
+        <div class="tips-card tab-tips-box">
+          <div class="tips-header" onclick="toggleCardTips('tipsBudgetContent', this)">
+            <h3>💡 Experten-Tipps: Budget & Haushalt <span class="badge-pill badge-orange" style="font-size: 10px;">3 Richtlinien</span></h3>
+            <span class="chevron" style="font-size: 11px; color: var(--text-sec);">▲</span>
+          </div>
+          <div id="tipsBudgetContent" style="margin-top: 10px;">
+            <div class="tip-item">
+              <div class="tip-icon" style="background: rgba(0, 113, 227, 0.15); color: #0071e3;">💼</div>
+              <div class="tip-content">
+                <div class="tip-title-row">
+                  <span class="tip-headline">Die goldene 30–35 % Regel einhalten</span>
+                  <span class="badge-pill badge-blue" style="font-size: 9px;">Banken-Limit</span>
+                </div>
+                <div class="tip-text">Die Kreditrate sollte maximal 35 % des bereinigten Haushaltsnettoeinkommens betragen. Steigt die Belastung über 40 %, werten Banken den Kredit als Hochrisiko.</div>
+              </div>
+            </div>
+            <div class="tip-item">
+              <div class="tip-icon" style="background: rgba(255, 149, 0, 0.15); color: #ff9500;">🔥</div>
+              <div class="tip-content">
+                <div class="tip-title-row">
+                  <span class="tip-headline">Warmkosten & Instandhaltung zur Rate addieren</span>
+                  <span class="badge-pill badge-orange" style="font-size: 9px;">Achtung Falle</span>
+                </div>
+                <div class="tip-text">Die Kreditrate ist nur die Kaltmiete an die Bank! Rechne noch ca. 3,50 €/m² für Heizung, Grundsteuer, Müll und Instandhaltung dazu.</div>
+              </div>
+            </div>
+            <div class="tip-item">
+              <div class="tip-icon" style="background: rgba(52, 199, 89, 0.15); color: #34c759;">👴</div>
+              <div class="tip-content">
+                <div class="tip-title-row">
+                  <span class="tip-headline">Schuldenfrei bis zum Renteneintritt (67 Jahre)</span>
+                  <span class="badge-pill badge-green" style="font-size: 9px;">Lebensplan</span>
+                </div>
+                <div class="tip-text">Das Darlehen muss spätestens mit 67 Jahren getilgt sein. Kreditraten von der stark reduzierten gesetzlichen Rente abzuzahlen, ist das häufigste Risiko für Altersarmut.</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- TAB 4: ORTE & MARKTPREISE -->
@@ -630,6 +838,46 @@
           <p style="font-size: 12px; color: var(--text-sec); margin-bottom: 12px; line-height: 1.4;">
             Vergleiche Durchschnittspreise pro m² für Wohnungen &amp; Häuser sowie Kaltmieten in 38 deutschen Städten. Mit 1 Klick in den Rechner übernehmen!
           </p>
+
+          <!-- EXPERTEN-TIPPS TAB 4 -->
+          <div class="tips-card tab-tips-box">
+            <div class="tips-header" onclick="toggleCardTips('tipsCitiesContent', this)">
+              <h3>💡 Experten-Tipps: Orte &amp; Marktpreise <span class="badge-pill badge-blue" style="font-size: 10px;">3 Empfehlungen</span></h3>
+              <span class="chevron" style="font-size: 11px; color: var(--text-sec);">▲</span>
+            </div>
+            <div id="tipsCitiesContent" style="margin-top: 10px;">
+              <div class="tip-item">
+                <div class="tip-icon" style="background: rgba(0, 113, 227, 0.15); color: #0071e3;">📍</div>
+                <div class="tip-content">
+                  <div class="tip-title-row">
+                    <span class="tip-headline">Mikrolage schlägt Makrolage</span>
+                    <span class="badge-pill badge-blue" style="font-size: 9px;">Faustformel</span>
+                  </div>
+                  <div class="tip-text">Günstige Regionen (&lt; 2.800 €/m²) locken mit hoher Mietrendite, aber langsamer Wertsteigerung. In Metropolen ist der Einstieg teuer, die Wiederverkäuflichkeit aber extrem krisenfest.</div>
+                </div>
+              </div>
+              <div class="tip-item">
+                <div class="tip-icon" style="background: rgba(255, 149, 0, 0.15); color: #ff9500;">🏛️</div>
+                <div class="tip-content">
+                  <div class="tip-title-row">
+                    <span class="tip-headline">Grunderwerbsteuer-Unterschied bis zu 3,0 %</span>
+                    <span class="badge-pill badge-orange" style="font-size: 9px;">Kostenfalle</span>
+                  </div>
+                  <div class="tip-text">In Bayern zahlst du nur 3,5 % Grunderwerbsteuer, in NRW, Saarland oder Brandenburg 6,5 %. Bei 500.000 € Kaufpreis sind das 15.000 € Unterschied an reinem Eigenkapital!</div>
+                </div>
+              </div>
+              <div class="tip-item">
+                <div class="tip-icon" style="background: rgba(52, 199, 89, 0.15); color: #34c759;">🏡</div>
+                <div class="tip-content">
+                  <div class="tip-title-row">
+                    <span class="tip-headline">Haus vs. Wohnung: Rücklagen bedenken</span>
+                    <span class="badge-pill badge-green" style="font-size: 9px;">Experten-Tipp</span>
+                  </div>
+                  <div class="tip-text">In einer Eigentumswohnung teilst du Sanierungskosten mit der WEG (Hausgeld). Beim Haus trägst du Dach, Fassade und Heizung allein – spare mind. 1,50–2,50 €/m² pro Monat an!</div>
+                </div>
+              </div>
+            </div>
+          </div>
 
           <!-- Search Input -->
           <div class="form-group" style="margin-bottom: 12px;">
@@ -739,6 +987,34 @@
 
     function switchTheme(mode) {
       document.documentElement.setAttribute('data-theme', mode);
+    }
+
+    let globalTipsVisible = true;
+
+    function toggleGlobalTips() {
+      globalTipsVisible = !globalTipsVisible;
+      const btn = document.getElementById('btnToggleTips');
+      if (btn) {
+        btn.innerText = globalTipsVisible ? '💡 Einsteiger-Tipps' : '💡 Tipps aus';
+        if (globalTipsVisible) btn.classList.add('active');
+        else btn.classList.remove('active');
+      }
+      document.querySelectorAll('.tab-tips-box').forEach(el => {
+        el.style.display = globalTipsVisible ? 'block' : 'none';
+      });
+    }
+
+    function toggleCardTips(contentId, headerEl) {
+      const content = document.getElementById(contentId);
+      const chevron = headerEl.querySelector('.chevron');
+      if (!content) return;
+      if (content.style.display === 'none') {
+        content.style.display = 'block';
+        if (chevron) chevron.innerText = '▲';
+      } else {
+        content.style.display = 'none';
+        if (chevron) chevron.innerText = '▼';
+      }
     }
 
     function setTab(tab, el) {
