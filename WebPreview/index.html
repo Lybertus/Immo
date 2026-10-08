@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Immobilien-Kaufrechner | iPhone 15 Pro Max & MacBook Pro M4</title>
+  <style>
+    :root {
+      --primary: #0071e3;
+      --primary-bg: #e8f2fc;
+      --bg: #f5f5f7;
+      --card-bg: #ffffff;
+      --text: #1d1d1f;
+      --text-sec: #86868b;
+      --border: #d2d2d7;
+      --green: #34c759;
+      --orange: #ff9500;
+      --red: #ff3b30;
+      --purple: #af52de;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #000000;
+        --card-bg: #1c1c1e;
+        --text: #f5f5f7;
+        --text-sec: #98989d;
+        --border: #38383a;
+        --primary-bg: #0d2642;
+      }
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+    }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .header-bar {
+      max-width: 1000px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .header-bar h1 {
+      font-size: 24px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .device-badge {
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--primary-bg);
+      color: var(--primary);
+      padding: 6px 12px;
+      border-radius: 20px;
+    }
+    .container {
+      max-width: 1100px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 860px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+    }
+    .card {
+      background: var(--card-bg);
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+    .card h2 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .hero-rate {
+      background: linear-gradient(135deg, rgba(0, 113, 227, 0.12), rgba(0, 113, 227, 0.04));
+      border: 1.5px solid rgba(0, 113, 227, 0.3);
+      text-align: center;
+      padding: 24px 20px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+    }
+    .hero-rate .label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: var(--primary);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .hero-rate .rate {
+      font-size: 38px;
+      font-weight: 800;
+      color: var(--text);
+    }
+    .hero-rate .sub {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 10px;
+      font-size: 13px;
+      color: var(--text-sec);
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-group label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .form-group .val {
+      font-family: inherit;
+      color: var(--primary);
+    }
+    .form-group input[type="range"] {
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--border);
+      outline: none;
+      -webkit-appearance: none;
+    }
+    .form-group input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--primary);
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    select, input[type="number"] {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      color: var(--text);
+      font-size: 14px;
+    }
+    .btn-group {
+      display: flex;
+      gap: 6px;
+      margin-top: 6px;
+      flex-wrap: wrap;
+    }
+    .btn-chip {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text-sec);
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 14px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .btn-chip:hover, .btn-chip.active {
+      background: var(--primary-bg);
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .metric-box {
+      background: var(--bg);
+      padding: 14px;
+      border-radius: 14px;
+    }
+    .metric-box .m-title {
+      font-size: 11px;
+      color: var(--text-sec);
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .metric-box .m-val {
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .metric-box .m-sub {
+      font-size: 11px;
+      color: var(--text-sec);
+      margin-top: 2px;
+    }
+    .breakdown-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      padding: 7px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .breakdown-row:last-child {
+      border-bottom: none;
+    }
+    .table-container {
+      max-height: 320px;
+      overflow-y: auto;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-top: 10px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    th, td {
+      padding: 8px 10px;
+      text-align: right;
+    }
+    th:first-child, td:first-child {
+      text-align: left;
+    }
+    th {
+      background: var(--bg);
+      position: sticky;
+      top: 0;
+      font-weight: 600;
+      color: var(--text-sec);
+    }
+    tr:nth-child(even) {
+      background: rgba(0,0,0,0.02);
+    }
+    .fixed-period-row {
+      background: var(--primary-bg) !important;
+      font-weight: bold;
+      color: var(--primary);
+    }
+    .btn-action {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
+      transition: opacity 0.2s;
+    }
+    .btn-action:hover {
+      opacity: 0.9;
+    }
+    .tabs-nav {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+    }
+    .tab-btn {
+      background: none;
+      border: none;
+      color: var(--text-sec);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .tab-btn.active {
+      background: var(--primary-bg);
+      color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header-bar">
+    <h1>🏠 Immobilien-Kaufrechner</h1>
+    <span class="device-badge"> iPhone 15 Pro Max & MacBook Pro M4 Ready</span>
+  </div>
+
+  <div class="container">
+    <!-- LEFT COLUMN: INPUTS -->
+    <div>
+      <div class="card">
+        <h2>💶 1. Objekt & Kaufnebenkosten</h2>
+        
+        <div class="form-group">
+          <label>Kaufpreis <span class="val" id="valKaufpreis">450.000 €</span></label>
+          <input type="range" id="kaufpreis" min="50000" max="2000000" step="10000" value="450000" oninput="calculate()">
+          <div class="btn-group">
+            <button class="btn-chip" onclick="setVal('kaufpreis', 250000)">250k</button>
+            <button class="btn-chip" onclick="setVal('kaufpreis', 350000)">350k</button>
+            <button class="btn-chip" onclick="setVal('kaufpreis', 450000)">450k</button>
+            <button class="btn-chip" onclick="setVal('kaufpreis', 650000)">650k</button>
+            <button class="btn-chip" onclick="setVal('kaufpreis', 850000)">850k</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Bundesland (Grunderwerbsteuer)</label>
+          <select id="bundesland" onchange="updateTax()">
+            <option value="3.5">Bayern (3,5 %)</option>
+            <option value="5.0">Baden-Württemberg (5,0 %)</option>
+            <option value="6.0">Berlin (6,0 %)</option>
+            <option value="6.5">Brandenburg (6,5 %)</option>
+            <option value="5.0">Bremen (5,0 %)</option>
+            <option value="5.5">Hamburg (5,5 %)</option>
+            <option value="6.0">Hessen (6,0 %)</option>
+            <option value="6.0">Mecklenburg-Vorpommern (6,0 %)</option>
+            <option value="5.0">Niedersachsen (5,0 %)</option>
+            <option value="6.5">Nordrhein-Westfalen (6,5 %)</option>
+            <option value="5.0">Rheinland-Pfalz (5,0 %)</option>
+            <option value="6.5">Saarland (6,5 %)</option>
+            <option value="5.5">Sachsen (5,5 %)</option>
+            <option value="5.0">Sachsen-Anhalt (5,0 %)</option>
+            <option value="6.5">Schleswig-Holstein (6,5 %)</option>
+            <option value="5.0">Thüringen (5,0 %)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Notar & Grundbucheintrag <span class="val" id="valNotar">2,0 %</span></label>
+          <input type="range" id="notar" min="1.0" max="3.0" step="0.1" value="2.0" oninput="calculate()">
+        </div>
+
+        <div class="form-group">
+          <label>Maklerprovision (Käuferanteil) <span class="val" id="valMakler">3,57 %</span></label>
+          <input type="range" id="makler" min="0" max="7.14" step="0.01" value="3.57" oninput="calculate()">
+          <div class="btn-group">
+            <button class="btn-chip" onclick="setVal('makler', 0)">Kein Makler (0 %)</button>
+            <button class="btn-chip" onclick="setVal('makler', 3.57)">Standard (3,57 %)</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Modernisierungs- & Renovierungskosten <span class="val" id="valModernisierung">20.000 €</span></label>
+          <input type="range" id="modernisierung" min="0" max="300000" step="5000" value="20000" oninput="calculate()">
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>🏦 2. Finanzierung & Konditionen</h2>
+        
+        <div class="form-group">
+          <label>Eigenkapital <span class="val" id="valEigenkapital">90.000 €</span></label>
+          <input type="range" id="eigenkapital" min="0" max="800000" step="5000" value="90000" oninput="calculate()">
+          <div class="btn-group">
+            <button class="btn-chip" onclick="setEquityPct(0.15)">15 % Quote</button>
+            <button class="btn-chip" onclick="setEquityPct(0.20)">20 % Quote</button>
+            <button class="btn-chip" onclick="setEquityPct(0.30)">30 % Quote</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Sollzins p.a. <span class="val" id="valZins">3,65 %</span></label>
+          <input type="range" id="zins" min="0.5" max="8.0" step="0.05" value="3.65" oninput="calculate()">
+        </div>
+
+        <div class="form-group">
+          <label>Zinsbindung <span class="val" id="valBindung">15 Jahre</span></label>
+          <select id="bindung" onchange="calculate()">
+            <option value="5">5 Jahre</option>
+            <option value="10">10 Jahre</option>
+            <option value="15" selected>15 Jahre</option>
+            <option value="20">20 Jahre</option>
+            <option value="25">25 Jahre</option>
+            <option value="30">30 Jahre</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Anfängliche Tilgung p.a. <span class="val" id="valTilgung">2,0 %</span></label>
+          <input type="range" id="tilgung" min="1.0" max="6.0" step="0.1" value="2.0" oninput="calculate()">
+        </div>
+
+        <div class="form-group">
+          <label>Jährliche Sondertilgung <span class="val" id="valSondertilgung">2.500 € / Jahr</span></label>
+          <input type="range" id="sondertilgung" min="0" max="30000" step="500" value="2500" oninput="calculate()">
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN: RESULTS -->
+    <div>
+      <div class="hero-rate">
+        <div class="label">Monatliche Rate (Annuität)</div>
+        <div class="rate" id="resRate">1.883 €</div>
+        <div class="sub">
+          <span>🟢 Tilgung: <strong id="resSubTilgung">666 €</strong></span>
+          <span>🟠 Zins: <strong id="resSubZins">1.217 €</strong></span>
+        </div>
+      </div>
+
+      <div class="metrics-grid">
+        <div class="metric-box">
+          <div class="m-title">Darlehensbetrag</div>
+          <div class="m-val" id="resDarlehen">400.000 €</div>
+          <div class="m-sub" id="resEkQuote">EK-Quote: 20 %</div>
+        </div>
+
+        <div class="metric-box">
+          <div class="m-title">Kaufnebenkosten</div>
+          <div class="m-val" id="resNebenkosten">40.815 €</div>
+          <div class="m-sub" id="resNebenkostenPct">9,1 % vom Kaufpreis</div>
+        </div>
+
+        <div class="metric-box">
+          <div class="m-title">Restschuld</div>
+          <div class="m-val" id="resRestschuld">235.000 €</div>
+          <div class="m-sub" id="resRestschuldSub">nach 15 J. Zinsbindung</div>
+        </div>
+
+        <div class="metric-box">
+          <div class="m-title">Gesamtlaufzeit</div>
+          <div class="m-val" id="resLaufzeit">26 J. 4 M.</div>
+          <div class="m-sub">bis Volltilgung</div>
+        </div>
+
+        <div class="metric-box">
+          <div class="m-title">Zinskosten gesamt</div>
+          <div class="m-val" id="resZinsenGesamt">180.000 €</div>
+          <div class="m-sub">bis vollständiger Tilgung</div>
+        </div>
+
+        <div class="metric-box">
+          <div class="m-title">Empf. Nettoeinkommen</div>
+          <div class="m-val" id="resNetto">5.380 €</div>
+          <div class="m-sub">bei 35 % Wohnkosten-Regel</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>📊 Nebenkosten-Aufstellung</h2>
+        <div class="breakdown-row">
+          <span>Kaufpreis der Immobilie</span>
+          <strong id="bkKaufpreis">450.000 €</strong>
+        </div>
+        <div class="breakdown-row">
+          <span id="bkSteuerLabel">Grunderwerbsteuer (Bayern 3,5 %)</span>
+          <span id="bkSteuer">15.750 €</span>
+        </div>
+        <div class="breakdown-row">
+          <span>Notar- & Grundbuchkosten (2,0 %)</span>
+          <span id="bkNotar">9.000 €</span>
+        </div>
+        <div class="breakdown-row">
+          <span>Maklerprovision</span>
+          <span id="bkMakler">16.065 €</span>
+        </div>
+        <div class="breakdown-row">
+          <span>Modernisierung / Sanierung</span>
+          <span id="bkModern">20.000 €</span>
+        </div>
+        <div class="breakdown-row" style="font-weight: 700; color: var(--primary);">
+          <span>Gesamtinvestition</span>
+          <span id="bkGesamt">510.815 €</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>📅 Tilgungsplan (Vorschau)</h2>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Jahr</th>
+                <th>Zinsen</th>
+                <th>Tilgung</th>
+                <th>Sondertilg.</th>
+                <th>Restschuld</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+
+        <button class="btn-action" onclick="copySummary()">📋 Zusammenfassung kopieren</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function fmt(val) {
+      return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(val);
+    }
+    function fmtPct(val) {
+      return new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(val) + ' %';
+    }
+
+    function setVal(id, val) {
+      document.getElementById(id).value = val;
+      calculate();
+    }
+
+    function updateTax() {
+      calculate();
+    }
+
+    function setEquityPct(pct) {
+      const kaufpreis = parseFloat(document.getElementById('kaufpreis').value);
+      const steuerSatz = parseFloat(document.getElementById('bundesland').value);
+      const notarSatz = parseFloat(document.getElementById('notar').value);
+      const maklerSatz = parseFloat(document.getElementById('makler').value);
+      const modern = parseFloat(document.getElementById('modernisierung').value);
+      const nebenkosten = kaufpreis * ((steuerSatz + notarSatz + maklerSatz) / 100);
+      const gesamt = kaufpreis + nebenkosten + modern;
+      const targetEk = Math.round((gesamt * pct) / 1000) * 1000;
+      document.getElementById('eigenkapital').value = targetEk;
+      calculate();
+    }
+
+    function calculate() {
+      const kaufpreis = parseFloat(document.getElementById('kaufpreis').value);
+      const steuerSatz = parseFloat(document.getElementById('bundesland').value);
+      const bundeslandText = document.getElementById('bundesland').options[document.getElementById('bundesland').selectedIndex].text;
+      const notarSatz = parseFloat(document.getElementById('notar').value);
+      const maklerSatz = parseFloat(document.getElementById('makler').value);
+      const modern = parseFloat(document.getElementById('modernisierung').value);
+      const eigenkapital = parseFloat(document.getElementById('eigenkapital').value);
+      const zins = parseFloat(document.getElementById('zins').value);
+      const bindung = parseInt(document.getElementById('bindung').value);
+      const tilgung = parseFloat(document.getElementById('tilgung').value);
+      const sondertilgung = parseFloat(document.getElementById('sondertilgung').value);
+
+      // Labels
+      document.getElementById('valKaufpreis').innerText = fmt(kaufpreis);
+      document.getElementById('valNotar').innerText = fmtPct(notarSatz);
+      document.getElementById('valMakler').innerText = fmtPct(maklerSatz);
+      document.getElementById('valModernisierung').innerText = fmt(modern);
+      document.getElementById('valEigenkapital').innerText = fmt(eigenkapital);
+      document.getElementById('valZins').innerText = fmtPct(zins);
+      document.getElementById('valBindung').innerText = bindung + ' Jahre';
+      document.getElementById('valTilgung').innerText = fmtPct(tilgung);
+      document.getElementById('valSondertilgung').innerText = fmt(sondertilgung) + ' / Jahr';
+
+      // Math
+      const grunderwerbsteuer = kaufpreis * (steuerSatz / 100);
+      const notarKosten = kaufpreis * (notarSatz / 100);
+      const maklerKosten = kaufpreis * (maklerSatz / 100);
+      const nebenkostenGesamt = grunderwerbsteuer + notarKosten + maklerKosten;
+      const gesamtkosten = kaufpreis + nebenkostenGesamt + modern;
+      const darlehen = Math.max(0, gesamtkosten - eigenkapital);
+
+      const monatsZinssatz = (zins / 100) / 12;
+      const jahresAnnuitaet = darlehen * ((zins + tilgung) / 100);
+      const monatsRate = jahresAnnuitaet / 12;
+
+      const anfangMonatsZins = darlehen * monatsZinssatz;
+      const anfangMonatsTilgung = Math.max(0, monatsRate - anfangMonatsZins);
+
+      // Simulation
+      let restschuld = darlehen;
+      let kumulierteZinsen = 0;
+      let restschuldZinsbindung = 0;
+      let monate = 0;
+      const bindungMonate = bindung * 12;
+
+      let tableHtml = '';
+      let jahresZinsen = 0;
+      let jahresTilgung = 0;
+
+      while (restschuld > 0.01 && monate < 600) {
+        monate++;
+        const mz = restschuld * monatsZinssatz;
+        const mt = Math.min(restschuld, monatsRate - mz);
+        restschuld -= mt;
+        kumulierteZinsen += mz;
+        jahresZinsen += mz;
+        jahresTilgung += mt;
+
+        let st = 0;
+        if (monate % 12 === 0 && sondertilgung > 0 && restschuld > 0.01) {
+          st = Math.min(restschuld, sondertilgung);
+          restschuld -= st;
+        }
+
+        if (monate === bindungMonate) {
+          restschuldZinsbindung = restschuld;
+        }
+
+        if (monate % 12 === 0 || restschuld <= 0.01) {
+          const yr = Math.ceil(monate / 12);
+          const isFixedEnd = (monate === bindungMonate);
+          tableHtml += `<tr class="${isFixedEnd ? 'fixed-period-row' : ''}">
+            <td>J. ${yr} ${isFixedEnd ? '🏁' : ''}</td>
+            <td style="color:var(--orange)">${fmt(jahresZinsen)}</td>
+            <td style="color:var(--green)">${fmt(jahresTilgung)}</td>
+            <td>${st > 0 ? fmt(st) : '-'}</td>
+            <td><strong>${fmt(Math.max(0, restschuld))}</strong></td>
+          </tr>`;
+          jahresZinsen = 0;
+          jahresTilgung = 0;
+        }
+      }
+
+      if (monate < bindungMonate) {
+        restschuldZinsbindung = 0;
+      }
+
+      const jahreGesamt = Math.floor(monate / 12);
+      const restMonate = monate % 12;
+
+      // Update UI
+      document.getElementById('resRate').innerText = fmt(monatsRate);
+      document.getElementById('resSubZins').innerText = fmt(anfangMonatsZins);
+      document.getElementById('resSubTilgung').innerText = fmt(anfangMonatsTilgung);
+      document.getElementById('resDarlehen').innerText = fmt(darlehen);
+      document.getElementById('resEkQuote').innerText = 'EK-Quote: ' + (gesamtkosten > 0 ? ((eigenkapital / gesamtkosten) * 100).toFixed(1) : 0) + ' %';
+      document.getElementById('resNebenkosten').innerText = fmt(nebenkostenGesamt);
+      document.getElementById('resNebenkostenPct').innerText = ((nebenkostenGesamt / kaufpreis) * 100).toFixed(1) + ' % vom Kaufpreis';
+      document.getElementById('resRestschuld').innerText = fmt(restschuldZinsbindung);
+      document.getElementById('resRestschuldSub').innerText = 'nach ' + bindung + ' J. Zinsbindung';
+      document.getElementById('resLaufzeit').innerText = `${jahreGesamt} J. ${restMonate > 0 ? restMonate + ' M.' : ''}`;
+      document.getElementById('resZinsenGesamt').innerText = fmt(kumulierteZinsen);
+      document.getElementById('resNetto').innerText = fmt(monatsRate / 0.35);
+
+      // Breakdown
+      document.getElementById('bkKaufpreis').innerText = fmt(kaufpreis);
+      document.getElementById('bkSteuerLabel').innerText = 'Grunderwerbsteuer (' + bundeslandText + ')';
+      document.getElementById('bkSteuer').innerText = fmt(grunderwerbsteuer);
+      document.getElementById('bkNotar').innerText = fmt(notarKosten);
+      document.getElementById('bkMakler').innerText = fmt(maklerKosten);
+      document.getElementById('bkModern').innerText = fmt(modern);
+      document.getElementById('bkGesamt').innerText = fmt(gesamtkosten);
+
+      document.getElementById('tableBody').innerHTML = tableHtml;
+    }
+
+    function copySummary() {
+      const rate = document.getElementById('resRate').innerText;
+      const darlehen = document.getElementById('resDarlehen').innerText;
+      const kaufpreis = document.getElementById('valKaufpreis').innerText;
+      const text = `Immobilien-Kaufrechnung:\nKaufpreis: ${kaufpreis}\nDarlehen: ${darlehen}\nMonatliche Rate: ${rate}\nBerechnet mit ImmobilienRechner für iPhone & Mac`;
+      navigator.clipboard.writeText(text).then(() => {
+        alert('Zusammenfassung in Zwischenablage kopiert!');
+      });
+    }
+
+    calculate();
+  </script>
+</body>
+</html>

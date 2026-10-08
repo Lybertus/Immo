@@ -1,0 +1,373 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		010100012C00000000000001 /* ImmobilienRechnerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020100012C00000000000001 /* ImmobilienRechnerApp.swift */; };
+		010100022C00000000000001 /* FederalState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020100022C00000000000001 /* FederalState.swift */; };
+		010100032C00000000000001 /* AmortizationYear.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020100032C00000000000001 /* AmortizationYear.swift */; };
+		010100042C00000000000001 /* CalculationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020100042C00000000000001 /* CalculationModel.swift */; };
+		010100052C00000000000001 /* InvestmentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020100052C00000000000001 /* InvestmentModel.swift */; };
+		010100062C00000000000001 /* ComparisonScenario.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020100062C00000000000001 /* ComparisonScenario.swift */; };
+		010100072C00000000000001 /* CalculatorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020100072C00000000000001 /* CalculatorViewModel.swift */; };
+		010100082C00000000000001 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020100082C00000000000001 /* ContentView.swift */; };
+		010100092C00000000000001 /* MetricCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020100092C00000000000001 /* MetricCardView.swift */; };
+		0101000A2C00000000000001 /* CurrencyInputField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0201000A2C00000000000001 /* CurrencyInputField.swift */; };
+		0101000B2C00000000000001 /* CustomSliderField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0201000B2C00000000000001 /* CustomSliderField.swift */; };
+		0101000C2C00000000000001 /* DonutChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0201000C2C00000000000001 /* DonutChartView.swift */; };
+		0101000D2C00000000000001 /* CalculatorInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0201000D2C00000000000001 /* CalculatorInputView.swift */; };
+		0101000E2C00000000000001 /* ResultsSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0201000E2C00000000000001 /* ResultsSummaryView.swift */; };
+		0101000F2C00000000000001 /* AmortizationTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0201000F2C00000000000001 /* AmortizationTableView.swift */; };
+		010100102C00000000000001 /* InvestmentYieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020100102C00000000000001 /* InvestmentYieldView.swift */; };
+		010100112C00000000000001 /* ComparisonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020100112C00000000000001 /* ComparisonView.swift */; };
+		010100122C00000000000001 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 020100122C00000000000001 /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		020000012C00000000000001 /* ImmobilienRechner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImmobilienRechner.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		020100012C00000000000001 /* ImmobilienRechnerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImmobilienRechnerApp.swift; sourceTree = "<group>"; };
+		020100022C00000000000001 /* FederalState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FederalState.swift; sourceTree = "<group>"; };
+		020100032C00000000000001 /* AmortizationYear.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmortizationYear.swift; sourceTree = "<group>"; };
+		020100042C00000000000001 /* CalculationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculationModel.swift; sourceTree = "<group>"; };
+		020100052C00000000000001 /* InvestmentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestmentModel.swift; sourceTree = "<group>"; };
+		020100062C00000000000001 /* ComparisonScenario.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComparisonScenario.swift; sourceTree = "<group>"; };
+		020100072C00000000000001 /* CalculatorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorViewModel.swift; sourceTree = "<group>"; };
+		020100082C00000000000001 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		020100092C00000000000001 /* MetricCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricCardView.swift; sourceTree = "<group>"; };
+		0201000A2C00000000000001 /* CurrencyInputField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyInputField.swift; sourceTree = "<group>"; };
+		0201000B2C00000000000001 /* CustomSliderField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSliderField.swift; sourceTree = "<group>"; };
+		0201000C2C00000000000001 /* DonutChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DonutChartView.swift; sourceTree = "<group>"; };
+		0201000D2C00000000000001 /* CalculatorInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorInputView.swift; sourceTree = "<group>"; };
+		0201000E2C00000000000001 /* ResultsSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsSummaryView.swift; sourceTree = "<group>"; };
+		0201000F2C00000000000001 /* AmortizationTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmortizationTableView.swift; sourceTree = "<group>"; };
+		020100102C00000000000001 /* InvestmentYieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvestmentYieldView.swift; sourceTree = "<group>"; };
+		020100112C00000000000001 /* ComparisonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComparisonView.swift; sourceTree = "<group>"; };
+		020100122C00000000000001 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		020100132C00000000000001 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		030000012C00000000000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		040000012C00000000000001 = {
+			isa = PBXGroup;
+			children = (
+				040000022C00000000000001 /* ImmobilienRechner */,
+				040000072C00000000000001 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		040000022C00000000000001 /* ImmobilienRechner */ = {
+			isa = PBXGroup;
+			children = (
+				020100012C00000000000001 /* ImmobilienRechnerApp.swift */,
+				040000032C00000000000001 /* Models */,
+				040000042C00000000000001 /* ViewModels */,
+				040000052C00000000000001 /* Views */,
+				020100122C00000000000001 /* Assets.xcassets */,
+				020100132C00000000000001 /* Info.plist */,
+			);
+			path = ImmobilienRechner;
+			sourceTree = "<group>";
+		};
+		040000032C00000000000001 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				020100022C00000000000001 /* FederalState.swift */,
+				020100032C00000000000001 /* AmortizationYear.swift */,
+				020100042C00000000000001 /* CalculationModel.swift */,
+				020100052C00000000000001 /* InvestmentModel.swift */,
+				020100062C00000000000001 /* ComparisonScenario.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		040000042C00000000000001 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				020100072C00000000000001 /* CalculatorViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		040000052C00000000000001 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				020100082C00000000000001 /* ContentView.swift */,
+				040000062C00000000000001 /* Components */,
+				040000082C00000000000001 /* Tabs */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		040000062C00000000000001 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				020100092C00000000000001 /* MetricCardView.swift */,
+				0201000A2C00000000000001 /* CurrencyInputField.swift */,
+				0201000B2C00000000000001 /* CustomSliderField.swift */,
+				0201000C2C00000000000001 /* DonutChartView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		040000082C00000000000001 /* Tabs */ = {
+			isa = PBXGroup;
+			children = (
+				0201000D2C00000000000001 /* CalculatorInputView.swift */,
+				0201000E2C00000000000001 /* ResultsSummaryView.swift */,
+				0201000F2C00000000000001 /* AmortizationTableView.swift */,
+				020100102C00000000000001 /* InvestmentYieldView.swift */,
+				020100112C00000000000001 /* ComparisonView.swift */,
+			);
+			path = Tabs;
+			sourceTree = "<group>";
+		};
+		040000072C00000000000001 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				020000012C00000000000001 /* ImmobilienRechner.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		050000012C00000000000001 /* ImmobilienRechner */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 080000022C00000000000001 /* Build configuration list for PBXNativeTarget "ImmobilienRechner" */;
+			buildPhases = (
+				060000012C00000000000001 /* Sources */,
+				030000012C00000000000001 /* Frameworks */,
+				070000012C00000000000001 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ImmobilienRechner;
+			productName = ImmobilienRechner;
+			productReference = 020000012C00000000000001 /* ImmobilienRechner.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		000000012C00000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					050000012C00000000000001 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = 080000012C00000000000001 /* Build configuration list for PBXProject "ImmobilienRechner" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = de;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				de,
+				en,
+				Base,
+			);
+			mainGroup = 040000012C00000000000001;
+			productRefGroup = 040000072C00000000000001 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				050000012C00000000000001 /* ImmobilienRechner */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		070000012C00000000000001 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				010100122C00000000000001 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		060000012C00000000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				010100012C00000000000001 /* ImmobilienRechnerApp.swift in Sources */,
+				010100022C00000000000001 /* FederalState.swift in Sources */,
+				010100032C00000000000001 /* AmortizationYear.swift in Sources */,
+				010100042C00000000000001 /* CalculationModel.swift in Sources */,
+				010100052C00000000000001 /* InvestmentModel.swift in Sources */,
+				010100062C00000000000001 /* ComparisonScenario.swift in Sources */,
+				010100072C00000000000001 /* CalculatorViewModel.swift in Sources */,
+				010100082C00000000000001 /* ContentView.swift in Sources */,
+				010100092C00000000000001 /* MetricCardView.swift in Sources */,
+				0101000A2C00000000000001 /* CurrencyInputField.swift in Sources */,
+				0101000B2C00000000000001 /* CustomSliderField.swift in Sources */,
+				0101000C2C00000000000001 /* DonutChartView.swift in Sources */,
+				0101000D2C00000000000001 /* CalculatorInputView.swift in Sources */,
+				0101000E2C00000000000001 /* ResultsSummaryView.swift in Sources */,
+				0101000F2C00000000000001 /* AmortizationTableView.swift in Sources */,
+				010100102C00000000000001 /* InvestmentYieldView.swift in Sources */,
+				010100112C00000000000001 /* ComparisonView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		090000012C00000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDEFINED_VARIABLES = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		090000022C00000000000001 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDEFINED_VARIABLES = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SWIFT_COMPILATION_MODE = "wholemodule";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		090000032C00000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ImmobilienRechner/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.eugen.immobilienrechner;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		090000042C00000000000001 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ImmobilienRechner/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.eugen.immobilienrechner;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		080000012C00000000000001 /* Build configuration list for PBXProject "ImmobilienRechner" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				090000012C00000000000001 /* Debug */,
+				090000022C00000000000001 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		080000022C00000000000001 /* Build configuration list for PBXNativeTarget "ImmobilienRechner" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				090000032C00000000000001 /* Debug */,
+				090000042C00000000000001 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+	};
+	rootObject = 000000012C00000000000001 /* Project object */;
+}
