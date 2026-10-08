@@ -3,6 +3,7 @@ import SwiftUI
 public enum NavigationTab: String, CaseIterable, Identifiable {
     case eingabe = "Eingabe"
     case budget = "Budget"
+    case mietenVsKaufen = "Mieten vs. Kaufen"
     case uebersicht = "Übersicht"
     case tilgungsplan = "Tilgungsplan"
     case rendite = "Rendite"
@@ -15,6 +16,7 @@ public enum NavigationTab: String, CaseIterable, Identifiable {
         switch self {
         case .eingabe: return "slider.horizontal.3"
         case .budget: return "wallet.pass.fill"
+        case .mietenVsKaufen: return "scalemass.fill"
         case .uebersicht: return "chart.pie.fill"
         case .tilgungsplan: return "list.bullet.rectangle.portrait.fill"
         case .rendite: return "eurosign.circle.fill"
@@ -64,7 +66,7 @@ public struct ContentView: View {
                     }
             }
         }
-        .frame(minWidth: 880, minHeight: 620)
+        .frame(minWidth: 900, minHeight: 640)
         .preferredColorScheme(viewModel.selectedAppearanceMode.colorScheme)
         .tint(viewModel.selectedAccentColor.color)
         .confirmationDialog("Zurücksetzen?", isPresented: $showResetConfirmation) {
@@ -91,6 +93,15 @@ public struct ContentView: View {
                 Label("Eingabe", systemImage: "slider.horizontal.3")
             }
             .tag(NavigationTab.eingabe)
+            
+            NavigationStack {
+                RentVsBuyView(viewModel: viewModel)
+                    .navigationTitle("Mieten vs. Kaufen")
+            }
+            .tabItem {
+                Label("Mieten/Kauf", systemImage: "scalemass.fill")
+            }
+            .tag(NavigationTab.mietenVsKaufen)
             
             NavigationStack {
                 AffordabilityView(viewModel: viewModel)
@@ -162,6 +173,8 @@ public struct ContentView: View {
         switch tab {
         case .eingabe:
             CalculatorInputView(viewModel: viewModel)
+        case .mietenVsKaufen:
+            RentVsBuyView(viewModel: viewModel)
         case .budget:
             AffordabilityView(viewModel: viewModel)
         case .uebersicht:

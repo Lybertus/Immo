@@ -31,6 +31,9 @@
 		010100162C00000000000001 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020100172C00000000000001 /* SettingsView.swift */; };
 		010100172C00000000000001 /* MarketRatesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020100182C00000000000001 /* MarketRatesModel.swift */; };
 		010100182C00000000000001 /* AmortizationChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020100192C00000000000001 /* AmortizationChartView.swift */; };
+		010100192C00000000000001 /* RentVsBuyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020100202C00000000000001 /* RentVsBuyModel.swift */; };
+		0101001A2C00000000000001 /* AffordabilityIndexModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020100212C00000000000001 /* AffordabilityIndexModel.swift */; };
+		0101001B2C00000000000001 /* RentVsBuyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020100222C00000000000001 /* RentVsBuyView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -60,6 +63,9 @@
 		020100172C00000000000001 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		020100182C00000000000001 /* MarketRatesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketRatesModel.swift; sourceTree = "<group>"; };
 		020100192C00000000000001 /* AmortizationChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmortizationChartView.swift; sourceTree = "<group>"; };
+		020100202C00000000000001 /* RentVsBuyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RentVsBuyModel.swift; sourceTree = "<group>"; };
+		020100212C00000000000001 /* AffordabilityIndexModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AffordabilityIndexModel.swift; sourceTree = "<group>"; };
+		020100222C00000000000001 /* RentVsBuyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RentVsBuyView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +111,8 @@
 				020100142C00000000000001 /* ThemeModel.swift */,
 				020100152C00000000000001 /* AffordabilityModel.swift */,
 				020100182C00000000000001 /* MarketRatesModel.swift */,
+				020100202C00000000000001 /* RentVsBuyModel.swift */,
+				020100212C00000000000001 /* AffordabilityIndexModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -143,6 +151,7 @@
 			isa = PBXGroup;
 			children = (
 				0201000D2C00000000000001 /* CalculatorInputView.swift */,
+				020100222C00000000000001 /* RentVsBuyView.swift */,
 				020100162C00000000000001 /* AffordabilityView.swift */,
 				0201000E2C00000000000001 /* ResultsSummaryView.swift */,
 				0201000F2C00000000000001 /* AmortizationTableView.swift */,
@@ -254,6 +263,9 @@
 				010100162C00000000000001 /* SettingsView.swift in Sources */,
 				010100172C00000000000001 /* MarketRatesModel.swift in Sources */,
 				010100182C00000000000001 /* AmortizationChartView.swift in Sources */,
+				010100192C00000000000001 /* RentVsBuyModel.swift in Sources */,
+				0101001A2C00000000000001 /* AffordabilityIndexModel.swift in Sources */,
+				0101001B2C00000000000001 /* RentVsBuyView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

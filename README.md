@@ -2,63 +2,55 @@
 
 Ein hochmoderner, nativer **Immobilien-Kauf- & Baufinanzierungsrechner**, entwickelt mit **SwiftUI** für das **iPhone 15 Pro Max** und den **MacBook Pro M4 (Apple Silicon)**.
 
-Mit flexiblem **Dark Mode / OLED-Dunkelmodus**, **16 wählbaren Apple-Akzentfarben**, **verschiedenen UI-Designstilen** sowie einem integrierten **Haushalts- & Budgetrechner nach Interhyp-Standard**.
+Mit flexiblem **Dark Mode / OLED-Dunkelmodus**, **16 wählbaren Apple-Akzentfarben**, **verschiedenen UI-Designstilen**, **Mieten-vs-Kaufen-Vergleich** sowie dem offiziellen **Interhyp-Erschwinglichkeitsindex**.
 
 ---
 
-## ✨ Neue Features & Highlights
+## ✨ Alle Features & Werkzeuge im Überblick
 
-### 🎨 1. Dark Mode & Großes Design-System
-* **Erscheinungsbild wählbar**: *System*, *Hell* oder *Dunkel (OLED)*.
-* **16 kuratierte Akzentfarben**:
-  * Apple Blau, Ocean Cyan, Tiefes Indigo, Royal Lila
-  * Magenta Pink, Rubinrot, Sunset Koralle, Warmes Bernstein
-  * Champagner Gold, Smaragdgrün, Frische Minze, Petrol Teal
-  * Waldgrün, Cyber Neon, Schiefergrau, Kupfer Bronze
-* **3 Design-Stile**:
-  * *Modern Apple* (weiche Rundungen, Glaseffekte)
-  * *Minimal Clean* (flach, puristisch, klare Linien)
-  * *Finanz-Kompakt* (hohe Informationsdichte, perfekt für Mac)
+### ⚖️ 1. Mieten vs. Kaufen: Wohnst du aktuell günstig?
+* **Mietmultiplikator & Ampelbewertung**:
+  * Setzt deine aktuelle Kaltmiete ins Verhältnis zum Kaufpreis der Immobilie.
+  * Zeigt sofort an: **Extrem günstig gemietet**, **Günstig**, **Marktüblich** oder **Teuer gemietet**.
+  * Wenn du sehr günstig wohnst, erfährst du direkt, warum ein Kauf finanziell oft erst nach vielen Jahren Sinn ergibt!
+* **Vermögensvergleich über 10 bis 30 Jahre**:
+  * **Käufer**: Immobilienwert nach Wertsteigerung abzüglich Restschuld.
+  * **Mieter**: Eigenkapital + monatlich gesparte Differenz angelegt im ETF (z. B. MSCI World / S&P mit Zinseszins).
+  * **Break-Even-Jahr**: Zeigt das exakte Jahr an, ab dem der Kauf finanziell im Vorteil ist!
 
-### 💼 2. Haushaltsrechner & Leistbarkeit (Interhyp-Prinzip)
-* **Haushaltsnettoeinkommen** eingeben (z. B. 4.500 € monatlich).
-* **Wohnkosten-Abschlag einstellen (20 % bis 45 %)**:
-  * 25 % = Sehr vorsichtig
-  * 30 % = Solide & konservativ
-  * 35 % = **Empfohlener Standard** (Interhyp & Verbraucherzentrale) ⭐
-  * 40 % = Maximal vertretbare Belastungsgrenze
-* **Banken-Ampel**: Zeigt sofort an, ob die Rate für Banken finanzierbar ist.
-* **Maximaler Kaufpreis ermitteln**:
-  * Berechnet unter Berücksichtigung von Nebenkosten, Grunderwerbsteuer und Eigenkapital, wie teuer deine Immobilie maximal sein darf.
-  * **1-Klick-Übernahme**: Überträgt das Budget sofort in den Hauptrechner!
+### 📊 2. Interhyp-Erschwinglichkeitsindex
+* Misst die reale Erschwinglichkeit von Wohneigentum basierend auf:
+  * Haushaltsnettoeinkommen
+  * Aktuellem Zinsniveau & Tilgung
+  * Quadratmeterpreisen
+* **Index-Score (Basis 100)** mit Ampel:
+  * $\ge 110$ = Hervorragend erschwinglich (Käufermarkt)
+  * $90 - 110$ = Ausgewogener Markt
+  * $< 90$ = Angespannter / schwer erschwinglicher Markt
+* **Leistbare Quadratmeter**: Zeigt konkret an, wie viel Wohnfläche sich dein Haushalt aktuell leisten kann.
 
-### 🎯 3. Multi-Ziel-Berechnung (Reverse-Calculator)
-* **Ziel A: Kaufpreis ➔ Rate** (Klassische Darlehensberechnung).
-* **Ziel B: Budget / Max. Kaufpreis** (Ausgehend von der Monatsrate).
-* **Ziel C: Wunschlaufzeit ➔ Tilgung** (z. B. schuldenfrei in 25 Jahren bis zur Rente – berechnet die exakt dafür nötige Tilgung!).
-* **2 % Tilgungsempfehlung**:
-  * Schnellbutton `⭐ 2,0 % Empfehlung setzen`.
-  * Ausführliche Erklärung, warum Banken 2,0 % Tilgung bei Zinsen um 3,5–4 % verlangen (Schuldenfreiheit in ~27 Jahren statt über 40 Jahren).
+### ⌨️ 3. Zwei-Wege-Eingabe (Schieberegler + Tastatur)
+* Alle Zahlen (Kaufpreis, Eigenkapital, Sollzins, Tilgungssatz, Miete etc.) können:
+  * über flüssige **Schieberegler** angepasst werden
+  * oder **direkt angeklickt und mit der Tastatur umgetippt** werden!
 
-### 💶 4. Kaufnebenkosten & 16 Bundesländer
-* Aktuelle Grunderwerbsteuer für alle 16 Bundesländer (Bayern 3,5 %, NRW 6,5 %, etc.).
-* Notar & Grundbuch (1,0 % – 3,0 %, Standard 2,0 %).
-* Maklerprovision konfigurierbar (z. B. 3,57 % inkl. MwSt. oder 0 %).
-* Modernisierungs- & Renovierungsbudget.
+### ⚡ 4. Reale Interhyp-Marktzinsen & Anschlussfinanzierung
+* **Automatische Zinsanpassung**:
+  * Wählst du **20 Jahre Zinsbindung**, wird automatisch der aktuelle Marktzins (ca. **4,00 %**) voreingestellt.
+  * Bei **10 Jahren**: ca. **3,60 %**, bei **15 Jahren**: ca. **3,80 %**.
+* **Anschlussfinanzierung**:
+  * Standardmäßig „Gleicher Zinssatz“, damit man realistisch durchrechnen kann.
+  * Optionaler **Stresstest (+1 % oder +2 %)** nach Ende der Zinsbindung.
 
-### 📅 5. Tilgungsplan & Rendite (Kapitalanlage)
-* Jahr-für-Jahr-Tilgungsplan mit Restschuld am Jahresende und Markierung des Zinsbindungsendes.
-* Renditerechner für Vermieter mit Kaltmiete, Instandhaltungsrücklage und Netto-Cashflow vor Steuer.
-* Szenarien speichern und direkt vergleichen.
+### 📈 5. Interaktives Kurvendiagramm (Amortisation)
+* **Restschuld-Kurve**: Visualisiert den exakten Schuldenabbau von Tag 1 bis zur vollständigen Tilgung (`0 €`).
+* **Zins-Kurve**: Zeigt die gezahlten Zinskosten im Zeitverlauf.
+* **Zielflagge (`🏁`)**: Markiert das Ende der Zinsbindung mit verbleibender Restschuld.
 
----
-
-## 📱 & 💻 Plattform-Optimierung
-
-| Plattform | Highlights |
-| :--- | :--- |
-| **iPhone 15 Pro Max** | Speziell angepasst an das 6,7-Zoll Display, Dynamic Island, native TabBar, haptisches Feedback und große Slider. |
-| **MacBook Pro M4** | Apple Silicon M4 Support: Nativer Split-View mit Sidebar-Navigation, Fensterskalierung und Tastatur-Shortcuts. |
+### 🎨 6. Dark Mode & 16 Apple-Akzentfarben
+* Echtes **OLED-Schwarz**, Hell oder System-Erscheinungsbild.
+* 16 kuratierte Akzentfarben (Apple Blau, Smaragdgrün, Cyan, Royal Lila, etc.).
+* 3 Design-Stile: *Modern Apple*, *Minimal Clean* und *Finanz-Kompakt*.
 
 ---
 
@@ -84,16 +76,20 @@ ImmobilienRechner/
 │   │   ├── InvestmentModel.swift     # Rendite & Cashflow
 │   │   ├── ComparisonScenario.swift  # Variantenvergleich
 │   │   ├── ThemeModel.swift          # Dark Mode & 16 Akzentfarben
-│   │   └── AffordabilityModel.swift  # Haushaltsrechner & 30-35% Regel
+│   │   ├── AffordabilityModel.swift  # Haushaltsrechner & 30-35% Regel
+│   │   ├── MarketRatesModel.swift    # Interhyp Marktzins-Benchmarks
+│   │   ├── RentVsBuyModel.swift      # Mieten vs. Kaufen Simulation
+│   │   └── AffordabilityIndexModel.swift # Interhyp Erschwinglichkeitsindex
 │   ├── ViewModels/
 │   │   └── CalculatorViewModel.swift # State & Persistenz
 │   └── Views/
 │       ├── ContentView.swift         # Adaptives SplitView/TabBar Layout
-│       ├── Components/               # Karten, Slider, Donut-Diagramm
+│       ├── Components/               # Karten, Slider, Donut-Diagramm, Kurvendiagramm
 │       └── Tabs/
 │           ├── CalculatorInputView.swift   # Rechner & 2% Badge
+│           ├── RentVsBuyView.swift         # Mieten vs. Kaufen & Index
 │           ├── AffordabilityView.swift     # Haushalts- & Budgetcheck
-│           ├── ResultsSummaryView.swift    # Ergebnisse & Diagramme
+│           ├── ResultsSummaryView.swift    # Ergebnisse & Kurvendiagramm
 │           ├── AmortizationTableView.swift # Tilgungsplan
 │           ├── InvestmentYieldView.swift   # Mietrendite & Cashflow
 │           ├── ComparisonView.swift        # Szenarien
@@ -104,28 +100,20 @@ ImmobilienRechner/
 
 ---
 
-## ⚡ Schnellstart & Testen auf dem Mac
+## ⚡ Schnellstart auf dem Mac
 
-### Option 1: Sofortiger Browser-Test (ohne Xcode)
+### 1. Sofort im Browser testen (ohne Xcode)
 ```bash
 open /Users/eugen/.gemini/antigravity/scratch/ImmobilienRechner/WebPreview/index.html
 ```
 
-### Option 2: In Xcode für iPhone 15 Pro Max & Mac M4 öffnen
+### 2. In Xcode für iPhone 15 Pro Max & Mac M4 öffnen
 ```bash
 open /Users/eugen/.gemini/antigravity/scratch/ImmobilienRechner/ImmobilienRechner.xcodeproj
 ```
-Wähle als Zielgerät:
-* **iPhone 15 Pro Max**
-* oder **My Mac (Mac Catalyst)** für native Mac-Ausführung.
-Drücke `Cmd + R` zum Starten!
 
----
-
-## 🚀 Auf GitHub hochladen
-
+### 3. Auf GitHub hochladen
 ```bash
 cd /Users/eugen/.gemini/antigravity/scratch/ImmobilienRechner
-git remote add origin https://github.com/<DEIN-NUTZERNAME>/<DEIN-REPO-NAME>.git
 git push -u origin main
 ```

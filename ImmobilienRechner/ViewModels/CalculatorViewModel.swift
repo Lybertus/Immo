@@ -16,6 +16,10 @@ public class CalculatorViewModel: ObservableObject {
         didSet { saveAffordabilityState() }
     }
     
+    @Published public var rentVsBuyInput: RentVsBuyInput {
+        didSet { saveRentVsBuyState() }
+    }
+    
     // MARK: - Market Rates Data (Interhyp Benchmark)
     @Published public var marketRates: MarketInterestRates = MarketInterestRates()
     
@@ -40,12 +44,13 @@ public class CalculatorViewModel: ObservableObject {
     @Published public var savedScenarios: [SavedScenario] = []
     
     // MARK: - Keys
-    private let userDefaultsKey = "immobilien_rechner_state_v3"
-    private let affordabilityKey = "immobilien_rechner_affordability_v3"
-    private let scenariosKey = "immobilien_rechner_scenarios_v3"
-    private let appearanceKey = "immobilien_rechner_appearance_v3"
-    private let styleKey = "immobilien_rechner_style_v3"
-    private let colorKey = "immobilien_rechner_color_v3"
+    private let userDefaultsKey = "immobilien_rechner_state_v4"
+    private let affordabilityKey = "immobilien_rechner_affordability_v4"
+    private let rentVsBuyKey = "immobilien_rechner_rentvsbuy_v4"
+    private let scenariosKey = "immobilien_rechner_scenarios_v4"
+    private let appearanceKey = "immobilien_rechner_appearance_v4"
+    private let styleKey = "immobilien_rechner_style_v4"
+    private let colorKey = "immobilien_rechner_color_v4"
     
     public init() {
         // Load Property State
@@ -62,6 +67,14 @@ public class CalculatorViewModel: ObservableObject {
             self.affordabilityInput = savedAff
         } else {
             self.affordabilityInput = AffordabilityInput()
+        }
+        
+        // Load Rent vs Buy State
+        if let data = UserDefaults.standard.data(forKey: rentVsBuyKey),
+           let savedRvB = try? JSONDecoder().decode(RentVsBuyInput.self, data) {
+            self.rentVsBuyInput = savedRvB
+        } else {
+            self.rentVsBuyInput = RentVsBuyInput()
         }
         
         self.investmentInput = InvestmentInput()
@@ -97,6 +110,26 @@ public class CalculatorViewModel: ObservableObject {
         AffordabilityResult(input: affordabilityInput)
     }
     
+    public var rentVsBuyResult: RentVsBuyResult {
+        RentVsBuyCalculator.calculate(
+            input: rentVsBuyInput,
+            propertyInput: input,
+            mortgageResult: result
+        )
+    }
+    
+    public var affordabilityIndexResult: AffordabilityIndexResult {
+        AffordabilityIndexResult.calculate(
+            haushaltsNetto: affordabilityInput.haushaltsNettoeinkommen,
+            wohnkostenQuote: affordabilityInput.wohnkostenQuote,
+            sollzins: input.sollzins,
+            tilgung: input.tilgungssatz,
+            eigenkapital: input.eigenkapital,
+            kaufpreis: input.kaufpreis,
+            wohnflaecheQm: rentVsBuyInput.wohnflaecheQm
+        )
+    }
+    
     public var maxBudgetCalculation: (maxDarlehen: Double, maxKaufpreis: Double, maxGesamtbudget: Double) {
         let nebenkostenSatz = input.aktiverSteuersatz + input.notarGrundbuchSatz + input.aktiverMaklersatz
         return AffordabilityResult.calculateMaxPurchasePrice(
@@ -118,7 +151,6 @@ public class CalculatorViewModel: ObservableObject {
     
     // MARK: - Market Rates & Term Update
     
-    /// Ändert die Zinsbindung und passt automatisch den Sollzins an den aktuellen Interhyp-Marktzins an
     public func setInterestTerm(_ years: Int) {
         input.zinsbindungJahre = years
         if input.autoUpdateInterestWithMarketBenchmark {
@@ -171,6 +203,7 @@ public class CalculatorViewModel: ObservableObject {
         input = PropertyInput()
         investmentInput = InvestmentInput()
         affordabilityInput = AffordabilityInput()
+        rentVsBuyInput = RentVsBuyInput()
     }
     
     // MARK: - Scenarios
@@ -217,6 +250,12 @@ public class CalculatorViewModel: ObservableObject {
         }
     }
     
+    private func saveRentVsBuyState() {
+        if let encoded = try? JSONEncoder().encode(rentVsBuyInput) {
+            UserDefaults.standard.set(encoded, forKey: rentVsBuyKey)
+        }
+    }
+    
     // MARK: - Formatters
     
     public func formatCurrency(_ value: Double, fractionDigits: Int = 0) -> String {
@@ -255,53 +294,47 @@ public class CalculatorViewModel: ObservableObject {
     public func generateExportSummary() -> String {
         let res = result
         let aff = affordabilityResult
+        let rvb = rentVsBuyResult
+        let idx = affordabilityIndexResult
+        
         return """
         ====================================================
         IMMOBILIEN-KAUFRECHNER PRO (Interhyp Standard)
         ====================================================
         Datum: \(Date().formatted(date: .numeric, time: .shortened))
 
-        1. HAUSHALTS- & BUDGETCHECK
+        1. INTERHYP-ERSCHWINGLICHKEITSINDEX
+        ----------------------------------------------------
+        Indexwert:                    \(Int(idx.indexScore)) Punkte (\(idx.bewertungStufe.rawValue))
+        Leistbare Wohnfläche:         \(Int(idx.leistbareWohnflaecheQm)) m²
+        Quadratmeterpreis Objekt:     \(formatCurrency(idx.qmPreisObjekt)) / m²
+        Fazit:                        \(idx.beschreibung)
+
+        2. MIETEN VS. KAUFEN VERGLEICH
+        ----------------------------------------------------
+        Aktuelle Kaltmiete:           \(formatCurrency(rentVsBuyInput.aktuelleKaltmiete)) / Monat
+        Mietmultiplikator:            Faktor \(String(format: "%.1f", rvb.mietmultiplikator))
+        Miet-Bewertung:               \(rvb.guenstigWohnenScore.rawValue)
+        Break-Even (Kauf im Vorteil): \(rvb.breakEvenJahr.map { "nach \($0) Jahren" } ?? "über 40 Jahre")
+        Vermögen Käufer (\(rentVsBuyInput.betrachtungszeitraumJahre) J.):     \(formatCurrency(rvb.vermoegenKaeufer))
+        Vermögen Mieter (\(rentVsBuyInput.betrachtungszeitraumJahre) J.):     \(formatCurrency(rvb.vermoegenMieter))
+        Vermögensvorteil:             \(formatCurrency(abs(rvb.vermoegensDifferenz))) zugunsten \(rvb.vermoegensDifferenz >= 0 ? "Käufer" : "Mieter")
+
+        3. HAUSHALT & BUDGET
         ----------------------------------------------------
         Monatliches Nettoeinkommen:   \(formatCurrency(affordabilityInput.haushaltsNettoeinkommen))
         Wohnkosten-Quote:             \(formatPercent(affordabilityInput.wohnkostenQuote, decimals: 1)) (\(aff.risikotext))
         Verfügbare Monatsrate:        \(formatCurrency(aff.maxMonatsrate, fractionDigits: 2))
-        Freies Einkommen nach Rate:   \(formatCurrency(aff.verfuegbarNachFixkosten))
 
-        2. OBJEKT & KOSTEN
+        4. OBJEKT & DARLEHEN
         ----------------------------------------------------
         Kaufpreis:                    \(formatCurrency(input.kaufpreis))
-        Bundesland:                   \(input.bundesland.rawValue) (\(formatPercent(input.aktiverSteuersatz)))
-        Grunderwerbsteuer:            \(formatCurrency(res.grunderwerbsteuer))
-        Notar & Grundbuch:            \(formatCurrency(res.notarGrundbuchKosten)) (\(formatPercent(input.notarGrundbuchSatz)))
-        Maklerprovision:              \(formatCurrency(res.maklerKosten)) (\(formatPercent(input.aktiverMaklersatz)))
-        Kaufnebenkosten gesamt:       \(formatCurrency(res.kaufnebenkostenGesamt)) (\(formatPercent(res.kaufnebenkostenProzent, decimals: 1)))
-        Modernisierungsbudget:        \(formatCurrency(input.modernisierungskosten))
-        GESAMTINVESTITION:            \(formatCurrency(res.gesamtkosten))
-
-        3. FINANZIERUNGSKONDITIONEN
-        ----------------------------------------------------
-        Eigenkapital:                 \(formatCurrency(input.eigenkapital)) (\(formatPercent(res.eigenkapitalQuote, decimals: 1)))
         Darlehensbetrag:              \(formatCurrency(res.darlehensbetrag))
-        Sollzinssatz:                 \(formatPercent(input.sollzins)) p.a. (Interhyp Referenz für \(input.zinsbindungJahre) Jahre)
+        Sollzins:                     \(formatPercent(input.sollzins)) p.a.
         Zinsbindung:                  \(input.zinsbindungJahre) Jahre
-        Anschlussfinanzierung:        \(input.anschlussOption.rawValue) (\(formatPercent(input.effektiverAnschlussZins)))
-        Anfängliche Tilgung:          \(formatPercent(res.anfaenglicherTilgungssatz)) p.a. (Empfehlung: 2,0 %)
-        Sondertilgung pro Jahr:       \(formatCurrency(input.sondertilgungProJahr))
-
-        4. FINANZIERUNGSERGEBNIS
-        ----------------------------------------------------
         MONATLICHE RATE:              \(formatCurrency(res.monatlicheRate, fractionDigits: 2))
-        - Davon anfänglicher Zins:    \(formatCurrency(res.anfaenglicheMonatsZinsen, fractionDigits: 2))
-        - Davon anfängliche Tilgung:  \(formatCurrency(res.anfaenglicheMonatsTilgung, fractionDigits: 2))
+        Restschuld nach Bindung:      \(formatCurrency(res.restschuldNachZinsbindung))
 
-        Restschuld nach Zinsbindung:  \(formatCurrency(res.restschuldNachZinsbindung))
-        Gezahlte Zinsen (Bindung):    \(formatCurrency(res.gezahlteZinsenInZinsbindung))
-        Gezahlte Tilgung (Bindung):   \(formatCurrency(res.gezahlteTilgungInZinsbindung))
-        Laufzeit bis Volltilgung:     \(formatDuration(years: res.gesamtlaufzeitJahre))
-        Gesamtzinsen bis 0 €:         \(formatCurrency(res.zinsenBisVolltilgung))
-        Gesamtrückzahlung:            \(formatCurrency(res.gesamtRueckzahlung))
-        
         Erstellt mit ImmobilienRechner Pro (iOS & macOS)
         ====================================================
         """
