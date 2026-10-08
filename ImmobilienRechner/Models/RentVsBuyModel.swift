@@ -102,25 +102,31 @@ public enum RentVsBuyCalculator {
         var laufendeInstandhaltung = input.instandhaltungKaeuferMonat
         var kaeuferSparDepot = 0.0
         
+        let loanPayoffMonth = mortgageResult.gesamtlaufzeitMonate
+        
         for y in 1...jahre {
             // Tilgungsplan-Daten für Jahr y abrufen
             let restschuldAmJahresende = mortgageResult.tilgungsplan.first(where: { $0.jahr == y })?.endRestschuld ?? 0.0
             
             // Monat für Monat im Jahr y simulieren
-            for _ in 1...12 {
+            for mInYear in 1...12 {
+                let currentMonth = (y - 1) * 12 + mInYear
+                let istKreditAktiv = currentMonth <= loanPayoffMonth
+                let monatlicheKreditRate = istKreditAktiv ? mortgageResult.monatlicheRate : 0.0
+                
                 // Verzinsung der Depots
                 mieterDepot *= (1.0 + etfMonatsRendite)
                 kaeuferSparDepot *= (1.0 + etfMonatsRendite)
                 
                 let monatAusgabenMieter = aktuelleMonatsMiete
-                let monatAusgabenKaeufer = mortgageResult.monatlicheRate + laufendeInstandhaltung
+                let monatAusgabenKaeufer = monatlicheKreditRate + laufendeInstandhaltung
                 
                 if monatAusgabenKaeufer > monatAusgabenMieter {
                     // Mieter hat monatlichen Überschuss und spart ihn im ETF
                     let ersparnis = monatAusgabenKaeufer - monatAusgabenMieter
                     mieterDepot += ersparnis
                 } else {
-                    // Miete ist höher als Kreditkosten: Käufer spart monatlich die Differenz
+                    // Miete ist höher als Kreditkosten/Instandhaltung: Käufer spart monatlich die Differenz
                     let ersparnis = monatAusgabenMieter - monatAusgabenKaeufer
                     kaeuferSparDepot += ersparnis
                 }

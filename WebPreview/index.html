@@ -496,7 +496,7 @@
               <option value="5.0">Baden-Württemberg (5,0 %)</option>
               <option value="6.0">Berlin (6,0 %)</option>
               <option value="6.5">Brandenburg (6,5 %)</option>
-              <option value="5.0">Bremen (5,0 %)</option>
+              <option value="5.5">Bremen (5,5 %)</option>
               <option value="5.5">Hamburg (5,5 %)</option>
               <option value="6.0">Hessen (6,0 %)</option>
               <option value="6.0">Mecklenburg-Vorpommern (6,0 %)</option>
@@ -1126,7 +1126,7 @@
       document.getElementById('resSubZins').innerText = fmt(darlehen * monatsZinsSatz);
       document.getElementById('resSubTilgung').innerText = fmt(Math.max(0, rate - (darlehen * monatsZinsSatz)));
 
-      // Simulation
+      // 1. Hypotheken-Simulation (Monat für Monat bis Volltilgung)
       let restschuld = darlehen;
       let monate = 0;
       let kumulierteZinsen = 0;
@@ -1134,14 +1134,7 @@
       let tableHtml = '';
       let curJahresZins = 0;
       let curJahresTilg = 0;
-
-      // Rent vs Buy Vermögenssimulation
-      let mieterDepot = eigenkapital;
-      let kaeuferDepot = 0;
-      let aktMiete = kaltmiete;
-      let breakEvenJahr = null;
-      let endKaeuferVermoegen = 0;
-      let endMieterVermoegen = 0;
+      const yearlyRestschuld = {};
 
       while (restschuld > 0.01 && monate < 600) {
         monate++;
@@ -1152,20 +1145,9 @@
         curJahresZins += mz;
         curJahresTilg += mt;
 
-        // Rent vs Buy monthly
-        if (monate <= 240) { // 20 Jahre
-          mieterDepot *= (1 + (etfRendite / 12));
-          kaeuferDepot *= (1 + (etfRendite / 12));
-          const kaeuferMonatKosten = rate + instandhaltung;
-          if (kaeuferMonatKosten > aktMiete) {
-            mieterDepot += (kaeuferMonatKosten - aktMiete);
-          } else {
-            kaeuferDepot += (aktMiete - kaeuferMonatKosten);
-          }
-        }
-
         if (monate % 12 === 0 || restschuld <= 0.01) {
           const yr = Math.ceil(monate / 12);
+          yearlyRestschuld[yr] = Math.max(0, restschuld);
           jahresPunkte.push({ jahr: yr, rest: restschuld, zinsen: kumulierteZinsen });
           tableHtml += `<tr>
             <td>Jahr ${yr} ${yr === bindung ? '🏁' : ''}</td>
@@ -1174,21 +1156,53 @@
             <td><strong>${fmt(Math.max(0, restschuld))}</strong></td>
           </tr>`;
           curJahresZins = 0; curJahresTilg = 0;
-
-          if (yr <= 20) {
-            aktMiete *= (1 + mietSteig);
-            const immoWert = kaufpreis * Math.pow(1.015, yr);
-            const kNetto = (immoWert - restschuld) + kaeuferDepot;
-            if (!breakEvenJahr && kNetto > mieterDepot) breakEvenJahr = yr;
-            if (yr === 20) {
-              endKaeuferVermoegen = kNetto;
-              endMieterVermoegen = mieterDepot;
-            }
-          }
         }
       }
-
+      const loanPayoffMonth = monate;
       document.getElementById('tableBody').innerHTML = tableHtml;
+
+      // 2. Rent vs Buy Vermögenssimulation (vollständige 20 Jahre Monat für Monat)
+      let mieterDepot = eigenkapital;
+      let kaeuferDepot = 0;
+      let aktMiete = kaltmiete;
+      let curInstand = instandhaltung;
+      let breakEvenJahr = null;
+      let endKaeuferVermoegen = 0;
+      let endMieterVermoegen = 0;
+      const etfMonatRendite = Math.pow(1 + etfRendite, 1 / 12) - 1;
+
+      for (let yr = 1; yr <= 20; yr++) {
+        for (let mInYr = 1; mInYr <= 12; mInYr++) {
+          const curM = (yr - 1) * 12 + mInYr;
+          const isLoanActive = curM <= loanPayoffMonth;
+          const kRate = isLoanActive ? rate : 0;
+
+          mieterDepot *= (1 + etfMonatRendite);
+          kaeuferDepot *= (1 + etfMonatRendite);
+
+          const kaeuferMonatKosten = kRate + curInstand;
+          if (kaeuferMonatKosten > aktMiete) {
+            mieterDepot += (kaeuferMonatKosten - aktMiete);
+          } else {
+            kaeuferDepot += (aktMiete - kaeuferMonatKosten);
+          }
+        }
+
+        const remainingDebt = yearlyRestschuld[yr] !== undefined ? yearlyRestschuld[yr] : 0;
+        const immoWert = kaufpreis * Math.pow(1.015, yr);
+        const kNetto = (immoWert - remainingDebt) + kaeuferDepot;
+
+        if (!breakEvenJahr && kNetto > mieterDepot) {
+          breakEvenJahr = yr;
+        }
+        if (yr === 20) {
+          endKaeuferVermoegen = kNetto;
+          endMieterVermoegen = mieterDepot;
+        }
+
+        aktMiete *= (1 + mietSteig);
+        curInstand *= 1.015;
+      }
 
       // Rent vs buy results
       const jahresMiete = kaltmiete * 12;
@@ -1306,7 +1320,7 @@
       { name: "Hannover", bl: "Niedersachsen", blVal: 5.0, aptQm: 3500, houseQm: 3600, rentQm: 11.20, cat: "mittel", catLabel: "Mittel / Fair" },
       { name: "Leipzig", bl: "Sachsen", blVal: 5.5, aptQm: 3200, houseQm: 3400, rentQm: 9.80, cat: "mittel", catLabel: "Mittel / Fair" },
       { name: "Dresden", bl: "Sachsen", blVal: 5.5, aptQm: 3100, houseQm: 3300, rentQm: 9.50, cat: "mittel", catLabel: "Mittel / Fair" },
-      { name: "Bremen", bl: "Bremen", blVal: 5.0, aptQm: 2900, houseQm: 2800, rentQm: 9.80, cat: "mittel", catLabel: "Mittel / Fair" },
+      { name: "Bremen", bl: "Bremen", blVal: 5.5, aptQm: 2900, houseQm: 2800, rentQm: 9.80, cat: "mittel", catLabel: "Mittel / Fair" },
       { name: "Kiel", bl: "Schleswig-Holstein", blVal: 6.5, aptQm: 3400, houseQm: 3300, rentQm: 10.80, cat: "mittel", catLabel: "Mittel / Fair" },
       { name: "Lübeck", bl: "Schleswig-Holstein", blVal: 6.5, aptQm: 3600, houseQm: 3500, rentQm: 11.00, cat: "mittel", catLabel: "Mittel / Fair" },
       { name: "Rostock", bl: "Mecklenburg-Vorpommern", blVal: 6.0, aptQm: 3600, houseQm: 3500, rentQm: 10.50, cat: "mittel", catLabel: "Mittel / Fair" },

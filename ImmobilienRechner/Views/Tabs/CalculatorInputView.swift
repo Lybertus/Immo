@@ -31,6 +31,36 @@ public struct CalculatorInputView: View {
                             .foregroundColor(.secondary)
                     }
                     .padding(.vertical, 2)
+                } else if viewModel.selectedGoal == .targetTermToRate {
+                    HStack(spacing: 8) {
+                        Image(systemName: "hourglass.badge.plus")
+                            .foregroundColor(accent)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Ziel: Schuldenfrei in **\(Int(viewModel.affordabilityInput.geplanteWunschlaufzeitJahre)) Jahren**")
+                                .font(.caption)
+                                .fontWeight(.bold)
+                            Text("Dafür nötige Tilgung: **\(viewModel.formatPercent(viewModel.requiredTilgungForTargetYears))**")
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+                        }
+                        Spacer()
+                        Button(action: {
+                            withAnimation {
+                                viewModel.applyRequiredTilgung()
+                            }
+                        }) {
+                            Text("Übernehmen")
+                                .font(.caption2)
+                                .fontWeight(.bold)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 4)
+                                .background(accent.opacity(0.15))
+                                .foregroundColor(accent)
+                                .clipShape(Capsule())
+                        }
+                        .buttonStyle(.plain)
+                    }
+                    .padding(.vertical, 2)
                 }
             }
             

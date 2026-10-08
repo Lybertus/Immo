@@ -26,13 +26,13 @@ public enum FederalState: String, CaseIterable, Identifiable, Codable {
         switch self {
         case .bayern:
             return 3.5
-        case .badenWuerttemberg, .bremen, .niedersachsen, .rheinlandPfalz, .sachsenAnhalt, .thueringen:
+        case .badenWuerttemberg, .niedersachsen, .rheinlandPfalz, .sachsenAnhalt, .thueringen:
             return 5.0
-        case .hamburg, .sachsen:
+        case .bremen, .hamburg, .sachsen:
             return 5.5
-        case .berlin, .hessen:
+        case .berlin, .hessen, .mecklenburgVorpommern:
             return 6.0
-        case .brandenburg, .mecklenburgVorpommern, .nordrheinWestfalen, .saarland, .schleswigHolstein:
+        case .brandenburg, .nordrheinWestfalen, .saarland, .schleswigHolstein:
             return 6.5
         }
     }

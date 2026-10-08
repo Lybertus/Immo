@@ -97,23 +97,22 @@ public struct AffordabilityResult {
         return (maxDarlehen, maxKaufpreis, maxGesamtbudget)
     }
     
-    /// Berechnet die benötigte Tilgung bei einer gewünschten Laufzeit in Jahren
+    /// Berechnet die exakt benötigte Anfangstilgung bei einer gewünschten Laufzeit in Jahren (unterjährige Monatsannuität)
     public static func calculateRequiredTilgung(
         sollzins: Double,
         zielJahre: Double
     ) -> Double {
         guard zielJahre > 0 else { return 2.0 }
-        // Mathematische Näherung nach Barwertformel der Annuität:
-        // q = 1 + i, Laufzeit n Jahre -> Annuität A = S * (q^n * i) / (q^n - 1)
-        // Tilgung t = A - i
-        let i = (sollzins / 100.0)
-        if i <= 0.0001 {
-            return (100.0 / zielJahre)
+        let iMonat = (sollzins / 100.0) / 12.0
+        if iMonat <= 0.000001 {
+            return max(0.5, (100.0 / zielJahre * 100).rounded() / 100.0)
         }
-        let q = 1.0 + i
-        let qN = pow(q, zielJahre)
-        let annuitaetenFaktor = (qN * i) / (qN - 1.0)
-        let tilgung = (annuitaetenFaktor - i) * 100.0
+        let monate = zielJahre * 12.0
+        let qM = 1.0 + iMonat
+        let qMn = pow(qM, monate)
+        let monatsAnnuitaetFaktor = (qMn * iMonat) / (qMn - 1.0)
+        let jahresAnnuitaetFaktor = monatsAnnuitaetFaktor * 12.0
+        let tilgung = (jahresAnnuitaetFaktor - (sollzins / 100.0)) * 100.0
         return max(0.5, (tilgung * 100).rounded() / 100.0)
     }
 }
